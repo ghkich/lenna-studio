@@ -8,47 +8,71 @@ export const Router = () => {
         <Route path="/" exact>
           <Home />
         </Route>
-        <Route path="/welcome">
-          <Welcome />
+        <Route path="/login">
+          <Login />
+        </Route>
+        <Route path="/profile">
+          <Profile />
         </Route>
       </Switch>
     </BrowserRouter>
   )
 }
 
-export const PageLayout = ({children}) => <div className="page">{children}</div>
-
-export const Home = () => (
-  <PageLayout>
-    <div className="loading">Loading...</div>
-  </PageLayout>
+export const LoginLayout = ({children}) => (
+  <div data-component="LoginLayout">
+    <div className="content">{children}</div>
+  </div>
 )
 
-export const Welcome = () => {
-  const [slideActiveIndex, setSlideActiveIndex] = useState(0)
+export const AuthenticatedLayout = ({children}) => (
+  <div data-component="AuthenticatedLayout">
+    <div className="toolbar">
+      username <a href="/login">(logout)</a>
+    </div>
+    <div className="content">{children}</div>
+  </div>
+)
 
-  const slides = [1, 2, 3, 4]
-
+export const Home = () => {
+  const [state, setState] = useState('Closed')
   return (
-    <PageLayout>
-      <div className="slides">
-        {slides.map((slide, idx) => (
-          <div key={idx} className={`slide ${slideActiveIndex === idx ? 'active' : ''}`}>
-            Slide {slide}
-          </div>
-        ))}
+    <AuthenticatedLayout>
+      <div data-component="CustomSelect" data-style="Default" data-state={state}>
+        <div onClick={() => setState((prev) => (prev === 'Closed' ? 'Opened' : 'Closed'))}>Select...</div>
+        <div className="dropdown">
+          <div>Option</div>
+          <div>Option</div>
+          <div>Option</div>
+          <div>Option</div>
+        </div>
       </div>
-      <div className="controls">
-        {slideActiveIndex + 1 < slides.length && (
-          <button
-            onClick={() => {
-              setSlideActiveIndex((prev) => prev + 1)
-            }}
-          >
-            Next slide
-          </button>
-        )}
-      </div>
-    </PageLayout>
+      <div className="spacer mb-5"></div>
+      <button data-component="CustomButton" type="button" onClick={() => (window.location.href = '/profile')}>
+        Go to profile
+      </button>
+    </AuthenticatedLayout>
+  )
+}
+
+export const Login = () => {
+  return (
+    <LoginLayout>
+      <form>
+        <input data-component="CustomInput" type="text" placeholder="email" />
+        <input data-component="CustomInput" type="password" placeholder="password" />
+        <button data-component="CustomButton" type="button" onClick={() => (window.location.href = '/')}>
+          Login
+        </button>
+      </form>
+    </LoginLayout>
+  )
+}
+
+export const Profile = () => {
+  return (
+    <AuthenticatedLayout>
+      <div data-component="Card">Lorem ipsum dolor sit asimet</div>
+    </AuthenticatedLayout>
   )
 }
