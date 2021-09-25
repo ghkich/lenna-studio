@@ -6,6 +6,9 @@ module.exports = {
       fontSize: {
         '2xs': '0.65rem',
       },
+      outline: {
+        red: ['2px dashed #FF0000', '-2px'],
+      },
     },
   },
   variants: {

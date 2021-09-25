@@ -1,6 +1,5 @@
-export const transformClassToStyle = (className) => {
-  const PRIMARY_COLOR = '#3B82F6'
-  const SECONDARY_COLOR = '#EC4899'
+export const transformClassToStyle = (className, theme) => {
+  if (!theme) return ''
 
   const obj = {
     hidden: `display: none;`,
@@ -13,11 +12,13 @@ export const transformClassToStyle = (className) => {
     'items-center': `align-items: center;`,
     'w-64': `width: 250px;`,
     'w-80': `width: 300px;`,
-    'bg-primary': `background-color: ${PRIMARY_COLOR};`,
+    'bg-primary': `background-color: ${theme.colors.primary};`,
+    'bg-secondary': `background-color: ${theme.colors.secondary};`,
     'bg-white': `background-color: white;`,
     'border-white': `border-color: white;`,
     'border-gray': `border-color: gray;`,
-    'text-primary': `color: ${PRIMARY_COLOR};`,
+    'text-primary': `color: ${theme.colors.primary};`,
+    'text-secondary': `color: ${theme.colors.secondary};`,
     'text-white': `color: white;`,
     'text-sm': `font-size: 12px;`,
     'shadow-lg': `box-shadow: 0 2px 10px rgba(0,0,0,0.2);`,

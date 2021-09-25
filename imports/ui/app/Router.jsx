@@ -35,22 +35,35 @@ export const AuthenticatedLayout = ({children}) => (
 )
 
 export const Home = () => {
-  const [state, setState] = useState('Closed')
+  const [state, setState] = useState('closed')
   return (
     <AuthenticatedLayout>
-      <div data-component="CustomSelect" data-style="Default" data-state={state}>
-        <div onClick={() => setState((prev) => (prev === 'Closed' ? 'Opened' : 'Closed'))}>Select...</div>
-        <div className="dropdown">
-          <div>Option</div>
-          <div>Option</div>
-          <div>Option</div>
-          <div>Option</div>
+      <div data-component="Breadcrumbs">
+        <div>People</div>
+        <a href="#">List</a>
+      </div>
+      <div className="page-content">
+        <div data-component="CustomSelect" data-style="primary" data-state={state}>
+          <div onClick={() => setState((prev) => (prev === 'closed' ? 'opened' : 'closed'))}>Select...</div>
+          <div className="dropdown">
+            <div>Option</div>
+            <div>Option</div>
+            <div>Option</div>
+            <div>Option</div>
+          </div>
         </div>
       </div>
       <div className="spacer mb-5"></div>
-      <button data-component="CustomButton" type="button" onClick={() => (window.location.href = '/profile')}>
-        Go to profile
-      </button>
+      <footer>
+        <button
+          data-component="CustomButton"
+          data-style="primary"
+          type="button"
+          onClick={() => (window.location.href = '/profile')}
+        >
+          Go to profile
+        </button>
+      </footer>
     </AuthenticatedLayout>
   )
 }
@@ -61,9 +74,28 @@ export const Login = () => {
       <form>
         <input data-component="CustomInput" type="text" placeholder="email" />
         <input data-component="CustomInput" type="password" placeholder="password" />
-        <button data-component="CustomButton" type="button" onClick={() => (window.location.href = '/')}>
-          Login
-        </button>
+        <footer>
+          <button
+            data-component="CustomButton"
+            data-style="primary"
+            type="button"
+            onClick={() => (window.location.href = '/')}
+          >
+            Login
+          </button>
+          <button
+            data-component="CustomButton"
+            data-style="secondary"
+            data-state="idle"
+            type="button"
+            onClick={() => (window.location.href = '/register')}
+          >
+            Register
+          </button>
+          <button data-component="LinkButton" data-style="primary" type="button">
+            Remember password
+          </button>
+        </footer>
       </form>
     </LoginLayout>
   )
