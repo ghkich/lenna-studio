@@ -14,6 +14,7 @@ import {Tags} from '../components/Tags'
 import {Textarea} from '../components/Textarea'
 import {INITIAL_THEMES_DATA} from '../../infra/data/themes'
 import {samples} from '../../infra/data/samples'
+import {Meteor} from 'meteor/meteor'
 
 library.add(faBrowsers, faCube, faPalette, faSwatchbook, faStarOfLife)
 
@@ -128,7 +129,7 @@ const STRUCTURE_VIEWS = {
   EXPECTED: 'expected',
 }
 
-export const App = () => {
+export const App_old = () => {
   const [currentPagePath, setCurrentPagePath] = useState('/')
   const [selectedTabIndex, setSelectedTabIndex] = useState(0)
   const [actualPageStructure, setActualPageStructure] = useState({})
@@ -237,6 +238,10 @@ export const App = () => {
     )
     setAllSelectors(selectors)
   }, [selectedPageComponent])
+
+  const handleLogin = () => {
+    Meteor.loginWithPassword({email: 'gh.kich@gmail.com'}, '123456')
+  }
 
   const prepareNewComponent = (component) => {
     let newClasses = component?.classes || []

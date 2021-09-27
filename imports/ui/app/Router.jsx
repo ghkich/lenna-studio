@@ -1,110 +1,59 @@
 import React, {useState} from 'react'
-import {BrowserRouter, Switch, Route} from 'react-router-dom'
+import {BrowserRouter as Router, Redirect, Switch, Route, useLocation} from 'react-router-dom'
+import {authenticatedRoutes, publicRoutes, RoutePaths} from './routes'
+import {AuthenticatedLayout} from '../layouts/AuthenticatedLayout'
+import {useAppContext} from './AuthContext'
 
-export const Router = () => {
+const AuthtenticatedRoute = ({children, authenticated, ...props}) => {
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route path="/" exact>
-          <Home />
-        </Route>
-        <Route path="/login">
-          <Login />
-        </Route>
-        <Route path="/profile">
-          <Profile />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+    <Route
+      {...props}
+      render={({location}) => {
+        if (!authenticated) {
+          return (
+            <Redirect
+              to={{
+                pathname: RoutePaths.LOGIN,
+                state: {from: location},
+              }}
+            />
+          )
+        }
+
+        return children
+      }}
+    />
   )
 }
 
-export const LoginLayout = ({children}) => (
-  <div data-component="LoginLayout">
-    <div className="content">{children}</div>
-  </div>
-)
+export const SwitchRoutes = () => {
+  const {state} = useAppContext()
+  const isAuthenticated = state?.user !== null
+  const location = useLocation()
 
-export const AuthenticatedLayout = ({children}) => (
-  <div data-component="AuthenticatedLayout">
-    <div className="toolbar">
-      username <a href="/login">(logout)</a>
-    </div>
-    <div className="content">{children}</div>
-  </div>
-)
-
-export const Home = () => {
-  const [state, setState] = useState('closed')
   return (
-    <AuthenticatedLayout>
-      <div data-component="Breadcrumbs">
-        <div>People</div>
-        <a href="#">List</a>
-      </div>
-      <div className="page-content">
-        <div data-component="CustomSelect" data-style="primary" data-state={state}>
-          <div onClick={() => setState((prev) => (prev === 'closed' ? 'opened' : 'closed'))}>Select...</div>
-          <div className="dropdown">
-            <div>Option</div>
-            <div>Option</div>
-            <div>Option</div>
-            <div>Option</div>
-          </div>
-        </div>
-      </div>
-      <div className="spacer mb-5"></div>
-      <footer>
-        <button
-          data-component="CustomButton"
-          data-style="primary"
-          type="button"
-          onClick={() => (window.location.href = '/profile')}
-        >
-          Go to profile
-        </button>
-      </footer>
-    </AuthenticatedLayout>
+    <Switch>
+      {publicRoutes.map((route, i) => (
+        <Route key={i} path={route.path} exact={route.exact} component={route.component} />
+      ))}
+      {authenticatedRoutes.map((route, i) => (
+        <AuthtenticatedRoute key={i} path={route.path} exact={route.exact} authenticated={isAuthenticated}>
+          <AuthenticatedLayout user={state?.user}>
+            <route.component />
+          </AuthenticatedLayout>
+        </AuthtenticatedRoute>
+      ))}
+      <Redirect to={{pathname: isAuthenticated ? RoutePaths.HOME : RoutePaths.LOGIN, state: {from: location}}} />
+    </Switch>
   )
 }
 
-export const Login = () => {
+const MainRouter = () => {
   return (
-    <LoginLayout>
-      <form>
-        <input data-component="CustomInput" type="text" placeholder="email" />
-        <input data-component="CustomInput" type="password" placeholder="password" />
-        <footer>
-          <button
-            data-component="CustomButton"
-            data-style="primary"
-            type="button"
-            onClick={() => (window.location.href = '/')}
-          >
-            Login
-          </button>
-          <button
-            data-component="CustomButton"
-            data-style="secondary"
-            data-state="idle"
-            type="button"
-            onClick={() => (window.location.href = '/register')}
-          >
-            Register
-          </button>
-          <button data-component="LinkButton" data-style="primary" type="button">
-            Remember password
-          </button>
-        </footer>
-      </form>
-    </LoginLayout>
+    <Router>
+      <SwitchRoutes />
+    </Router>
   )
 }
 
-export const Profile = () => {
-  return (
-    <AuthenticatedLayout>
-      <div data-component="Card">Lorem ipsum dolor sit asimet</div>
-    </AuthenticatedLayout>
-  )
-}
+export default MainRouter
