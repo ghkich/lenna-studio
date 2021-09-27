@@ -1,5 +1,5 @@
 {
-  "name": "grido",
+  "name": "lenna",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,7 @@
     "test-meteor": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer",
-    "deploy-galaxy": "DEPLOY_HOSTNAME=galaxy.meteor.com meteor deploy grido.meteorapp.com --free --mongo"
+    "deploy-galaxy": "DEPLOY_HOSTNAME=galaxy.meteor.com meteor deploy lenna.meteorapp.com --free --mongo"
   },
   "dependencies": {
     "@babel/runtime": "^7.15.3",
