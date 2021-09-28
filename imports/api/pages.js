@@ -1,14 +1,20 @@
-import {Mongo} from 'meteor/mongo'
-import SimpleSchema from 'simpl-schema'
+import {Api} from './api'
 
-export const PagesCollection = new Mongo.Collection('pages')
-
-PagesCollection.schema = new SimpleSchema({
-  name: String,
-  path: String,
-  children: {
-    type: Array,
-    optional: true,
+export const PagesApi = new Api({
+  collectionName: 'pages',
+  collectionSchema: {
+    name: String,
+    path: String,
+    elementId: {
+      type: String,
+      optional: true,
+    },
   },
-  'children.$': Object,
+  publications: {
+    byAppId: {
+      schema: {
+        appId: String,
+      },
+    },
+  },
 })

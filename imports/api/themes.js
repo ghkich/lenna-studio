@@ -1,12 +1,15 @@
-import {Mongo} from 'meteor/mongo'
-import SimpleSchema from 'simpl-schema'
+import {Api} from './api'
 
-export const ThemesCollection = new Mongo.Collection('themes')
-
-ThemesCollection.schema = new SimpleSchema({
-  name: String,
-  colors: Array,
-  'colors.$': Object,
-  'colors.$.primary': String,
-  'colors.$.secondary': String,
+export const ThemesApi = new Api({
+  collectionName: 'themes',
+  collectionSchema: {
+    name: String,
+  },
+  publications: {
+    byAppId: {
+      schema: {
+        appId: String,
+      },
+    },
+  },
 })

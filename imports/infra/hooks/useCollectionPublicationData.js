@@ -1,11 +1,9 @@
 import {useTracker} from 'meteor/react-meteor-data'
 
-export const useCollectionData = ({collection, subscription, terms}, dependencies) =>
+export const useCollectionPublicationData = ({collection, publicationName, terms}, dependencies) =>
   useTracker(() => {
-    const sub = Meteor.subscribe(subscription, terms)
+    const sub = Meteor.subscribe(publicationName, terms)
     const data = collection.find().fetch()
-
-    console.log(data)
 
     return {
       data,
