@@ -24,6 +24,7 @@ export const ComponentsPage = () => {
   const [selectedStyle, setSelectedStyle] = useState()
   const [selectedSelectorValue, setSelectedSelectorValue] = useState()
   const [css, setCss] = useState('')
+  const [createComponentMode, setCreateComponentMode] = useState()
 
   const {components} = useTracker(() => {
     if (!state.selectedAppId) return {}
@@ -99,13 +100,13 @@ export const ComponentsPage = () => {
           <button
             type="button"
             className="w-6 h-6 border rounded-sm hover:bg-gray-100"
-            // onClick={() => setCreateComponentMode((prev) => !prev)}
+            onClick={() => setCreateComponentMode((prev) => !prev)}
           >
             <FontAwesomeIcon icon={faPlus} className="p-0" />
           </button>
         </div>
       </div>
-      <NewComponent />
+      {createComponentMode && <NewComponent />}
       <div className="border-b mb-2">
         {components?.map((comp) => (
           <div
