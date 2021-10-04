@@ -1,8 +1,8 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {BrowserRouter as Router, Redirect, Switch, Route, useLocation} from 'react-router-dom'
 import {authenticatedRoutes, publicRoutes, RoutePaths} from './routes'
-import {AuthenticatedLayout} from '../layouts/AuthenticatedLayout'
-import {useAppContext} from './AuthContext'
+import {Meteor} from 'meteor/meteor'
+import {useTracker} from 'meteor/react-meteor-data'
 
 const AuthtenticatedRoute = ({children, authenticated, ...props}) => {
   return (
@@ -27,8 +27,8 @@ const AuthtenticatedRoute = ({children, authenticated, ...props}) => {
 }
 
 export const SwitchRoutes = () => {
-  const {state} = useAppContext()
-  const isAuthenticated = state?.user !== null
+  const user = useTracker(() => Meteor.user())
+  const isAuthenticated = user !== null
   const location = useLocation()
 
   return (
@@ -38,12 +38,10 @@ export const SwitchRoutes = () => {
       ))}
       {authenticatedRoutes.map((route, i) => (
         <AuthtenticatedRoute key={i} path={route.path} exact={route.exact} authenticated={isAuthenticated}>
-          <AuthenticatedLayout user={state?.user}>
-            <route.component />
-          </AuthenticatedLayout>
+          <route.component />
         </AuthtenticatedRoute>
       ))}
-      <Redirect to={{pathname: isAuthenticated ? RoutePaths.HOME : RoutePaths.LOGIN, state: {from: location}}} />
+      <Redirect to={{pathname: isAuthenticated ? RoutePaths.STRUCTURE : RoutePaths.LOGIN, state: {from: location}}} />
     </Switch>
   )
 }

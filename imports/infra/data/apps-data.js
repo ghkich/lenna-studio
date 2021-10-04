@@ -1,12 +1,12 @@
-export const INITIAL_APPS_DATA = [
+import {APP_CATEGORIES} from '../constants/app-categories'
+
+export const APPS_SEED = [
   {
-    name: 'My first app',
-    pages: [
-      {
-        name: 'Login',
-        path: '/login',
-        elementId: '',
-      },
-    ],
+    name: 'My admin app',
+    category: APP_CATEGORIES.ADMIN,
+  },
+  {
+    name: 'My store',
+    category: APP_CATEGORIES.ECOMMERCE,
   },
 ]

@@ -1,29 +1,29 @@
 import React from 'react'
-import {Home} from '../pages/home/Home'
-import {Login} from '../pages/login/Login'
-import {Components} from '../pages/components/Components'
+import {StructurePage} from '../pages/structure/StructurePage'
+import {LoginPage} from '../pages/login/LoginPage'
+import {ComponentsPage} from '../pages/components/ComponentsPage'
 
 export const RoutePaths = {
   LOGIN: '/login',
-  HOME: '/',
+  STRUCTURE: '/',
   COMPONENTS: '/components',
 }
 
 export const publicRoutes = [
   {
     path: RoutePaths.LOGIN,
-    component: Login,
+    component: LoginPage,
   },
 ]
 
 export const authenticatedRoutes = [
   {
     exact: true,
-    path: RoutePaths.HOME,
-    component: Home,
+    path: RoutePaths.STRUCTURE,
+    component: StructurePage,
   },
   {
     path: RoutePaths.COMPONENTS,
-    component: Components,
+    component: ComponentsPage,
   },
 ]
