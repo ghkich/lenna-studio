@@ -8,14 +8,13 @@ const METHOD_STATUSES = {
   ERROR: 'error',
 }
 
-export const useMethod = (
-  methodName,
-  options = {
+export const useMethod = (methodName, opt) => {
+  const options = {
     manual: true,
     withParams: {},
     onSuccess: () => {},
-  },
-) => {
+    ...opt,
+  }
   const [data, setData] = useState()
   const [status, setStatus] = useState(METHOD_STATUSES.IDLE)
 
@@ -23,18 +22,19 @@ export const useMethod = (
     setStatus(METHOD_STATUSES.LOADING)
     new Promise((resolve, reject) => {
       Meteor.call(methodName, ...args, (error, result) => {
-        if (error) {
-          setStatus(METHOD_STATUSES.ERROR)
-          reject(error)
-        } else {
-          setData(result)
-          setStatus(METHOD_STATUSES.SUCCESS)
-          resolve(result)
-        }
+        if (error) reject(error)
+        else resolve(result)
       })
-    }).then((result) => {
-      options.onSuccess(result)
     })
+      .then((result) => {
+        setData(result)
+        setStatus(METHOD_STATUSES.SUCCESS)
+        options.onSuccess(result)
+      })
+      .catch((error) => {
+        console.log(error)
+        setStatus(METHOD_STATUSES.ERROR)
+      })
   }
 
   useEffect(() => {
