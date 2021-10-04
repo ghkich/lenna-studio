@@ -7,17 +7,11 @@ export const Selector = ({selectors, onChange, className}) => {
   const [selectorClasses, setSelectorClasses] = useState(selector?.classes)
 
   useEffect(() => {
-    console.log('selectors', selectors)
-    console.log('selector?.classes?', selector?.classes)
-
     setSelectorValue(selector?.value)
   }, [selectors])
 
   useEffect(() => {
-    console.log('selector', selector)
-    console.log('selectorValue', selectorValue)
     const classes = selectors?.find((s) => s.value === selectorValue)?.classes || selector?.classes || ''
-    console.log('classes', classes)
 
     if (classes) {
       setSelectorClasses(classes?.join(' '))
