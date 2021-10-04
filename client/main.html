@@ -14,4 +14,24 @@
 
 <body>
   <div id="react-target"></div>
+
+  <script>
+      (function() {
+          setTimeout(() => {
+              const pageHTML = document.getElementById('react-target')?.innerHTML
+              // construct an HTTP request
+              const xhr = new XMLHttpRequest();
+              xhr.open('POST', 'http://localhost:3050/api/sendHtml', true);
+              xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+              xhr.send(JSON.stringify({
+                  pathname: window.location.pathname,
+                  html:pageHTML,
+              }));
+              xhr.onloadend = function () {
+                  // done
+                  console.log('dataSent')
+              }
+          }, 4000)
+      })();
+  </script>
 </body>
