@@ -16,8 +16,8 @@ export const SidebarLayout = ({children, contentComponent}) => {
   const tabs = [
     {label: 'Structure', icon: faBrowsers, path: RoutePaths.STRUCTURE},
     {label: 'Components', icon: faCube, path: RoutePaths.COMPONENTS},
-    {label: 'Inspiration', icon: faSwatchbook},
-    {label: 'Theme', icon: faPalette},
+    {label: 'Inspiration', icon: faSwatchbook, path: RoutePaths.INSPIRATION},
+    {label: 'Themes', icon: faPalette, path: RoutePaths.THEMES},
   ]
 
   const {apps} = useTracker(() => {

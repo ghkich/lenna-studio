@@ -1,12 +1,16 @@
 import React from 'react'
-import {StructurePage} from '../pages/structure/StructurePage'
 import {LoginPage} from '../pages/login/LoginPage'
+import {StructurePage} from '../pages/structure/StructurePage'
 import {ComponentsPage} from '../pages/components/ComponentsPage'
+import {InspirationPage} from '../pages/inspiration/InspirationPage'
+import {ThemesPage} from '../pages/themes/ThemesPage'
 
 export const RoutePaths = {
   LOGIN: '/login',
   STRUCTURE: '/',
   COMPONENTS: '/components',
+  INSPIRATION: '/inspiration',
+  THEMES: '/themes',
 }
 
 export const publicRoutes = [
@@ -25,5 +29,13 @@ export const authenticatedRoutes = [
   {
     path: RoutePaths.COMPONENTS,
     component: ComponentsPage,
+  },
+  {
+    path: RoutePaths.INSPIRATION,
+    component: InspirationPage,
+  },
+  {
+    path: RoutePaths.THEMES,
+    component: ThemesPage,
   },
 ]
