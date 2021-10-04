@@ -1,23 +1,29 @@
+import {COMPONENT_CATEGORIES} from '../constants/component-categories'
+import {LENNA_ATTR_KEYS} from '../constants/lenna-attr-keys'
+
 const stringToArray = (string) => string.split(' ')
 
-export const ComponentCategories = {
-  LAYOUTS: 'Layouts',
-  CONTROLS: 'Controls',
-  FORM: 'Form',
-}
-
-export const INITIAL_COMPONENTS_DATA = [
+export const COMPONENTS_SEED = [
   {
-    tag: 'div',
     name: 'LoginLayout',
-    category: ComponentCategories.LAYOUTS,
-    children: [
+    category: COMPONENT_CATEGORIES.LAYOUTS,
+    childNodes: [
       {
-        tag: 'div',
-        classes: ['content'],
-        children: [
+        tagName: 'div',
+        attrs: {
+          [LENNA_ATTR_KEYS.COMPONENT]: 'LoginLayout',
+        },
+        childNodes: [
           {
-            tag: 'form',
+            tagName: 'div',
+            attrs: {
+              class: 'content',
+            },
+            childNodes: [
+              {
+                tagName: 'form',
+              },
+            ],
           },
         ],
       },
@@ -38,12 +44,14 @@ export const INITIAL_COMPONENTS_DATA = [
     ],
   },
   {
-    tag: 'button',
     name: 'CustomButton',
-    category: ComponentCategories.CONTROLS,
-    children: [
+    category: COMPONENT_CATEGORIES.CONTROLS,
+    childNodes: [
       {
-        text: 'Button label',
+        tagName: 'button',
+        attrs: {
+          [LENNA_ATTR_KEYS.COMPONENT]: 'CustomButton',
+        },
       },
     ],
     selectors: [
@@ -52,46 +60,55 @@ export const INITIAL_COMPONENTS_DATA = [
         classes: stringToArray('py-2 px-5 bg-gray text-gray-500'),
       },
     ],
-    variants: {
-      styles: [
-        {
-          value: 'primary',
-          selectors: [
-            {
-              value: '',
-              classes: stringToArray('bg-primary text-white'),
-            },
-          ],
-        },
-        {
-          value: 'secondary',
-          selectors: [
-            {
-              value: '',
-              classes: stringToArray('bg-secondary text-white'),
-            },
-          ],
-        },
-      ],
-    },
-  },
-  {
-    tag: 'div',
-    name: 'AuthenticatedLayout',
-    category: ComponentCategories.LAYOUTS,
-    children: [
+    styles: [
       {
-        tag: 'div',
-        classes: ['toolbar'],
-        children: [
+        value: 'primary',
+        selectors: [
           {
-            tag: 'a',
+            value: '',
+            classes: stringToArray('bg-primary text-white'),
           },
         ],
       },
       {
-        tag: 'div',
-        classes: ['content'],
+        value: 'secondary',
+        selectors: [
+          {
+            value: '',
+            classes: stringToArray('bg-secondary text-white'),
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'AuthenticatedLayout',
+    category: COMPONENT_CATEGORIES.LAYOUTS,
+    childNodes: [
+      {
+        tagName: 'div',
+        attrs: {
+          [LENNA_ATTR_KEYS.COMPONENT]: 'AuthenticatedLayout',
+        },
+        childNodes: [
+          {
+            tagName: 'div',
+            attrs: {
+              class: 'toolbar',
+            },
+            childNodes: [
+              {
+                tagName: 'a',
+              },
+            ],
+          },
+          {
+            tagName: 'div',
+            attrs: {
+              class: 'content',
+            },
+          },
+        ],
       },
     ],
     selectors: [
@@ -114,19 +131,28 @@ export const INITIAL_COMPONENTS_DATA = [
     ],
   },
   {
-    tag: 'div',
     name: 'CustomSelect',
-    category: ComponentCategories.FORM,
-    children: [
+    category: COMPONENT_CATEGORIES.FORM,
+    childNodes: [
       {
-        tag: 'div',
-      },
-      {
-        tag: 'div',
-        classes: ['dropdown'],
-        children: [
+        tagName: 'div',
+        attrs: {
+          [LENNA_ATTR_KEYS.COMPONENT]: 'CustomSelect',
+        },
+        childNodes: [
           {
-            tag: 'div',
+            tagName: 'div',
+          },
+          {
+            tagName: 'div',
+            attrs: {
+              class: 'dropdown',
+            },
+            childNodes: [
+              {
+                tagName: 'div',
+              },
+            ],
           },
         ],
       },
@@ -149,39 +175,37 @@ export const INITIAL_COMPONENTS_DATA = [
         classes: stringToArray('py-1 px-5 hover:bg-gray-100'),
       },
     ],
-    variants: {
-      states: [
-        {
-          value: 'closed',
-          selectors: [
-            {
-              value: '> div:first-child',
-              classes: stringToArray('border-gray text-gray-500'),
-            },
-            {
-              value: '> div.dropdown',
-              classes: stringToArray('hidden'),
-            },
-          ],
-        },
-        {
-          value: 'opened',
-          selectors: [
-            {
-              value: '',
-              classes: stringToArray('border border-blue-500'),
-            },
-            {
-              value: '> div:first-child',
-              classes: stringToArray('border-blue-500 text-blue-500'),
-            },
-            {
-              value: '> div.dropdown',
-              classes: stringToArray('border-blue-500 block'),
-            },
-          ],
-        },
-      ],
-    },
+    states: [
+      {
+        value: 'closed',
+        selectors: [
+          {
+            value: '> div:first-child',
+            classes: stringToArray('border-gray text-gray-500'),
+          },
+          {
+            value: '> div.dropdown',
+            classes: stringToArray('hidden'),
+          },
+        ],
+      },
+      {
+        value: 'opened',
+        selectors: [
+          {
+            value: '',
+            classes: stringToArray('border border-blue-500'),
+          },
+          {
+            value: '> div:first-child',
+            classes: stringToArray('border-blue-500 text-blue-500'),
+          },
+          {
+            value: '> div.dropdown',
+            classes: stringToArray('border-blue-500 block'),
+          },
+        ],
+      },
+    ],
   },
 ]

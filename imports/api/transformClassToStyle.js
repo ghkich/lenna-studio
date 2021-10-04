@@ -1,6 +1,10 @@
-export const transformClassToStyle = (className, theme) => {
-  if (!theme) return ''
-
+export const transformClassToStyle = (className) => {
+  const theme = {
+    colors: {
+      primary: '#333333',
+      secondary: '#ff0000',
+    },
+  }
   const obj = {
     hidden: `display: none;`,
     block: `display: block;`,

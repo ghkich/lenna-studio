@@ -1,33 +1,67 @@
-export const INITIAL_PAGE_DATA = [
+import {LENNA_ATTR_KEYS} from '../constants/lenna-attr-keys'
+
+export const PAGES_SEED = [
   {
     name: 'Login',
     path: '/login',
-    children: [
+    childNodes: [
       {
-        name: 'LoginLayout',
+        tagName: 'div',
+        attrs: {
+          [LENNA_ATTR_KEYS.COMPONENT]: 'LoginLayout',
+        },
       },
     ],
   },
   {
     name: 'Home',
     path: '/',
-    children: [
+    childNodes: [
       {
-        name: 'AuthenticatedLayout',
-        children: [
+        tagName: 'div',
+        attrs: {
+          [LENNA_ATTR_KEYS.COMPONENT]: 'AuthenticatedLayout',
+        },
+        childNodes: [
           {
-            tag: 'div',
-            classes: ['toolbar'],
-            children: [{tag: 'a'}],
+            tagName: 'div',
+            attrs: {
+              class: 'toolbar',
+            },
+            childNodes: [{tagName: 'a'}],
           },
           {
-            tag: 'div',
-            classes: ['content'],
-            children: [
-              {tag: 'div', name: 'CustomSelect'},
-              {tag: 'div', classes: ['spacer', 'mb-5']},
-              {tag: 'button', name: 'CustomButton', style: 'primary'},
-              {tag: 'button', name: 'CustomButton', style: 'secondary'},
+            tagName: 'div',
+            attrs: {
+              class: 'content',
+            },
+            childNodes: [
+              {
+                tagName: 'div',
+                attrs: {
+                  [LENNA_ATTR_KEYS.COMPONENT]: 'CustomSelect',
+                },
+              },
+              {
+                tagName: 'div',
+                attrs: {
+                  class: 'spacer mb-5',
+                },
+              },
+              {
+                tagName: 'button',
+                attrs: {
+                  [LENNA_ATTR_KEYS.COMPONENT]: 'CustomButton',
+                  [LENNA_ATTR_KEYS.STYLE]: 'primary',
+                },
+              },
+              {
+                tagName: 'button',
+                attrs: {
+                  [LENNA_ATTR_KEYS.COMPONENT]: 'CustomButton',
+                  [LENNA_ATTR_KEYS.STYLE]: 'secondary',
+                },
+              },
             ],
           },
         ],
