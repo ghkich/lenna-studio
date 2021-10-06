@@ -1,7 +1,6 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useMethod} from '../../../../infra/hooks/useMethod'
 import {useAppContext} from '../../../app/AuthContext'
-import {debounce} from '../../../utils/debounce'
 
 export const ClassesInput = ({componentId, selectorId, selectorValue, classes, style, state, disabled}) => {
   const [value, setValue] = useState()
@@ -28,8 +27,6 @@ export const ClassesInput = ({componentId, selectorId, selectorValue, classes, s
     updateOrCreateBaseClasses.call({appId, componentId, selectorId, selectorValue, classes})
   }
 
-  const debouncedHandleUpdateClasses = useCallback(debounce(handleUpdateClasses, 300), [])
-
   return (
     <div>
       <textarea
@@ -37,7 +34,11 @@ export const ClassesInput = ({componentId, selectorId, selectorValue, classes, s
         onBlur={(e) => handleUpdateClasses(e.target.value.split(' '))}
         onChange={(e) => {
           setValue(e.target.value)
-          debouncedHandleUpdateClasses(e.target.value.split(' '))
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && (e.metaKey || e.altKey)) {
+            handleUpdateClasses(value?.split(' '))
+          }
         }}
         className="w-full p-2 border"
         spellCheck={false}
