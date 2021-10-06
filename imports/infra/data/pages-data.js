@@ -1,4 +1,4 @@
-import {LENNA_ATTR_KEYS} from '../constants/lenna-attr-keys'
+import {CUSTOM_DATA_KEY} from '../constants/lenna-attr-keys'
 
 export const PAGES_SEED = [
   {
@@ -8,59 +8,123 @@ export const PAGES_SEED = [
       {
         tagName: 'div',
         attrs: {
-          [LENNA_ATTR_KEYS.COMPONENT]: 'LoginLayout',
+          [CUSTOM_DATA_KEY]: 'LoginLayout',
         },
+        childNodes: [
+          {
+            tagName: 'form',
+            childNodes: [
+              {
+                tagName: 'input',
+                attrs: {
+                  type: 'text',
+                  placeholder: 'E-mail',
+                },
+              },
+              {
+                tagName: 'input',
+                attrs: {
+                  type: 'password',
+                  placeholder: 'Password',
+                },
+              },
+              {
+                tagName: 'button',
+                attrs: {
+                  type: 'button',
+                  [CUSTOM_DATA_KEY]: 'Button-primary',
+                },
+                childNodes: [{text: 'Login'}],
+              },
+              {
+                tagName: 'button',
+                attrs: {
+                  type: 'button',
+                  [CUSTOM_DATA_KEY]: 'LinkButton-primary',
+                },
+                childNodes: [{text: 'Forgot my password'}],
+              },
+            ],
+          },
+        ],
       },
     ],
   },
   {
-    name: 'Home',
+    name: 'Dashboard',
     path: '/',
     childNodes: [
       {
         tagName: 'div',
         attrs: {
-          [LENNA_ATTR_KEYS.COMPONENT]: 'AuthenticatedLayout',
+          [CUSTOM_DATA_KEY]: 'AuthenticatedLayout',
         },
         childNodes: [
           {
             tagName: 'div',
-            attrs: {
-              class: 'toolbar',
-            },
-            childNodes: [{tagName: 'a'}],
+            childNodes: [
+              {
+                tagName: 'img',
+                src: 'https://preview.keenthemes.com/metronic8/demo4/assets/media/logos/logo-demo4.svg',
+              },
+              {
+                tagName: 'nav',
+                childNodes: [
+                  {
+                    tagName: 'a',
+                    childNodes: [
+                      {
+                        text: 'Dashboard',
+                      },
+                    ],
+                  },
+                  {
+                    tagName: 'a',
+                    childNodes: [
+                      {
+                        text: 'Account',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
           },
           {
             tagName: 'div',
-            attrs: {
-              class: 'content',
-            },
             childNodes: [
               {
                 tagName: 'div',
                 attrs: {
-                  [LENNA_ATTR_KEYS.COMPONENT]: 'CustomSelect',
+                  class: 'toolbar',
                 },
+                childNodes: [
+                  {
+                    text: 'Dashboard',
+                  },
+                  {
+                    tagName: 'div',
+                    attrs: {
+                      [CUSTOM_DATA_KEY]: 'SearchBar',
+                    },
+                    childNodes: [
+                      {
+                        tagName: 'input',
+                        attrs: {
+                          type: 'text',
+                          placeholder: 'Search...',
+                        },
+                      },
+                    ],
+                  },
+                ],
               },
               {
                 tagName: 'div',
                 attrs: {
-                  class: 'spacer mb-5',
+                  class: 'content',
                 },
-              },
-              {
-                tagName: 'button',
-                attrs: {
-                  [LENNA_ATTR_KEYS.COMPONENT]: 'CustomButton',
-                  [LENNA_ATTR_KEYS.STYLE]: 'primary',
-                },
-              },
-              {
-                tagName: 'button',
-                attrs: {
-                  [LENNA_ATTR_KEYS.COMPONENT]: 'CustomButton',
-                  [LENNA_ATTR_KEYS.STYLE]: 'secondary',
-                },
+                childNodes: [{text: 'Welcome to dashboard :)'}],
               },
             ],
           },
