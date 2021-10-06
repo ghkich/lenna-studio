@@ -14,7 +14,6 @@ import {ClassesInput} from './components/ClassesInput'
 import {NewComponent} from './components/NewComponent'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus} from '@fortawesome/pro-solid-svg-icons'
-import {LENNA_ATTR_KEYS} from '../../../infra/constants/lenna-attr-keys'
 
 export const ComponentsPage = () => {
   const {state} = useAppContext()
@@ -53,24 +52,27 @@ export const ComponentsPage = () => {
   const selectedComponent = components?.find((component) => component._id === selectedComponentId)
 
   const {selectors} = useTracker(() => {
-    if (!selectedComponentId) return {}
-    const sub = Meteor.subscribe('selectors.byComponentId', {componentId: selectedComponentId})
-    const selectors = SelectorsCollection.find().fetch()
+    if (!state.selectedAppId) return {}
+    const sub = Meteor.subscribe('selectors.byAppId', {appId: state.selectedAppId})
+    const appSelectors = SelectorsCollection.find().fetch()
 
-    const css = generateCss({selectors})
+    const css = generateCss({selectors: appSelectors})
     setCss(css)
+
+    const selectors = SelectorsCollection.find({componentId: selectedComponentId}).fetch()
 
     return {
       selectors,
       status: sub.ready() ? 'ready' : 'loading',
     }
-  }, [selectedComponentId])
+  }, [state.selectedAppId, selectedComponentId])
 
   const selectedSelector = selectors?.find((selector) => selector.value === selectedSelectorValue)
 
   useEffect(() => {
     setSelectedState(selectedComponent?.states?.[0])
     setSelectedStyle(selectedComponent?.styles?.[0])
+    console.log(selectedComponent)
   }, [selectedComponent])
 
   return (
@@ -79,7 +81,12 @@ export const ComponentsPage = () => {
         <>
           <style>{css}</style>
           <div className="">
-            <ElementsPreview elements={elements} />
+            <ElementsPreview
+              elements={elements}
+              selectedComponentId={selectedComponent?._id}
+              selectedStyle={selectedStyle}
+              selectedState={selectedState}
+            />
           </div>
         </>
       }
@@ -122,9 +129,6 @@ export const ComponentsPage = () => {
       </div>
       {selectedComponent?._id && (
         <>
-          <div className="text-2xs border px-1 border-b-0 bg-gray-50">
-            [{LENNA_ATTR_KEYS.COMPONENT}="{selectedComponent.name}"]
-          </div>
           <input
             placeholder="Selector"
             value={selectedSelectorValue}

@@ -4,7 +4,7 @@ import {faBorderAll, faBorderCenterH, faBorderCenterV} from '@fortawesome/pro-li
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {COMPONENT_CATEGORIES} from '../../../../infra/constants/component-categories'
 import {useAppContext} from '../../../app/AuthContext'
-import {LENNA_ATTR_KEYS} from '../../../../infra/constants/lenna-attr-keys'
+import {CUSTOM_DATA_KEY} from '../../../../infra/constants/lenna-attr-keys'
 
 export const NewComponent = () => {
   const [tagName, setTagName] = useState('')
@@ -22,7 +22,7 @@ export const NewComponent = () => {
           componentId,
           tagName,
           attrs: {
-            [LENNA_ATTR_KEYS.COMPONENT]: componentName,
+            [CUSTOM_DATA_KEY]: componentName,
           },
         })
       }

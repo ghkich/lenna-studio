@@ -3,3 +3,5 @@ export const LENNA_ATTR_KEYS = {
   STYLE: 'data-style',
   STATE: 'data-state',
 }
+
+export const CUSTOM_DATA_KEY = 'data-ls'

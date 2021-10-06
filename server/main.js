@@ -13,12 +13,14 @@ import {STRUCTURE_TYPES} from '../imports/infra/constants/structure-types'
 
 // PUBLICATIONS
 import '../imports/api/apps/publications/by-user-id'
+import '../imports/api/apps/publications/by-category'
 import '../imports/api/pages/publications/by-app-id'
 import '../imports/api/components/publications/by-id'
 import '../imports/api/components/publications/by-app-id'
 import '../imports/api/elements/publications/by-component-id'
 import '../imports/api/elements/publications/by-page-id'
 import '../imports/api/selectors/publications/by-component-id'
+import '../imports/api/selectors/publications/by-app-id'
 
 // METHODS
 import '../imports/api/pages/methods'
@@ -56,7 +58,8 @@ Meteor.startup(() => {
   const createOrUpdateSelectors = ({appId, componentId, selectors, style, state}) => {
     if (!appId || !selectors || !componentId) return
     selectors.forEach(({value, classes}) => {
-      const selector = SelectorsCollection.findOne({componentId, value}) || {}
+      const selectorValue = value || undefined
+      const selector = SelectorsCollection.findOne({appId, componentId, value: selectorValue}) || {}
       if (selector?._id) {
         if (style) {
           SelectorsCollection.update(
@@ -119,7 +122,7 @@ Meteor.startup(() => {
     const themes = ThemesCollection.find().fetch()
     const themeId = index < themes.length - 1 ? themes[index]?._id : themes[0]?._id
     const appId = AppsCollection.insert({
-      userId,
+      ...(app.addForUser ? {userId} : {}),
       themeId,
       ...app,
     })

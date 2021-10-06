@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {faCaretRight, faCaretDown} from '@fortawesome/pro-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {LENNA_ATTR_KEYS} from '../../infra/constants/lenna-attr-keys'
+import {CUSTOM_DATA_KEY} from '../../infra/constants/lenna-attr-keys'
 
 const Element = ({element, level, renderChildren, onClick}) => {
   const [open, setOpen] = useState(true)
@@ -21,11 +21,11 @@ const Element = ({element, level, renderChildren, onClick}) => {
           }}
         >
           <FontAwesomeIcon icon={open ? faCaretRight : faCaretDown} className="text-2xs" />{' '}
-          {element?.attrs?.[LENNA_ATTR_KEYS.COMPONENT] || element?.tagName}
+          {element?.attrs?.[CUSTOM_DATA_KEY] || element?.tagName}
         </div>
       ) : (
         <div className={className} style={style} onClick={() => onClick(element)}>
-          {element?.attrs?.[LENNA_ATTR_KEYS.COMPONENT] || element?.tagName}
+          {element?.attrs?.[CUSTOM_DATA_KEY] || element?.tagName}
         </div>
       )}
       {open && <>{renderChildren(element.childrenIds, level)}</>}

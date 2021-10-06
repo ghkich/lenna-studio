@@ -1,5 +1,5 @@
 import {COMPONENT_CATEGORIES} from '../constants/component-categories'
-import {LENNA_ATTR_KEYS} from '../constants/lenna-attr-keys'
+import {CUSTOM_DATA_KEY} from '../constants/lenna-attr-keys'
 
 const stringToArray = (string) => string.split(' ')
 
@@ -11,17 +11,39 @@ export const COMPONENTS_SEED = [
       {
         tagName: 'div',
         attrs: {
-          [LENNA_ATTR_KEYS.COMPONENT]: 'LoginLayout',
+          [CUSTOM_DATA_KEY]: 'LoginLayout',
         },
         childNodes: [
           {
-            tagName: 'div',
-            attrs: {
-              class: 'content',
-            },
+            tagName: 'form',
             childNodes: [
               {
-                tagName: 'form',
+                tagName: 'input',
+                attrs: {
+                  type: 'text',
+                  placeholder: 'E-mail',
+                },
+              },
+              {
+                tagName: 'input',
+                attrs: {
+                  type: 'password',
+                  placeholder: 'Password',
+                },
+              },
+              {
+                tagName: 'button',
+                attrs: {
+                  [CUSTOM_DATA_KEY]: 'Button-primary',
+                },
+                childNodes: [{text: 'Login'}],
+              },
+              {
+                tagName: 'button',
+                attrs: {
+                  [CUSTOM_DATA_KEY]: 'LinkButton-primary',
+                },
+                childNodes: [{text: 'Forgot my password'}],
               },
             ],
           },
@@ -31,27 +53,133 @@ export const COMPONENTS_SEED = [
     selectors: [
       {
         value: '',
-        classes: stringToArray('bg-primary'),
+        classes: stringToArray('bg-primary flex flex-col justify-center items-center h-screen'),
       },
       {
-        value: '> .content',
-        classes: stringToArray('flex flex-col justify-center items-center h-screen'),
-      },
-      {
-        value: '> .content > form',
+        value: '> form',
         classes: stringToArray('flex flex-col p-5 w-80 bg-white rounded shadow-xl'),
+      },
+      {
+        value: '> form > input',
+        classes: stringToArray('bg-white p-2 border'),
       },
     ],
   },
   {
-    name: 'CustomButton',
+    name: 'AuthenticatedLayout',
+    category: COMPONENT_CATEGORIES.LAYOUTS,
+    childNodes: [
+      {
+        tagName: 'div',
+        attrs: {
+          [CUSTOM_DATA_KEY]: 'AuthenticatedLayout',
+        },
+        childNodes: [
+          {
+            tagName: 'div',
+            childNodes: [
+              {
+                tagName: 'img',
+                src: 'https://preview.keenthemes.com/metronic8/demo4/assets/media/logos/logo-demo4.svg',
+              },
+              {
+                tagName: 'nav',
+                childNodes: [
+                  {
+                    tagName: 'a',
+                    childNodes: [
+                      {
+                        text: 'Dashboard',
+                      },
+                    ],
+                  },
+                  {
+                    tagName: 'a',
+                    childNodes: [
+                      {
+                        text: 'Account',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            tagName: 'div',
+            childNodes: [
+              {
+                tagName: 'div',
+                attrs: {
+                  class: 'toolbar',
+                },
+                childNodes: [
+                  {
+                    text: 'Dashboard',
+                  },
+                  {
+                    tagName: 'div',
+                    attrs: {
+                      [CUSTOM_DATA_KEY]: 'SearchBar',
+                    },
+                    childNodes: [
+                      {
+                        tagName: 'input',
+                        attrs: {
+                          type: 'text',
+                          placeholder: 'Search...',
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                tagName: 'div',
+                attrs: {
+                  class: 'content',
+                },
+                childNodes: [{text: 'Welcome to dashboard :)'}],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    selectors: [
+      {
+        value: '',
+        classes: stringToArray('h-screen bg-primary flex'),
+      },
+      {
+        value: '> div:first-child',
+        classes: stringToArray('w-20 bg-primary text-white p-4'),
+      },
+      {
+        value: '> div:last-child',
+        classes: stringToArray('flex-1'),
+      },
+      {
+        value: '> div.toolbar',
+        classes: stringToArray('flex items-center justify-end w-full h-10 px-2 bg-primary text-white shadow-lg'),
+      },
+      {
+        value: '> div.content',
+        classes: stringToArray('flex flex-col p-5'),
+      },
+    ],
+  },
+  {
+    name: 'Button',
     category: COMPONENT_CATEGORIES.CONTROLS,
     childNodes: [
       {
         tagName: 'button',
         attrs: {
-          [LENNA_ATTR_KEYS.COMPONENT]: 'CustomButton',
+          type: 'button',
+          [CUSTOM_DATA_KEY]: 'Button',
         },
+        childNodes: [{text: 'Button'}],
       },
     ],
     selectors: [
@@ -82,127 +210,40 @@ export const COMPONENTS_SEED = [
     ],
   },
   {
-    name: 'AuthenticatedLayout',
-    category: COMPONENT_CATEGORIES.LAYOUTS,
+    name: 'LinkButton',
+    category: COMPONENT_CATEGORIES.CONTROLS,
     childNodes: [
       {
-        tagName: 'div',
+        tagName: 'button',
         attrs: {
-          [LENNA_ATTR_KEYS.COMPONENT]: 'AuthenticatedLayout',
+          type: 'button',
+          [CUSTOM_DATA_KEY]: 'LinkButton',
         },
-        childNodes: [
-          {
-            tagName: 'div',
-            attrs: {
-              class: 'toolbar',
-            },
-            childNodes: [
-              {
-                tagName: 'a',
-              },
-            ],
-          },
-          {
-            tagName: 'div',
-            attrs: {
-              class: 'content',
-            },
-          },
-        ],
+        childNodes: [{text: 'Link Button'}],
       },
     ],
     selectors: [
       {
         value: '',
-        classes: stringToArray('h-screen bg-primary'),
-      },
-      {
-        value: '> div.toolbar',
-        classes: stringToArray('flex items-center justify-end w-full h-10 px-2 bg-primary text-white shadow-lg'),
-      },
-      {
-        value: '> div.toolbar > a',
-        classes: stringToArray('text-xs pl-2'),
-      },
-      {
-        value: '> div.content',
-        classes: stringToArray('flex flex-col p-5'),
+        classes: stringToArray('py-2 px-5 bg-transparent text-gray-500'),
       },
     ],
-  },
-  {
-    name: 'CustomSelect',
-    category: COMPONENT_CATEGORIES.FORM,
-    childNodes: [
+    styles: [
       {
-        tagName: 'div',
-        attrs: {
-          [LENNA_ATTR_KEYS.COMPONENT]: 'CustomSelect',
-        },
-        childNodes: [
-          {
-            tagName: 'div',
-          },
-          {
-            tagName: 'div',
-            attrs: {
-              class: 'dropdown',
-            },
-            childNodes: [
-              {
-                tagName: 'div',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-    selectors: [
-      {
-        value: '',
-        classes: stringToArray('flex flex-col w-64 bg-white text-sm shadow-lg cursor-pointer'),
-      },
-      {
-        value: '> div:first-child',
-        classes: stringToArray('py-2 px-5 border rounded'),
-      },
-      {
-        value: '> div.dropdown',
-        classes: stringToArray('border border-t-0'),
-      },
-      {
-        value: '> div.dropdown > div',
-        classes: stringToArray('py-1 px-5 hover:bg-gray-100'),
-      },
-    ],
-    states: [
-      {
-        value: 'closed',
-        selectors: [
-          {
-            value: '> div:first-child',
-            classes: stringToArray('border-gray text-gray-500'),
-          },
-          {
-            value: '> div.dropdown',
-            classes: stringToArray('hidden'),
-          },
-        ],
-      },
-      {
-        value: 'opened',
+        value: 'primary',
         selectors: [
           {
             value: '',
-            classes: stringToArray('border border-blue-500'),
+            classes: stringToArray('text-primary'),
           },
+        ],
+      },
+      {
+        value: 'secondary',
+        selectors: [
           {
-            value: '> div:first-child',
-            classes: stringToArray('border-blue-500 text-blue-500'),
-          },
-          {
-            value: '> div.dropdown',
-            classes: stringToArray('border-blue-500 block'),
+            value: '',
+            classes: stringToArray('text-secondary'),
           },
         ],
       },

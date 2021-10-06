@@ -22,7 +22,7 @@ export const SidebarLayout = ({children, contentComponent}) => {
 
   const {apps} = useTracker(() => {
     const sub = Meteor.subscribe('apps.byUserId')
-    const apps = AppsCollection.find().fetch()
+    const apps = AppsCollection.find({userId: user?._id}).fetch()
 
     return {
       apps,
@@ -88,7 +88,7 @@ export const SidebarLayout = ({children, contentComponent}) => {
             </div>
           </>
         )}
-        <div className="flex-1 p-4">{children}</div>
+        <div className="flex-1 p-4 overflow-auto">{children}</div>
       </div>
     </div>
   )

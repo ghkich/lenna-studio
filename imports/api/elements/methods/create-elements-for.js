@@ -1,6 +1,6 @@
 import {ElementsCollection} from '../../../collections/elements'
 import {ComponentsCollection} from '../../../collections/components'
-import {LENNA_ATTR_KEYS} from '../../../infra/constants/lenna-attr-keys'
+import {CUSTOM_DATA_KEY} from '../../../infra/constants/lenna-attr-keys'
 
 export const NODE_TYPES = {
   ELEMENT_NODE: 1, // An Element node like <p> or <div>
@@ -12,6 +12,46 @@ export const NODE_TYPES = {
   DOCUMENT_NODE: 9, // A Document node
   DOCUMENT_TYPE_NODE: 10, // A DocumentType node, such as <!DOCTYPE html>
   DOCUMENT_FRAGMENT_NODE: 11, // A DocumentFragment node
+}
+
+export const getComponentPropsFromCustomData = (customData) => {
+  if (!customData) return {}
+
+  let name
+  let style
+  let state
+
+  const nameStartIndex = 0
+  const styleStartIndex = customData.indexOf('-')
+  const stateStartIndex = customData.indexOf(':')
+
+  let nameEndIndex = customData.length
+  let styleEndIndex = stateStartIndex - 1
+  let stateEndIndex = customData.length
+
+  if (styleEndIndex < 0) {
+    styleEndIndex = nameEndIndex
+  }
+  if (styleStartIndex >= 0) {
+    style = customData.substring(styleStartIndex + 1, styleEndIndex)
+    nameEndIndex = styleStartIndex
+  } else {
+    if (stateStartIndex >= 0) {
+      nameEndIndex = stateStartIndex
+    }
+  }
+
+  if (stateStartIndex >= 0) {
+    state = customData.substring(stateStartIndex, stateEndIndex)
+  }
+
+  name = customData.substring(nameStartIndex, nameEndIndex)
+
+  return {
+    name,
+    style,
+    state,
+  }
 }
 
 export const createElementsFor = ({appId, pageId, componentId, nodes, structureType}) => {
@@ -28,18 +68,20 @@ export const createElementsFor = ({appId, pageId, componentId, nodes, structureT
     childNodes.forEach((node) => {
       topDownIndex++
       let attrs = node.attrs
-      if (!parentId && (!node.attrs?.[LENNA_ATTR_KEYS.STYLE] || !node.attrs?.[LENNA_ATTR_KEYS.STATE])) {
+      const componentProps = getComponentPropsFromCustomData(node.attrs?.[CUSTOM_DATA_KEY])
+      if (!parentId && (!componentProps.style || !componentProps.state)) {
         const component = ComponentsCollection.findOne(componentId)
-        if (component?.styles?.length > 0 && !node.attrs?.[LENNA_ATTR_KEYS.STYLE]) {
-          attrs = {
-            ...attrs,
-            'data-style': component.styles?.[0],
+        if (component?.name) {
+          let customData = component?.name
+          if (component?.styles?.length > 0 && !componentProps.style) {
+            customData += `-${component.styles?.[0]}`
           }
-        }
-        if (component?.states?.length > 0 && !node.attrs?.[LENNA_ATTR_KEYS.STATE]) {
+          if (component?.states?.length > 0 && !componentProps.state) {
+            customData += `:${component.states?.[0]}`
+          }
           attrs = {
             ...attrs,
-            'data-state': component.states?.[0],
+            [CUSTOM_DATA_KEY]: customData,
           }
         }
       }

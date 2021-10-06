@@ -2,7 +2,9 @@ import React from 'react'
 import {SidebarLayout} from '../../layouts/SidebarLayout'
 
 export const ThemesPage = () => {
-  return <SidebarLayout>
-    <div></div>
-  </SidebarLayout>
+  return (
+    <SidebarLayout>
+      <div />
+    </SidebarLayout>
+  )
 }
