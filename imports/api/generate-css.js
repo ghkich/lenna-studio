@@ -11,6 +11,7 @@ export const generateCss = (params) => {
   let styles = ''
   selectors?.forEach((selector) => {
     const component = ComponentsCollection.findOne({_id: selector.componentId})
+    if (!component) return
     styles += `[${CUSTOM_DATA_KEY}^='${component.name}'] ${selector.value ? selector.value : ''} {`
     selector?.classes?.forEach((className) => {
       styles += transformClassToStyle(className)
