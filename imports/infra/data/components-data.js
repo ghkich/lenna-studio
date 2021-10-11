@@ -66,13 +66,13 @@ export const COMPONENTS_SEED = [
     ],
   },
   {
-    name: 'AuthenticatedLayout',
+    name: 'SidebarLayout',
     category: COMPONENT_CATEGORIES.LAYOUTS,
     childNodes: [
       {
         tagName: 'div',
         attrs: {
-          [CUSTOM_DATA_KEY]: 'AuthenticatedLayout',
+          [CUSTOM_DATA_KEY]: 'SidebarLayout',
         },
         childNodes: [
           {

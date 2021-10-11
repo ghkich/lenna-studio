@@ -37,7 +37,7 @@ export const SidebarLayout = ({children, contentComponent}) => {
   }, [apps])
 
   return (
-    <div data-component="SidebarLayout" className="flex">
+    <div data-ls="AuthenticatedLayout" className="flex">
       <div className="content flex-1">{contentComponent}</div>
       <div className="w-2 h-screen bg-gray-100 hover:bg-gray-200 hover:bg-opacity-75 cursor-pointer" />
       <div className="sidebar flex flex-col bg-white text-gray-500 text-xs w-80 h-screen border-l border-gray-200">

@@ -11,6 +11,9 @@ import {useMethod} from '../../../infra/hooks/useMethod'
 import {faArrowRightArrowLeft} from '@fortawesome/pro-duotone-svg-icons'
 import {STRUCTURE_TYPES} from '../../../infra/constants/structure-types'
 import {ElementsPreview} from '../../components/ElementsPreview'
+import {ElementsComparison} from '../../components/ElementsComparison'
+import {SelectorsCollection} from '../../../collections/selectors'
+import {generateCss} from '../../../api/generate-css'
 
 export const StructurePage = () => {
   const {state} = useAppContext()
@@ -20,6 +23,7 @@ export const StructurePage = () => {
   const [pageName, setPageName] = useState('')
   const [pagePath, setPagePath] = useState('')
   const [structureType, setStructureType] = useState()
+  const [css, setCss] = useState('')
 
   const {pages} = useTracker(() => {
     if (!state.selectedAppId) return {}
@@ -34,16 +38,30 @@ export const StructurePage = () => {
     }
   }, [state.selectedAppId, pageSearchValue])
 
-  const {elements} = useTracker(() => {
-    if (!selectedPageId || !structureType) return {}
-    const sub = Meteor.subscribe('elements.byPageId', {pageId: selectedPageId, structureType})
-    const elements = ElementsCollection.find().fetch()
+  const {elements, actualElements, expectedElements} = useTracker(() => {
+    if (!selectedPageId) return {}
+    const sub = Meteor.subscribe('elements.byPageId', {pageId: selectedPageId})
+    const elements = ElementsCollection.find(structureType ? {'structure.type': structureType} : {}).fetch()
+    const actualElements = ElementsCollection.find({'structure.type': STRUCTURE_TYPES.ACTUAL}).fetch()
+    const expectedElements = ElementsCollection.find({'structure.type': STRUCTURE_TYPES.EXPECTED}).fetch()
 
     return {
       elements,
+      actualElements,
+      expectedElements,
       status: sub.ready() ? 'ready' : 'loading',
     }
   }, [selectedPageId, structureType])
+
+  useTracker(() => {
+    if (!state.selectedAppId) return {}
+    Meteor.subscribe('selectors.byAppId', {appId: state.selectedAppId})
+    Meteor.subscribe('components.byAppId', {appId: state.selectedAppId})
+    const appSelectors = SelectorsCollection.find().fetch()
+
+    const css = generateCss({selectors: appSelectors})
+    setCss(css)
+  }, [state.selectedAppId, selectedPageId])
 
   const createPage = useMethod('pages.create', {
     onSuccess: () => {
@@ -68,7 +86,14 @@ export const StructurePage = () => {
   }
 
   return (
-    <SidebarLayout contentComponent={<ElementsPreview elements={elements} />}>
+    <SidebarLayout
+      contentComponent={
+        <>
+          <style>{css}</style>
+          <ElementsPreview elements={elements} />
+        </>
+      }
+    >
       <div className="flex">
         <div className="flex-1">
           <div className="">
@@ -157,7 +182,11 @@ export const StructurePage = () => {
           </div>
         </div>
       )}
-      <ElementsTree elements={elements} />
+      {!structureType ? (
+        <ElementsComparison actual={actualElements} expected={expectedElements} />
+      ) : (
+        <ElementsTree elements={elements} />
+      )}
     </SidebarLayout>
   )
 }

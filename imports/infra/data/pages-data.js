@@ -57,7 +57,7 @@ export const PAGES_SEED = [
       {
         tagName: 'div',
         attrs: {
-          [CUSTOM_DATA_KEY]: 'AuthenticatedLayout',
+          [CUSTOM_DATA_KEY]: 'SidebarLayout',
         },
         childNodes: [
           {
@@ -127,6 +127,9 @@ export const PAGES_SEED = [
                 childNodes: [{text: 'Welcome to dashboard :)'}],
               },
             ],
+          },
+          {
+            tagName: 'div',
           },
         ],
       },

@@ -6,7 +6,9 @@ import {CUSTOM_DATA_KEY} from '../../infra/constants/lenna-attr-keys'
 const Element = ({element, level, renderChildren, onClick}) => {
   const [open, setOpen] = useState(true)
 
-  const className = `px-2 py-0.5 border border-b-0 hover:bg-gray-50 cursor-pointer`
+  const className = `px-2 py-0.5 border border-b-0 cursor-pointer ${
+    element?.success ? 'bg-green-50' : element?.error ? 'bg-red-50' : 'hover:bg-gray-50 '
+  }`
   const style = {paddingLeft: `${level * 12 || 3}px`}
 
   return (
@@ -34,7 +36,7 @@ const Element = ({element, level, renderChildren, onClick}) => {
 }
 
 export const ElementsTree = ({elements, onElementClick}) => {
-  const containerElement = elements?.find((el) => !el.parentId)
+  const containerElement = elements?.find((el) => !el?.parentId)
   if (!containerElement) return null
   let level = 0
   const renderChildren = (childrenIds, level) => {
@@ -43,8 +45,8 @@ export const ElementsTree = ({elements, onElementClick}) => {
     return (
       <>
         {childrenIds?.map((childId) => {
-          const element = elements?.find((el) => el._id === childId)
-          if (!element.tagName) return
+          const element = elements?.find((el) => el?._id === childId)
+          if (!element?.tagName) return
           return (
             <Element
               key={element?._id}
