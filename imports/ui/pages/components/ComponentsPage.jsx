@@ -7,7 +7,6 @@ import {SidebarLayout} from '../../layouts/SidebarLayout'
 import {ElementsTree} from '../../components/ElementsTree'
 import {ElementsPreview} from '../../components/ElementsPreview'
 import {SelectorsCollection} from '../../../collections/selectors'
-import {generateCss} from '../../../api/generate-css'
 import {ManageStyles} from './components/ManageStyles'
 import {ManageStates} from './components/ManageStates'
 import {ClassesInput} from './components/ClassesInput'
@@ -22,7 +21,6 @@ export const ComponentsPage = () => {
   const [selectedState, setSelectedState] = useState()
   const [selectedStyle, setSelectedStyle] = useState()
   const [selectedSelectorValue, setSelectedSelectorValue] = useState()
-  const [css, setCss] = useState('')
   const [createComponentMode, setCreateComponentMode] = useState()
 
   const {components} = useTracker(() => {
@@ -54,11 +52,6 @@ export const ComponentsPage = () => {
   const {selectors} = useTracker(() => {
     if (!state.selectedAppId) return {}
     const sub = Meteor.subscribe('selectors.byAppId', {appId: state.selectedAppId})
-    const appSelectors = SelectorsCollection.find().fetch()
-
-    const css = generateCss({selectors: appSelectors})
-    setCss(css)
-
     const selectors = SelectorsCollection.find({componentId: selectedComponentId}).fetch()
 
     return {
@@ -78,17 +71,12 @@ export const ComponentsPage = () => {
   return (
     <SidebarLayout
       contentComponent={
-        <>
-          <style>{css}</style>
-          <div className="">
-            <ElementsPreview
-              elements={elements}
-              selectedComponentId={selectedComponent?._id}
-              selectedStyle={selectedStyle}
-              selectedState={selectedState}
-            />
-          </div>
-        </>
+        <ElementsPreview
+          elements={elements}
+          selectedComponentId={selectedComponent?._id}
+          selectedStyle={selectedStyle}
+          selectedState={selectedState}
+        />
       }
     >
       <div className="flex">

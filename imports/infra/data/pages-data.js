@@ -1,9 +1,55 @@
 import {CUSTOM_DATA_KEY} from '../constants/lenna-attr-keys'
+import {PAGE_CATEGORIES} from '../constants/page-categories'
 
 export const PAGES_SEED = [
   {
+    name: 'Home',
+    path: '/welcome',
+    category: PAGE_CATEGORIES.LANDING,
+    childNodes: [
+      {
+        tagName: 'div',
+        text: 'Home',
+      },
+    ],
+  },
+  {
+    name: 'Register',
+    path: '/register',
+    category: PAGE_CATEGORIES.REGISTER,
+    childNodes: [
+      {
+        tagName: 'form',
+        childNodes: [
+          {
+            tagName: 'input',
+            attrs: {
+              type: 'text',
+              placeholder: 'E-mail',
+            },
+          },
+          {
+            tagName: 'input',
+            attrs: {
+              type: 'password',
+              placeholder: 'Password',
+            },
+          },
+          {
+            tagName: 'input',
+            attrs: {
+              type: 'password',
+              placeholder: 'Confirm password',
+            },
+          },
+        ],
+      },
+    ],
+  },
+  {
     name: 'Login',
     path: '/login',
+    category: PAGE_CATEGORIES.LOGIN,
     childNodes: [
       {
         tagName: 'div',
@@ -53,6 +99,7 @@ export const PAGES_SEED = [
   {
     name: 'Dashboard',
     path: '/',
+    category: PAGE_CATEGORIES.DASHBOARD,
     childNodes: [
       {
         tagName: 'div',
@@ -132,6 +179,17 @@ export const PAGES_SEED = [
             tagName: 'div',
           },
         ],
+      },
+    ],
+  },
+  {
+    name: 'Account',
+    path: '/account',
+    category: PAGE_CATEGORIES.PROFILE,
+    childNodes: [
+      {
+        tagName: 'div',
+        childNodes: [{text: 'User profile'}],
       },
     ],
   },

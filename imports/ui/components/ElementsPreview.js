@@ -1,9 +1,26 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {omit} from '../utils/object-utils'
 import {CUSTOM_DATA_KEY} from '../../infra/constants/lenna-attr-keys'
 import {ComponentsCollection} from '../../collections/components'
+import {useTracker} from 'meteor/react-meteor-data'
+import {SelectorsCollection} from '../../collections/selectors'
+import {generateCss} from '../../api/generate-css'
+import {useAppContext} from '../app/AuthContext'
 
-export const ElementsPreview = ({elements, selectedComponentId, selectedStyle, selectedState}) => {
+export const ElementsPreview = ({elements, selectedPageId, selectedComponentId, selectedStyle, selectedState}) => {
+  const [css, setCss] = useState('')
+  const {state} = useAppContext()
+
+  useTracker(() => {
+    if (!state.selectedAppId) return {}
+    Meteor.subscribe('selectors.byAppId', {appId: state.selectedAppId})
+    Meteor.subscribe('components.byAppId', {appId: state.selectedAppId})
+    const appSelectors = SelectorsCollection.find().fetch()
+
+    const css = generateCss({selectors: appSelectors})
+    setCss(css)
+  }, [state.selectedAppId, selectedPageId])
+
   useEffect(() => {
     if (selectedComponentId) {
       const component = ComponentsCollection.findOne({_id: selectedComponentId})
@@ -52,5 +69,10 @@ export const ElementsPreview = ({elements, selectedComponentId, selectedStyle, s
       )
     })
   }
-  return renderChildren([containerElement._id], selectedComponentId)
+  return (
+    <>
+      <style>{css}</style>
+      {renderChildren([containerElement._id], selectedComponentId)}
+    </>
+  )
 }
