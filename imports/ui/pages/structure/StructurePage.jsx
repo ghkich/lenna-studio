@@ -6,14 +6,13 @@ import {ElementsCollection} from '../../../collections/elements'
 import {SidebarLayout} from '../../layouts/SidebarLayout'
 import {ElementsTree} from '../../components/ElementsTree'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPlus, faTrashCan} from '@fortawesome/pro-solid-svg-icons'
+import {faPlus} from '@fortawesome/pro-solid-svg-icons'
 import {useMethod} from '../../../infra/hooks/useMethod'
 import {faArrowRightArrowLeft} from '@fortawesome/pro-duotone-svg-icons'
 import {STRUCTURE_TYPES} from '../../../infra/constants/structure-types'
 import {ElementsPreview} from '../../components/ElementsPreview'
 import {ElementsComparison} from '../../components/ElementsComparison'
-import {SelectorsCollection} from '../../../collections/selectors'
-import {generateCss} from '../../../api/generate-css'
+import {PagesList} from '../../components/PagesList'
 
 export const StructurePage = () => {
   const {state} = useAppContext()
@@ -23,7 +22,6 @@ export const StructurePage = () => {
   const [pageName, setPageName] = useState('')
   const [pagePath, setPagePath] = useState('')
   const [structureType, setStructureType] = useState()
-  const [css, setCss] = useState('')
 
   const {pages} = useTracker(() => {
     if (!state.selectedAppId) return {}
@@ -53,16 +51,6 @@ export const StructurePage = () => {
     }
   }, [selectedPageId, structureType])
 
-  useTracker(() => {
-    if (!state.selectedAppId) return {}
-    Meteor.subscribe('selectors.byAppId', {appId: state.selectedAppId})
-    Meteor.subscribe('components.byAppId', {appId: state.selectedAppId})
-    const appSelectors = SelectorsCollection.find().fetch()
-
-    const css = generateCss({selectors: appSelectors})
-    setCss(css)
-  }, [state.selectedAppId, selectedPageId])
-
   const createPage = useMethod('pages.create', {
     onSuccess: () => {
       setPagePath('')
@@ -70,8 +58,6 @@ export const StructurePage = () => {
       setAddPageMode(false)
     },
   })
-
-  const removePage = useMethod('pages.remove')
 
   const handleCreatePage = () => {
     createPage.call({
@@ -81,19 +67,8 @@ export const StructurePage = () => {
     })
   }
 
-  const handleRemovePage = (pageId) => {
-    removePage.call(pageId)
-  }
-
   return (
-    <SidebarLayout
-      contentComponent={
-        <>
-          <style>{css}</style>
-          <ElementsPreview elements={elements} />
-        </>
-      }
-    >
+    <SidebarLayout contentComponent={<ElementsPreview elements={elements} selectedPageId={selectedPageId} />}>
       <div className="flex">
         <div className="flex-1">
           <div className="">
@@ -137,23 +112,12 @@ export const StructurePage = () => {
           </button>
         </div>
       )}
-      <div className="border-b">
-        {pages?.map((page) => (
-          <button
-            key={page._id}
-            type="button"
-            className={`flex border border-b-0 px-2 py-1 w-full text-left ${
-              page._id === selectedPageId ? 'bg-blue-50 text-blue-500' : ''
-            }`}
-            onClick={() => setSelectedPageId((prev) => (prev === page._id ? undefined : page._id))}
-          >
-            <div className="flex-1">{page.name}</div>
-            <div onClick={() => handleRemovePage(page._id)} className="opacity-25 hover:opacity-75">
-              <FontAwesomeIcon icon={faTrashCan} />
-            </div>
-          </button>
-        ))}
-      </div>
+      <PagesList
+        pages={pages}
+        selectedPageId={selectedPageId}
+        onSelectPage={(pageId) => setSelectedPageId(pageId)}
+        showRemove
+      />
       {selectedPageId && (
         <div className="my-2 flex">
           <div
