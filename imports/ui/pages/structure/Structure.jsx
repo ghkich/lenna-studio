@@ -3,7 +3,7 @@ import {useTracker} from 'meteor/react-meteor-data'
 import {PagesCollection} from '../../../collections/pages'
 import {useAppContext} from '../../app/AuthContext'
 import {ElementsCollection} from '../../../collections/elements'
-import {SidebarLayout} from '../../layouts/SidebarLayout'
+import {SidebarLayout} from '../../components/layouts/SidebarLayout'
 import {ElementsTree} from '../../components/ElementsTree'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus} from '@fortawesome/pro-solid-svg-icons'
@@ -14,7 +14,7 @@ import {ElementsPreview} from '../../components/ElementsPreview'
 import {ElementsComparison} from '../../components/ElementsComparison'
 import {PagesList} from '../../components/PagesList'
 
-export const StructurePage = () => {
+export const Structure = () => {
   const {state} = useAppContext()
   const [selectedPageId, setSelectedPageId] = useState()
   const [pageSearchValue, setPageSearchValue] = useState('')

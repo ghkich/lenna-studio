@@ -1,4 +1,4 @@
-import {Tags} from '../../../components/Tags'
+import {Tags} from '../../../components/basic/Tags'
 import React from 'react'
 import {useMethod} from '../../../../infra/hooks/useMethod'
 

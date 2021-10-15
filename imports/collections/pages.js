@@ -4,6 +4,10 @@ import SimpleSchema from 'simpl-schema'
 import {PAGE_CATEGORIES} from '../infra/constants/page-categories'
 
 export const PageSchema = new SimpleSchema({
+  userId: {
+    type: SimpleSchema.RegEx.Id,
+    optional: true,
+  },
   appId: {
     type: SimpleSchema.RegEx.Id,
     optional: true,

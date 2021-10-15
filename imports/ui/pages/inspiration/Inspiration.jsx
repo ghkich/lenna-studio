@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {SidebarLayout} from '../../layouts/SidebarLayout'
+import {SidebarLayout} from '../../components/layouts/SidebarLayout'
 import {InspirationApps} from './components/InspirationApps'
 import {InspirationPages} from './components/InspirationPages'
 
@@ -27,7 +27,7 @@ const tabs = [
   },
 ]
 
-export const InspirationPage = () => {
+export const Inspiration = () => {
   const [selectedInspirationType, setSelectedInspirationType] = useState(INSPIRATION_TYPES.APPS)
 
   return (

@@ -25,6 +25,7 @@ import '../imports/api/selectors/publications/by-component-id'
 import '../imports/api/selectors/publications/by-app-id'
 
 // METHODS
+import '../imports/api/apps/methods'
 import '../imports/api/pages/methods'
 import '../imports/api/components/methods'
 import '../imports/api/elements/methods'
@@ -120,17 +121,15 @@ Meteor.startup(() => {
     })
   }
 
-  APPS_SEED.forEach((app, index) => {
-    const themes = ThemesCollection.find().fetch()
-    const themeId = index < themes.length - 1 ? themes[index]?._id : themes[0]?._id
+  APPS_SEED.forEach((app) => {
     const appId = AppsCollection.insert({
       ...(app.addForUser ? {userId} : {}),
-      themeId,
       ...app,
     })
 
     COMPONENTS_SEED.forEach((component) => {
       const componentId = ComponentsCollection.insert({
+        userId,
         appId,
         name: component.name,
         category: component.category,
@@ -171,6 +170,7 @@ Meteor.startup(() => {
 
     PAGES_SEED.forEach((page) => {
       const pageId = PagesCollection.insert({
+        userId,
         appId,
         category: page.category,
         name: page.name,

@@ -41,7 +41,7 @@ export const SwitchRoutes = () => {
           <route.component />
         </AuthtenticatedRoute>
       ))}
-      <Redirect to={{pathname: isAuthenticated ? RoutePaths.STRUCTURE : RoutePaths.LOGIN, state: {from: location}}} />
+      <Redirect to={{pathname: isAuthenticated ? RoutePaths.APPS : RoutePaths.LOGIN, state: {from: location}}} />
     </Switch>
   )
 }

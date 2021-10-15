@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {useTracker} from 'meteor/react-meteor-data'
 import {PagesCollection} from '../../../../collections/pages'
-import {Select} from '../../../components/Select'
+import {Select} from '../../../components/basic/Select'
 import {PAGE_CATEGORIES} from '../../../../infra/constants/page-categories'
 import {PagesList} from '../../../components/PagesList'
 import {ElementsTree} from '../../../components/ElementsTree'

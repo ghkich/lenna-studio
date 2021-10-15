@@ -3,7 +3,7 @@ import {useAppContext} from '../../app/AuthContext'
 import {ComponentsCollection} from '../../../collections/components'
 import {useTracker} from 'meteor/react-meteor-data'
 import {ElementsCollection} from '../../../collections/elements'
-import {SidebarLayout} from '../../layouts/SidebarLayout'
+import {SidebarLayout} from '../../components/layouts/SidebarLayout'
 import {ElementsTree} from '../../components/ElementsTree'
 import {ElementsPreview} from '../../components/ElementsPreview'
 import {SelectorsCollection} from '../../../collections/selectors'
@@ -14,7 +14,7 @@ import {NewComponent} from './components/NewComponent'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus} from '@fortawesome/pro-solid-svg-icons'
 
-export const ComponentsPage = () => {
+export const Components = () => {
   const {state} = useAppContext()
   const [selectedComponentId, setSelectedComponentId] = useState()
   const [componentSearchValue, setComponentSearchValue] = useState('')

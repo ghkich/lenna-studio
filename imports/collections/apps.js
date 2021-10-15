@@ -8,11 +8,11 @@ export const AppSchema = new SimpleSchema({
     type: SimpleSchema.RegEx.Id,
     optional: true,
   },
-  themeId: SimpleSchema.RegEx.Id,
   name: String,
   category: {
     type: String,
     allowedValues: Object.values(APP_CATEGORIES),
+    optional: true,
   },
 })
 
