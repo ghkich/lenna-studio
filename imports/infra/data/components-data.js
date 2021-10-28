@@ -1,9 +1,30 @@
 import {COMPONENT_CATEGORIES} from '../constants/component-categories'
-import {CUSTOM_DATA_KEY} from '../constants/lenna-attr-keys'
+import {CUSTOM_ATTR_KEYS} from '../constants/custom-attr-keys'
 
 const stringToArray = (string) => string.split(' ')
 
 export const COMPONENTS_SEED = [
+  {
+    name: 'SearchBar',
+    category: COMPONENT_CATEGORIES.FORM,
+    childNodes: [
+      {
+        tagName: 'div',
+        attrs: {
+          [CUSTOM_ATTR_KEYS.COMPONENT]: 'SearchBar',
+        },
+        childNodes: [
+          {
+            tagName: 'input',
+            attrs: {
+              type: 'text',
+              placeholder: 'Search...',
+            },
+          },
+        ],
+      },
+    ],
+  },
   {
     name: 'LoginLayout',
     category: COMPONENT_CATEGORIES.LAYOUTS,
@@ -11,7 +32,7 @@ export const COMPONENTS_SEED = [
       {
         tagName: 'div',
         attrs: {
-          [CUSTOM_DATA_KEY]: 'LoginLayout',
+          [CUSTOM_ATTR_KEYS.COMPONENT]: 'LoginLayout',
         },
         childNodes: [
           {
@@ -34,14 +55,16 @@ export const COMPONENTS_SEED = [
               {
                 tagName: 'button',
                 attrs: {
-                  [CUSTOM_DATA_KEY]: 'Button-primary',
+                  [CUSTOM_ATTR_KEYS.COMPONENT]: 'Button',
+                  [CUSTOM_ATTR_KEYS.STYLE]: 'primary',
                 },
                 childNodes: [{text: 'Login'}],
               },
               {
                 tagName: 'button',
                 attrs: {
-                  [CUSTOM_DATA_KEY]: 'LinkButton-primary',
+                  [CUSTOM_ATTR_KEYS.COMPONENT]: 'LinkButton',
+                  [CUSTOM_ATTR_KEYS.STYLE]: 'primary',
                 },
                 childNodes: [{text: 'Forgot my password'}],
               },
@@ -72,7 +95,7 @@ export const COMPONENTS_SEED = [
       {
         tagName: 'div',
         attrs: {
-          [CUSTOM_DATA_KEY]: 'SidebarLayout',
+          [CUSTOM_ATTR_KEYS.COMPONENT]: 'SidebarLayout',
         },
         childNodes: [
           {
@@ -120,22 +143,16 @@ export const COMPONENTS_SEED = [
                   {
                     tagName: 'div',
                     attrs: {
-                      [CUSTOM_DATA_KEY]: 'SearchBar',
+                      [CUSTOM_ATTR_KEYS.COMPONENT]: 'SearchBar',
                     },
-                    childNodes: [
-                      {
-                        tagName: 'input',
-                        attrs: {
-                          type: 'text',
-                          placeholder: 'Search...',
-                        },
-                      },
-                    ],
                   },
                 ],
               },
               {
                 tagName: 'div',
+                structure: {
+                  isChildrenContainer: true,
+                },
                 attrs: {
                   class: 'content',
                 },
@@ -175,9 +192,12 @@ export const COMPONENTS_SEED = [
     childNodes: [
       {
         tagName: 'button',
+        structure: {
+          isChildrenContainer: true,
+        },
         attrs: {
           type: 'button',
-          [CUSTOM_DATA_KEY]: 'Button',
+          [CUSTOM_ATTR_KEYS.COMPONENT]: 'Button',
         },
         childNodes: [{text: 'Button'}],
       },
@@ -215,9 +235,12 @@ export const COMPONENTS_SEED = [
     childNodes: [
       {
         tagName: 'button',
+        structure: {
+          isChildrenContainer: true,
+        },
         attrs: {
           type: 'button',
-          [CUSTOM_DATA_KEY]: 'LinkButton',
+          [CUSTOM_ATTR_KEYS.COMPONENT]: 'LinkButton',
         },
         childNodes: [{text: 'Link Button'}],
       },
