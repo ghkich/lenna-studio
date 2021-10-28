@@ -4,5 +4,9 @@ Meteor.publish('components.byAppId', function ({appId} = {}) {
   if (!this.userId) {
     return this.ready()
   }
-  return ComponentsCollection.find({appId})
+  let terms = {userId: this.userId, appId}
+  if (!appId) {
+    terms = {userId: this.userId}
+  }
+  return ComponentsCollection.find(terms)
 })

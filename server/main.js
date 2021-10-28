@@ -14,8 +14,10 @@ import {STRUCTURE_TYPES} from '../imports/infra/constants/structure-types'
 // PUBLICATIONS
 import '../imports/api/apps/publications/by-user-id'
 import '../imports/api/apps/publications/by-category'
+import '../imports/api/apps/publications/by-id'
 import '../imports/api/pages/publications/by-app-id'
 import '../imports/api/pages/publications/by-category'
+import '../imports/api/pages/publications/by-id'
 import '../imports/api/components/publications/by-app-id'
 import '../imports/api/components/publications/by-category'
 import '../imports/api/components/publications/by-id'
@@ -169,10 +171,12 @@ Meteor.startup(() => {
     })
 
     PAGES_SEED.forEach((page) => {
+      const layoutComponentId = ComponentsCollection.findOne({name: page.layout})?._id
       const pageId = PagesCollection.insert({
         userId,
         appId,
         category: page.category,
+        layoutComponentId,
         name: page.name,
         path: page.path,
       })
