@@ -1,43 +1,32 @@
 import React, {useEffect, useState} from 'react'
 import {omit} from '../utils/object-utils'
-import {CUSTOM_DATA_KEY} from '../../infra/constants/lenna-attr-keys'
-import {ComponentsCollection} from '../../collections/components'
+import {CUSTOM_ATTR_KEYS} from '../../infra/constants/custom-attr-keys'
 import {useTracker} from 'meteor/react-meteor-data'
 import {SelectorsCollection} from '../../collections/selectors'
 import {generateCss} from '../../api/generate-css'
-import {useAppContext} from '../app/AuthContext'
 
-export const ElementsPreview = ({elements, selectedPageId, selectedComponentId, selectedStyle, selectedState}) => {
+export const ElementsPreview = ({elements, componentId, selectedStyle, selectedState}) => {
   const [css, setCss] = useState('')
-  const {state} = useAppContext()
+  const appId = elements?.[0]?.appId
 
   useTracker(() => {
-    if (!state.selectedAppId) return {}
-    Meteor.subscribe('selectors.byAppId', {appId: state.selectedAppId})
-    Meteor.subscribe('components.byAppId', {appId: state.selectedAppId})
+    if (!appId) return {}
+    Meteor.subscribe('selectors.byAppId', {appId})
+    Meteor.subscribe('components.byAppId', {appId})
     const appSelectors = SelectorsCollection.find().fetch()
 
     const css = generateCss({selectors: appSelectors})
     setCss(css)
-  }, [state.selectedAppId, selectedPageId])
+  }, [appId])
 
   useEffect(() => {
-    if (selectedComponentId) {
-      const component = ComponentsCollection.findOne({_id: selectedComponentId})
-
-      let customData = component?.name
-      if (selectedStyle) {
-        customData += `-${selectedStyle}`
-      }
-      if (selectedState) {
-        customData += `:${selectedState}`
-      }
-
+    if (componentId) {
       const updateComponentElementCustomData = () => {
         setTimeout(() => {
-          const selectedComponentElement = document.getElementById(selectedComponentId)
-          if (selectedComponentElement) {
-            selectedComponentElement?.setAttribute(CUSTOM_DATA_KEY, customData)
+          const domComponent = document.getElementById(componentId)
+          if (domComponent) {
+            domComponent?.setAttribute(CUSTOM_ATTR_KEYS.STYLE, selectedStyle)
+            domComponent?.setAttribute(CUSTOM_ATTR_KEYS.STATE, selectedState)
           } else {
             updateComponentElementCustomData()
           }
@@ -45,17 +34,17 @@ export const ElementsPreview = ({elements, selectedPageId, selectedComponentId, 
       }
       updateComponentElementCustomData()
     }
-  }, [selectedComponentId, selectedStyle, selectedState])
+  }, [componentId, selectedStyle, selectedState])
 
-  const containerElement = elements?.find((el) => !el.parentId)
+  const containerElement = elements?.find((el) => !el?.parentId)
   if (!containerElement) return null
-  const renderChildren = (childrenIds, containerComponentId) => {
-    if (!childrenIds || childrenIds.length === 0) return null
-    return childrenIds?.map((childId) => {
-      const element = elements?.find((el) => el._id === childId)
+  const renderChildren = (children, containerComponentId) => {
+    if (!children || children.length === 0) return null
+    return children?.map((element) => {
       if (!element?.tagName) {
-        return element.text
+        return element?.text
       }
+      const children = elements?.filter((el) => el?.parentId === element._id)
       return React.createElement(
         element?.tagName,
         {
@@ -65,14 +54,14 @@ export const ElementsPreview = ({elements, selectedPageId, selectedComponentId, 
           className: element?.attrs?.class,
           viewBox: element?.attrs?.viewbox,
         },
-        renderChildren(element.childrenIds),
+        renderChildren(children),
       )
     })
   }
   return (
     <>
       <style>{css}</style>
-      {renderChildren([containerElement._id], selectedComponentId)}
+      {renderChildren([containerElement], componentId)}
     </>
   )
 }

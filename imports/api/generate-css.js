@@ -1,42 +1,42 @@
-import {transformClassToStyle} from './transformClassToStyle'
+import {transformClassToCss} from './transform-class-to-css'
 import {ComponentsCollection} from '../collections/components'
 import {SelectorsCollection} from '../collections/selectors'
-import {CUSTOM_DATA_KEY} from '../infra/constants/lenna-attr-keys'
+import {CUSTOM_ATTR_KEYS} from '../infra/constants/custom-attr-keys'
 
 export const generateCss = (params) => {
   let selectors = params?.selectors
   if (params?.appId) {
     selectors = SelectorsCollection.find({appId: params.appId}).fetch()
   }
-  let styles = ''
+  let cssStyles = ''
   selectors?.forEach((selector) => {
     const component = ComponentsCollection.findOne({_id: selector.componentId})
     if (!component) return
-    styles += `[${CUSTOM_DATA_KEY}^='${component.name}'] ${selector.value ? selector.value : ''} {`
+    cssStyles += `[${CUSTOM_ATTR_KEYS.COMPONENT}='${component.name}'] ${selector.value ? selector.value : ''} {`
     selector?.classes?.forEach((className) => {
-      styles += transformClassToStyle(className)
+      cssStyles += transformClassToCss(className)
     })
-    styles += `}`
+    cssStyles += `}`
 
     selector?.classesByStyles?.forEach(({style, classes}) => {
-      styles += `[${CUSTOM_DATA_KEY}^='${component.name}'][${CUSTOM_DATA_KEY}*='-${style}'] ${
+      cssStyles += `[${CUSTOM_ATTR_KEYS.COMPONENT}='${component.name}'][${CUSTOM_ATTR_KEYS.STYLE}='${style}'] ${
         selector.value ? selector.value : ''
       } {`
       classes?.forEach((className) => {
-        styles += transformClassToStyle(className)
+        cssStyles += transformClassToCss(className)
       })
-      styles += `}`
+      cssStyles += `}`
     })
 
     selector?.classesByStates?.forEach(({state, classes}) => {
-      styles += `[${CUSTOM_DATA_KEY}^='${component.name}'][${CUSTOM_DATA_KEY}*=':${state}'] ${
+      cssStyles += `[${CUSTOM_ATTR_KEYS.COMPONENT}='${component.name}'][${CUSTOM_ATTR_KEYS.STATE}='${state}'] ${
         selector.value ? selector.value : ''
       } {`
       classes?.forEach((className) => {
-        styles += transformClassToStyle(className)
+        cssStyles += transformClassToCss(className)
       })
-      styles += `}`
+      cssStyles += `}`
     })
   })
-  return styles
+  return cssStyles
 }

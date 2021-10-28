@@ -6,11 +6,10 @@ import {SidebarLayout} from '../../components/layouts/SidebarLayout'
 import {faSidebarFlip} from '@fortawesome/pro-light-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {Button} from '../../components/basic/Button'
+import {Form} from '../../components/form/Form'
 import {TextInput} from '../../components/basic/TextInput'
-import {useForm} from 'react-hook-form'
 
 export const Login = () => {
-  const {register, handleSubmit} = useForm()
   const history = useHistory()
 
   const onSubmit = ({email, password}) => {
@@ -28,13 +27,13 @@ export const Login = () => {
           <FontAwesomeIcon icon={faSidebarFlip} className="text-5xl" />
           <h1 className="text-base font-extralight m-0 mt-1">Lenna Studio</h1>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2 w-8/12">
-          <TextInput register={register} name="email" placeholder="E-mail" />
-          <TextInput type="password" register={register} name="password" placeholder="Password" />
+        <Form onSubmit={onSubmit} className="w-8/12">
+          <TextInput name="email" placeholder="E-mail" />
+          <TextInput type="password" name="password" placeholder="Password" />
           <Button type="submit" style="primary">
             Sign in
           </Button>
-        </form>
+        </Form>
         <div className="pt-4 border-t w-6/12 text-center">
           <NavLink to={RoutePaths.REGISTER} className="uppercase hover:opacity-75">
             Create account

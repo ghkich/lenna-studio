@@ -9,11 +9,7 @@ import {ToggleButtonGroup} from '../../components/basic/ToggleButtonGroup'
 import {InspirationApps} from '../inspiration/components/InspirationApps'
 import {useMethod} from '../../../infra/hooks/useMethod'
 import {useHistory} from 'react-router-dom'
-
-const CREATION_TYPES = {
-  SCRATCH: 'scratch',
-  EXISTING: 'existing',
-}
+import {CREATION_OPTIONS, CREATION_TYPES} from '../../../infra/constants/creation-types'
 
 export const NewApp = () => {
   const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.SCRATCH)
@@ -39,14 +35,11 @@ export const NewApp = () => {
 
   return (
     <SidebarLayout menuMinimized>
-      <PageHeader title="New app" goBackTo={RoutePaths.APPS} />
+      <PageHeader title="New app" />
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-        <TextInput register={register} name="name" placeholder="Name to identify your app" />
+        <TextInput register={register} name="name" placeholder="Name" />
         <ToggleButtonGroup
-          buttons={[
-            {value: CREATION_TYPES.SCRATCH, label: 'From scratch'},
-            {value: CREATION_TYPES.EXISTING, label: 'From existing'},
-          ]}
+          buttons={CREATION_OPTIONS}
           activeButton={selectedCreationType}
           onToggle={(value) => setSelectedCreationType(value)}
         />

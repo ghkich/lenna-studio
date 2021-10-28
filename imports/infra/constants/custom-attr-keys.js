@@ -1,4 +1,4 @@
-export const LENNA_ATTR_KEYS = {
+export const CUSTOM_ATTR_KEYS = {
   COMPONENT: 'data-component',
   STYLE: 'data-style',
   STATE: 'data-state',

@@ -69,7 +69,7 @@ const margins = Object.entries(spacing).reduce((newObj, [key, val]) => {
   }
 }, {})
 
-export const transformClassToStyle = (className) => {
+export const transformClassToCss = (className) => {
   const theme = {
     colors: {
       primary: '#333333',

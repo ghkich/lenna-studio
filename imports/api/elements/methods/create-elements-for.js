@@ -1,6 +1,6 @@
 import {ElementsCollection} from '../../../collections/elements'
 import {ComponentsCollection} from '../../../collections/components'
-import {CUSTOM_DATA_KEY} from '../../../infra/constants/lenna-attr-keys'
+import {CUSTOM_ATTR_KEYS} from '../../../infra/constants/custom-attr-keys'
 
 export const NODE_TYPES = {
   ELEMENT_NODE: 1, // An Element node like <p> or <div>
@@ -14,46 +14,6 @@ export const NODE_TYPES = {
   DOCUMENT_FRAGMENT_NODE: 11, // A DocumentFragment node
 }
 
-export const getComponentPropsFromCustomData = (customData) => {
-  if (!customData) return {}
-
-  let name
-  let style
-  let state
-
-  const nameStartIndex = 0
-  const styleStartIndex = customData.indexOf('-')
-  const stateStartIndex = customData.indexOf(':')
-
-  let nameEndIndex = customData.length
-  let styleEndIndex = stateStartIndex - 1
-  let stateEndIndex = customData.length
-
-  if (styleEndIndex < 0) {
-    styleEndIndex = nameEndIndex
-  }
-  if (styleStartIndex >= 0) {
-    style = customData.substring(styleStartIndex + 1, styleEndIndex)
-    nameEndIndex = styleStartIndex
-  } else {
-    if (stateStartIndex >= 0) {
-      nameEndIndex = stateStartIndex
-    }
-  }
-
-  if (stateStartIndex >= 0) {
-    state = customData.substring(stateStartIndex, stateEndIndex)
-  }
-
-  name = customData.substring(nameStartIndex, nameEndIndex)
-
-  return {
-    name,
-    style,
-    state,
-  }
-}
-
 export const createElementsFor = ({appId, pageId, componentId, nodes, structureType}) => {
   let topDownIndex = 0
   if (pageId) {
@@ -64,24 +24,26 @@ export const createElementsFor = ({appId, pageId, componentId, nodes, structureT
   }
   const createChildrenElements = (childNodes, parentId) => {
     if (!childNodes || childNodes?.length === 0) return
-    const childNodeIds = []
     childNodes.forEach((node) => {
       topDownIndex++
       let attrs = node.attrs
-      const componentProps = getComponentPropsFromCustomData(node.attrs?.[CUSTOM_DATA_KEY])
-      if (!parentId && (!componentProps.style || !componentProps.state)) {
+      let styleProp = node.attrs?.[CUSTOM_ATTR_KEYS.STYLE]
+      let stateProp = node.attrs?.[CUSTOM_ATTR_KEYS.STATE]
+      if (!parentId && (!styleProp || !stateProp)) {
         const component = ComponentsCollection.findOne(componentId)
         if (component?.name) {
-          let customData = component?.name
-          if (component?.styles?.length > 0 && !componentProps.style) {
-            customData += `-${component.styles?.[0]}`
+          let nameProp = component?.name
+          if (component?.styles?.length > 0 && !styleProp) {
+            styleProp = component.styles?.[0]
           }
-          if (component?.states?.length > 0 && !componentProps.state) {
-            customData += `:${component.states?.[0]}`
+          if (component?.states?.length > 0 && !stateProp) {
+            stateProp = component.states?.[0]
           }
           attrs = {
             ...attrs,
-            [CUSTOM_DATA_KEY]: customData,
+            [CUSTOM_ATTR_KEYS.COMPONENT]: nameProp,
+            [CUSTOM_ATTR_KEYS.STYLE]: styleProp,
+            [CUSTOM_ATTR_KEYS.STATE]: stateProp,
           }
         }
       }
@@ -98,19 +60,11 @@ export const createElementsFor = ({appId, pageId, componentId, nodes, structureT
           index: topDownIndex,
         },
       })
-      childNodeIds.push(elementId)
       createChildrenElements(node?.childNodes, elementId)
+      if (node.structure?.isChildrenContainer) {
+        ComponentsCollection.update(componentId, {$set: {childrenContainerElementId: elementId}})
+      }
     })
-    if (parentId && childNodeIds?.length > 0) {
-      ElementsCollection.update(
-        {_id: parentId},
-        {
-          $set: {
-            childrenIds: childNodeIds,
-          },
-        },
-      )
-    }
   }
   createChildrenElements(nodes)
 }

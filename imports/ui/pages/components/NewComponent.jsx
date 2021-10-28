@@ -9,50 +9,34 @@ import {ToggleButtonGroup} from '../../components/basic/ToggleButtonGroup'
 import {useMethod} from '../../../infra/hooks/useMethod'
 import {useHistory} from 'react-router-dom'
 import {CREATION_OPTIONS, CREATION_TYPES} from '../../../infra/constants/creation-types'
-import {InspirationPages} from '../inspiration/components/InspirationPages'
-import {Select} from '../../components/basic/Select'
-import {useTracker} from 'meteor/react-meteor-data'
-import {COMPONENT_CATEGORIES} from '../../../infra/constants/component-categories'
-import {ComponentsCollection} from '../../../collections/components'
 
-export const NewPage = () => {
+export const NewComponent = () => {
   const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.SCRATCH)
   const {register, handleSubmit} = useForm()
   const history = useHistory()
 
-  const {components} = useTracker(() => {
-    const sub = Meteor.subscribe('components.byCategory', {category: COMPONENT_CATEGORIES.LAYOUTS})
-    const components = ComponentsCollection.find({category: COMPONENT_CATEGORIES.LAYOUTS}).fetch()
-
-    return {
-      components,
-      loading: !sub.ready(),
-    }
-  }, [])
-
   const createElementsByIds = useMethod('elements.createByIds', {})
 
-  const createPage = useMethod('pages.create', {
-    onSuccess: (pageId) => {
-      if (pageId) {
+  const createComponent = useMethod('components.create', {
+    onSuccess: (componentId) => {
+      if (componentId) {
         if (selectedCreationType === CREATION_TYPES.SCRATCH) {
-          history.push(`${RoutePaths.PAGES}/${pageId}`)
+          history.push(`${RoutePaths.COMPONENTS}/${componentId}`)
         } else {
         }
       }
     },
   })
 
-  const onSubmit = ({name, path, layoutComponentId}) => {
-    createPage.call({name, path, layoutComponentId})
+  const onSubmit = ({name}) => {
+    createComponent.call({name})
   }
 
   return (
     <SidebarLayout menuMinimized>
-      <PageHeader title="New page" />
+      <PageHeader title="New component" />
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
         <TextInput register={register} name="name" placeholder="Name" />
-        <TextInput register={register} name="path" placeholder="Route path" />
         <ToggleButtonGroup
           buttons={CREATION_OPTIONS}
           activeButton={selectedCreationType}
@@ -60,21 +44,10 @@ export const NewPage = () => {
         />
         {selectedCreationType === CREATION_TYPES.SCRATCH && (
           <>
-            <Select
-              register={register}
-              name="layoutComponentId"
-              options={[
-                {value: '', label: 'Choose a layout component...'},
-                ...components?.map((comp) => ({value: comp._id, label: comp.name})),
-              ]}
-            />
+            <TextInput register={register} name="structure" placeholder="Structure (div > div + div)" />
           </>
         )}
-        {selectedCreationType === CREATION_TYPES.EXISTING && (
-          <div>
-            <InspirationPages />
-          </div>
-        )}
+        {selectedCreationType === CREATION_TYPES.EXISTING && <div></div>}
         <div className="border-t opacity-50" />
         <Button type="submit" style="primary">
           Create

@@ -3,11 +3,12 @@ import {SelectorsCollection} from '../../../collections/selectors'
 
 Meteor.methods({
   ['components.create'](component) {
-    const existingComponentName = ComponentsCollection.find({appId: component.appId, name: component.name}).fetch()
+    if (!component?.name) return
+    const existingComponentName = ComponentsCollection.find({appId: component?.appId, name: component.name}).fetch()
     if (existingComponentName?.length > 0) {
       throw new Meteor.Error('component name already exists')
     }
-    return ComponentsCollection.insert(component)
+    return ComponentsCollection.insert({...component, userId: this.userId})
   },
   ['components.update']({_id, ...component}) {
     return ComponentsCollection.update(_id, {$set: component})

@@ -49,7 +49,7 @@ export const InspirationApps = () => {
           value={selectedAppCategory}
           onChange={(e) => setSelectedAppCategory(e.target.value)}
           options={[
-            {value: '', label: 'Choose an app category'},
+            {value: '', label: 'Choose an app category...'},
             ...Object.values(APP_CATEGORIES).map((value) => ({value, label: value})),
           ]}
         />

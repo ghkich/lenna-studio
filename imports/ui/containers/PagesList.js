@@ -1,11 +1,10 @@
 import React, {useState} from 'react'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faTrashCan} from '@fortawesome/pro-solid-svg-icons'
 import {useMethod} from '../../infra/hooks/useMethod'
 import {useTracker} from 'meteor/react-meteor-data'
 import {PagesCollection} from '../../collections/pages'
 import {RoutePaths} from '../app/routes'
 import {ListControls} from '../components/ListControls'
+import {NavLink} from 'react-router-dom'
 
 export const PagesList = ({appId}) => {
   const [searchValue, setSearchValue] = useState('')
@@ -39,25 +38,17 @@ export const PagesList = ({appId}) => {
   )
 }
 
-const PagesListComponent = ({pages, selectedPageId, onSelectPage, onRemoveClick, showRemove}) => {
+const PagesListComponent = ({pages}) => {
   return (
-    <div className="border-b">
+    <div className="flex flex-col gap-0.5 mt-1">
       {pages?.map((page) => (
-        <button
+        <NavLink
           key={page._id}
-          type="button"
-          className={`flex border border-b-0 px-2 py-1 w-full text-left ${
-            page._id === selectedPageId ? 'bg-blue-50 text-blue-500' : ''
-          }`}
-          onClick={() => onSelectPage(page._id)}
+          className={`border rounded-sm px-2 py-1 hover:bg-gray-50 cursor-pointer`}
+          to={`${RoutePaths.PAGES}/${page._id}`}
         >
-          <div className="flex-1">{page.name}</div>
-          {showRemove && (
-            <div onClick={onRemoveClick} className="opacity-25 hover:opacity-75">
-              <FontAwesomeIcon icon={faTrashCan} />
-            </div>
-          )}
-        </button>
+          {page.name}
+        </NavLink>
       ))}
     </div>
   )

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import {CUSTOM_DATA_KEY} from '../../infra/constants/lenna-attr-keys'
-import {ElementsTree} from './ElementsTree'
+import {CUSTOM_ATTR_KEYS} from '../../infra/constants/custom-attr-keys'
+import {ElementsTree} from '../containers/ElementsTree'
 
 export const ElementsComparison = ({actual, expected}) => {
   const [error, setError] = useState('')
@@ -16,10 +16,10 @@ export const ElementsComparison = ({actual, expected}) => {
           ...actual[i],
           error: true,
         }
-        if (expectedEl?.attrs?.[CUSTOM_DATA_KEY] !== actual[i]?.attrs?.[CUSTOM_DATA_KEY]) {
+        if (expectedEl?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT] !== actual[i]?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT]) {
           setError(`Wrong component container`)
-          setActualString(actual[i]?.attrs?.[CUSTOM_DATA_KEY])
-          setExpectedString(expectedEl?.attrs?.[CUSTOM_DATA_KEY])
+          setActualString(actual[i]?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT])
+          setExpectedString(expectedEl?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT])
           asserted.push(newElement)
           return false
         }
