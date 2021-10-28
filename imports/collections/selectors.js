@@ -1,9 +1,13 @@
 import {Mongo} from 'meteor/mongo'
 import {COLLECTION_NAMES} from '../infra/constants/collection-names'
 import SimpleSchema from 'simpl-schema'
+import {timestampsSchema} from '../schemas/timestamps'
 
 export const SelectorSchema = new SimpleSchema({
-  appId: SimpleSchema.RegEx.Id,
+  appId: {
+    type: SimpleSchema.RegEx.Id,
+    optional: true,
+  },
   componentId: SimpleSchema.RegEx.Id,
   value: {
     type: String,
@@ -51,6 +55,6 @@ export const SelectorSchema = new SimpleSchema({
     type: String,
     optional: true,
   },
-})
+}).extend(timestampsSchema)
 
 export const SelectorsCollection = new Mongo.Collection(COLLECTION_NAMES.SELECTORS)

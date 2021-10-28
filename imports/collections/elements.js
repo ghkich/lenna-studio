@@ -2,6 +2,7 @@ import {Mongo} from 'meteor/mongo'
 import {COLLECTION_NAMES} from '../infra/constants/collection-names'
 import SimpleSchema from 'simpl-schema'
 import {STRUCTURE_TYPES} from '../infra/constants/structure-types'
+import {timestampsSchema} from '../schemas/timestamps'
 
 export const ElementSchema = new SimpleSchema({
   appId: SimpleSchema.RegEx.Id,
@@ -26,11 +27,6 @@ export const ElementSchema = new SimpleSchema({
     optional: true,
     blackbox: true,
   },
-  childrenIds: {
-    type: Array,
-    optional: true,
-  },
-  'childrenIds.$': SimpleSchema.RegEx.Id,
   parentId: {
     type: SimpleSchema.RegEx.Id,
     optional: true,
@@ -39,11 +35,11 @@ export const ElementSchema = new SimpleSchema({
     type: Object,
     optional: true,
   },
+  'structure.index': SimpleSchema.Integer,
   'structure.type': {
     type: String,
     allowedValues: Object.values(STRUCTURE_TYPES),
   },
-  'structure.index': SimpleSchema.Integer,
-})
+}).extend(timestampsSchema)
 
 export const ElementsCollection = new Mongo.Collection(COLLECTION_NAMES.ELEMENTS)
