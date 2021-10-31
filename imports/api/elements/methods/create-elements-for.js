@@ -26,35 +26,48 @@ export const createElementsFor = ({appId, pageId, componentId, nodes, structureT
     if (!childNodes || childNodes?.length === 0) return
     childNodes.forEach((node) => {
       topDownIndex++
-      let attrs = node.attrs
-      let styleProp = node.attrs?.[CUSTOM_ATTR_KEYS.STYLE]
-      let stateProp = node.attrs?.[CUSTOM_ATTR_KEYS.STATE]
-      if (!parentId && (!styleProp || !stateProp)) {
-        const component = ComponentsCollection.findOne(componentId)
-        if (component?.name) {
-          let nameProp = component?.name
-          if (component?.styles?.length > 0 && !styleProp) {
-            styleProp = component.styles?.[0]
-          }
-          if (component?.states?.length > 0 && !stateProp) {
-            stateProp = component.states?.[0]
-          }
-          attrs = {
-            ...attrs,
-            [CUSTOM_ATTR_KEYS.COMPONENT]: nameProp,
-            [CUSTOM_ATTR_KEYS.STYLE]: styleProp,
-            [CUSTOM_ATTR_KEYS.STATE]: stateProp,
+      let component
+      const componentName = node.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT]
+      if (componentName) {
+        const appComponent = ComponentsCollection.findOne({appId, name: componentName})
+        if (appComponent) {
+          component = {
+            _id: appComponent._id,
+            style: appComponent.styles?.[0],
+            state: appComponent.states?.[0],
           }
         }
       }
+      // let attrs = node.attrs
+      // let styleProp = node.attrs?.[CUSTOM_ATTR_KEYS.STYLE]
+      // let stateProp = node.attrs?.[CUSTOM_ATTR_KEYS.STATE]
+      // if (!parentId && (!styleProp || !stateProp)) {
+      //   const component = ComponentsCollection.findOne(componentId)
+      //   if (component?.name) {
+      //     let nameProp = component?.name
+      //     if (component?.styles?.length > 0 && !styleProp) {
+      //       styleProp = component.styles?.[0]
+      //     }
+      //     if (component?.states?.length > 0 && !stateProp) {
+      //       stateProp = component.states?.[0]
+      //     }
+      //     attrs = {
+      //       ...attrs,
+      //       [CUSTOM_ATTR_KEYS.COMPONENT]: nameProp,
+      //       [CUSTOM_ATTR_KEYS.STYLE]: styleProp,
+      //       [CUSTOM_ATTR_KEYS.STATE]: stateProp,
+      //     }
+      //   }
+      // }
       const elementId = ElementsCollection.insert({
         appId,
         pageId,
         componentId,
         parentId,
+        component,
         tagName: node.tagName?.toLowerCase(),
         text: node.text,
-        attrs,
+        attrs: node.attrs,
         structure: {
           type: structureType,
           index: topDownIndex,

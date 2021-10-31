@@ -10,9 +10,6 @@ export const COMPONENTS_SEED = [
     childNodes: [
       {
         tagName: 'div',
-        attrs: {
-          [CUSTOM_ATTR_KEYS.COMPONENT]: 'SearchBar',
-        },
         childNodes: [
           {
             tagName: 'input',
@@ -26,14 +23,95 @@ export const COMPONENTS_SEED = [
     ],
   },
   {
+    name: 'LinkButton',
+    category: COMPONENT_CATEGORIES.CONTROLS,
+    childNodes: [
+      {
+        tagName: 'button',
+        structure: {
+          isChildrenContainer: true,
+        },
+        attrs: {
+          type: 'button',
+        },
+        childNodes: [{text: 'Link Button'}],
+      },
+    ],
+    selectors: [
+      {
+        value: '',
+        classes: stringToArray('py-2 px-5 bg-transparent text-gray-500'),
+      },
+    ],
+    styles: [
+      {
+        value: 'primary',
+        selectors: [
+          {
+            value: '',
+            classes: stringToArray('text-primary'),
+          },
+        ],
+      },
+      {
+        value: 'secondary',
+        selectors: [
+          {
+            value: '',
+            classes: stringToArray('text-secondary'),
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Button',
+    category: COMPONENT_CATEGORIES.CONTROLS,
+    childNodes: [
+      {
+        tagName: 'button',
+        structure: {
+          isChildrenContainer: true,
+        },
+        attrs: {
+          type: 'button',
+        },
+        childNodes: [{text: 'Button'}],
+      },
+    ],
+    selectors: [
+      {
+        value: '',
+        classes: stringToArray('py-2 px-5 bg-gray text-gray-500'),
+      },
+    ],
+    styles: [
+      {
+        value: 'primary',
+        selectors: [
+          {
+            value: '',
+            classes: stringToArray('bg-primary text-white'),
+          },
+        ],
+      },
+      {
+        value: 'secondary',
+        selectors: [
+          {
+            value: '',
+            classes: stringToArray('bg-secondary text-white'),
+          },
+        ],
+      },
+    ],
+  },
+  {
     name: 'LoginLayout',
     category: COMPONENT_CATEGORIES.LAYOUTS,
     childNodes: [
       {
         tagName: 'div',
-        attrs: {
-          [CUSTOM_ATTR_KEYS.COMPONENT]: 'LoginLayout',
-        },
         childNodes: [
           {
             tagName: 'form',
@@ -94,9 +172,6 @@ export const COMPONENTS_SEED = [
     childNodes: [
       {
         tagName: 'div',
-        attrs: {
-          [CUSTOM_ATTR_KEYS.COMPONENT]: 'SidebarLayout',
-        },
         childNodes: [
           {
             tagName: 'div',
@@ -183,92 +258,6 @@ export const COMPONENTS_SEED = [
       {
         value: '> div.content',
         classes: stringToArray('flex flex-col p-5'),
-      },
-    ],
-  },
-  {
-    name: 'Button',
-    category: COMPONENT_CATEGORIES.CONTROLS,
-    childNodes: [
-      {
-        tagName: 'button',
-        structure: {
-          isChildrenContainer: true,
-        },
-        attrs: {
-          type: 'button',
-          [CUSTOM_ATTR_KEYS.COMPONENT]: 'Button',
-        },
-        childNodes: [{text: 'Button'}],
-      },
-    ],
-    selectors: [
-      {
-        value: '',
-        classes: stringToArray('py-2 px-5 bg-gray text-gray-500'),
-      },
-    ],
-    styles: [
-      {
-        value: 'primary',
-        selectors: [
-          {
-            value: '',
-            classes: stringToArray('bg-primary text-white'),
-          },
-        ],
-      },
-      {
-        value: 'secondary',
-        selectors: [
-          {
-            value: '',
-            classes: stringToArray('bg-secondary text-white'),
-          },
-        ],
-      },
-    ],
-  },
-  {
-    name: 'LinkButton',
-    category: COMPONENT_CATEGORIES.CONTROLS,
-    childNodes: [
-      {
-        tagName: 'button',
-        structure: {
-          isChildrenContainer: true,
-        },
-        attrs: {
-          type: 'button',
-          [CUSTOM_ATTR_KEYS.COMPONENT]: 'LinkButton',
-        },
-        childNodes: [{text: 'Link Button'}],
-      },
-    ],
-    selectors: [
-      {
-        value: '',
-        classes: stringToArray('py-2 px-5 bg-transparent text-gray-500'),
-      },
-    ],
-    styles: [
-      {
-        value: 'primary',
-        selectors: [
-          {
-            value: '',
-            classes: stringToArray('text-primary'),
-          },
-        ],
-      },
-      {
-        value: 'secondary',
-        selectors: [
-          {
-            value: '',
-            classes: stringToArray('text-secondary'),
-          },
-        ],
       },
     ],
   },

@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {useTracker} from 'meteor/react-meteor-data'
 import {ElementsCollection} from '../../../collections/elements'
 import {SidebarLayout} from '../../components/layouts/SidebarLayout'
-import {ElementsTree} from '../../containers/ElementsTree'
+import {ElementsTree} from '../../containers/elements/ElementsTree'
 import {ElementsPreview} from '../../components/ElementsPreview'
 import {useParams} from 'react-router-dom'
 import {PageHeader} from '../../components/PageHeader'
@@ -14,6 +14,7 @@ import {COMPONENT_CATEGORIES} from '../../../infra/constants/component-categorie
 import {ComponentsCollection} from '../../../collections/components'
 import {Form} from '../../components/form/Form'
 import {STRUCTURE_TYPES} from '../../../infra/constants/structure-types'
+import {Button} from '../../components/basic/Button'
 
 export const ViewPage = () => {
   const {id: pageId} = useParams() || {}
@@ -32,7 +33,7 @@ export const ViewPage = () => {
     }
   }, [pageId])
 
-  const {treeElements, previewElements} = useTracker(() => {
+  const {treeElements, previewElements, allowAddChildren} = useTracker(() => {
     if (!pageId || !layoutComponentId) return {}
     const subs = [
       Meteor.subscribe('components.byId', {_id: layoutComponentId}),
@@ -40,8 +41,8 @@ export const ViewPage = () => {
       Meteor.subscribe('elements.byPageId', {pageId}),
     ]
     const pageElements = ElementsCollection.find({pageId, 'structure.type': STRUCTURE_TYPES.EXPECTED}).fetch()
-    const layoutElements = ElementsCollection.find({componentId: layoutComponentId}).fetch()
     const layoutComponent = ComponentsCollection.findOne({_id: layoutComponentId})
+    const layoutElements = ElementsCollection.find({componentId: layoutComponentId}).fetch()
 
     const layoutChildrenContainer = layoutElements.find((el) => el?._id === layoutComponent?.childrenContainerElementId)
 
@@ -59,13 +60,14 @@ export const ViewPage = () => {
       ]
       treeElements = [
         ...pageElementsInLayoutContainer,
-        {...layoutChildrenContainer, attrs: mainLayoutContainerElement?.attrs, parentId: undefined},
+        {...layoutChildrenContainer, component: mainLayoutContainerElement?.component, parentId: undefined},
       ]
     }
 
     return {
       treeElements,
       previewElements,
+      allowAddChildren: !!layoutChildrenContainer,
       loading: subs.some((sub) => !sub.ready()),
     }
   }, [pageId, layoutComponentId])
@@ -92,24 +94,31 @@ export const ViewPage = () => {
     <SidebarLayout menuMinimized contentComponent={<ElementsPreview elements={previewElements} />}>
       <PageHeader title={page?.name} />
       {page?.name && (
-        <Form onSubmit={onSubmit} defaultValues={{name: page.name, path: page.path}}>
-          <TextInput name="name" placeholder="Name" />
-          <TextInput name="path" placeholder="Route path" />
-          <Select
-            value={layoutComponentId}
-            onChange={(e) => setLayoutComponentId(e.target.value)}
-            options={[
-              {value: '', label: 'Choose a layout component...'},
-              ...components?.map((comp) => ({value: comp._id, label: comp.name})),
-            ]}
-          />
+        <>
+          <Form onSubmit={onSubmit} defaultValues={{name: page.name, path: page.path}}>
+            <TextInput name="name" placeholder="Name" />
+            <TextInput name="path" placeholder="Route path" />
+            <Select
+              value={layoutComponentId}
+              onChange={(e) => setLayoutComponentId(e.target.value)}
+              options={[
+                {value: '', label: 'Choose a layout component...'},
+                ...components?.map((comp) => ({value: comp._id, label: comp.name})),
+              ]}
+            />
+            <div className="flex gap-2 pb-2 mb-2 border-b">
+              <Button type="submit" className="flex-1">
+                Save
+              </Button>
+            </div>
+          </Form>
           {page?._id && treeElements?.length > 0 && (
             <>
-              <ElementsTree elements={treeElements} />
+              <ElementsTree elements={treeElements} allowAddChildren={allowAddChildren} />
               <div className="mb-2" />
             </>
           )}
-        </Form>
+        </>
       )}
     </SidebarLayout>
   )

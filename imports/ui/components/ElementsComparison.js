@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {CUSTOM_ATTR_KEYS} from '../../infra/constants/custom-attr-keys'
-import {ElementsTree} from '../containers/ElementsTree'
+import {ElementsTree} from '../containers/elements/ElementsTree'
 
 export const ElementsComparison = ({actual, expected}) => {
   const [error, setError] = useState('')

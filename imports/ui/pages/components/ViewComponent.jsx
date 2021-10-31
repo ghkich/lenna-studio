@@ -3,7 +3,7 @@ import {ComponentsCollection} from '../../../collections/components'
 import {useTracker} from 'meteor/react-meteor-data'
 import {ElementsCollection} from '../../../collections/elements'
 import {SidebarLayout} from '../../components/layouts/SidebarLayout'
-import {ElementsTree} from '../../containers/ElementsTree'
+import {ElementsTree} from '../../containers/elements/ElementsTree'
 import {ElementsPreview} from '../../components/ElementsPreview'
 import {SelectorsCollection} from '../../../collections/selectors'
 import {ManageStyles} from './components/ManageStyles'
@@ -11,6 +11,7 @@ import {ManageStates} from './components/ManageStates'
 import {ClassesInput} from './components/ClassesInput'
 import {useParams} from 'react-router-dom'
 import {PageHeader} from '../../components/PageHeader'
+import {CUSTOM_ATTR_KEYS} from '../../../infra/constants/custom-attr-keys'
 
 export const ViewComponent = () => {
   const {id: componentId} = useParams() || {}
@@ -32,13 +33,15 @@ export const ViewComponent = () => {
   const {elements} = useTracker(() => {
     if (!componentId) return {}
     const sub = Meteor.subscribe('elements.byComponentId', {componentId})
-    const elements = ElementsCollection.find().fetch()
+    const elements = ElementsCollection.find()
+      .fetch()
+      .map((el) => (!el.parentId ? {...el, attrs: {...el.attrs, [CUSTOM_ATTR_KEYS.COMPONENT]: component.name}} : el))
 
     return {
       elements,
       loading: !sub.ready(),
     }
-  }, [componentId])
+  }, [componentId, component])
 
   const {selectors} = useTracker(() => {
     if (!componentId) return {}

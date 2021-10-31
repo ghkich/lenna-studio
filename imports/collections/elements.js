@@ -14,6 +14,26 @@ export const ElementSchema = new SimpleSchema({
     type: SimpleSchema.RegEx.Id,
     optional: true,
   },
+  parentId: {
+    type: SimpleSchema.RegEx.Id,
+    optional: true,
+  },
+  component: {
+    type: Object,
+    optional: true,
+  },
+  'component._id': {
+    type: SimpleSchema.RegEx.Id,
+    optional: true,
+  },
+  'component.style': {
+    type: String,
+    optional: true,
+  },
+  'component.state': {
+    type: String,
+    optional: true,
+  },
   tagName: {
     type: String,
     optional: true,
@@ -27,15 +47,10 @@ export const ElementSchema = new SimpleSchema({
     optional: true,
     blackbox: true,
   },
-  parentId: {
-    type: SimpleSchema.RegEx.Id,
-    optional: true,
-  },
   structure: {
     type: Object,
     optional: true,
   },
-  'structure.index': SimpleSchema.Integer,
   'structure.type': {
     type: String,
     allowedValues: Object.values(STRUCTURE_TYPES),
