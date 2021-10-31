@@ -35,7 +35,7 @@ export const NewApp = () => {
   return (
     <SidebarLayout menuMinimized>
       <PageHeader title="New app" />
-      <Form onSubmit={handleSubmit} className="flex flex-col gap-2">
+      <Form onSubmit={handleSubmit}>
         <TextInput name="name" placeholder="Name" />
         <ToggleButtonGroup
           buttons={CREATION_OPTIONS}
