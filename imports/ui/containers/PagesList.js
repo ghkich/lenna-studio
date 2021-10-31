@@ -32,6 +32,7 @@ export const PagesList = ({appId}) => {
         searchValue={searchValue}
         onSearch={(value) => setSearchValue(value)}
         onAddClickGoTo={appId ? `${RoutePaths.APPS}/${appId}${RoutePaths.NEW_PAGE}` : RoutePaths.NEW_PAGE}
+        placeholder="Search pages..."
       />
       <PagesListComponent pages={pages} />
     </>

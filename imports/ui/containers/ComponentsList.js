@@ -25,6 +25,7 @@ export const ComponentsList = ({appId}) => {
         searchValue={searchValue}
         onSearch={(value) => setSearchValue(value)}
         onAddClickGoTo={RoutePaths.NEW_COMPONENT}
+        placeholder="Search components..."
       />
       <ComponentsListComponent components={components} />
     </>
