@@ -57,6 +57,7 @@ export const authenticatedRoutes = [
     component: NewApp,
   },
   {
+    exact: true,
     path: `${RoutePaths.APPS}/:id`,
     component: ViewApp,
   },
@@ -71,6 +72,12 @@ export const authenticatedRoutes = [
     component: NewPage,
   },
   {
+    exact: true,
+    path: `${RoutePaths.APPS}/:id${RoutePaths.NEW_PAGE}`,
+    component: NewPage,
+  },
+  {
+    exact: true,
     path: `${RoutePaths.PAGES}/:id`,
     component: ViewPage,
   },
@@ -85,6 +92,12 @@ export const authenticatedRoutes = [
     component: NewComponent,
   },
   {
+    exact: true,
+    path: `${RoutePaths.APPS}/:id${RoutePaths.NEW_COMPONENT}`,
+    component: NewComponent,
+  },
+  {
+    exact: true,
     path: `${RoutePaths.COMPONENTS}/:id`,
     component: ViewComponent,
   },

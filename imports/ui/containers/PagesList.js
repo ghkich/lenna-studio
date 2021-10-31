@@ -31,7 +31,7 @@ export const PagesList = ({appId}) => {
       <ListControls
         searchValue={searchValue}
         onSearch={(value) => setSearchValue(value)}
-        onAddClickGoTo={RoutePaths.NEW_PAGE}
+        onAddClickGoTo={appId ? `${RoutePaths.APPS}/${appId}${RoutePaths.NEW_PAGE}` : RoutePaths.NEW_PAGE}
       />
       <PagesListComponent pages={pages} />
     </>

@@ -2,22 +2,22 @@ import React, {useState} from 'react'
 import {SidebarLayout} from '../../components/layouts/SidebarLayout'
 import {PageHeader} from '../../components/PageHeader'
 import {RoutePaths} from '../../app/routes'
-import {useForm} from 'react-hook-form'
 import {Button} from '../../components/basic/Button'
 import {TextInput} from '../../components/basic/TextInput'
 import {ToggleButtonGroup} from '../../components/basic/ToggleButtonGroup'
 import {useMethod} from '../../../infra/hooks/useMethod'
-import {useHistory} from 'react-router-dom'
+import {useHistory, useParams} from 'react-router-dom'
 import {CREATION_OPTIONS, CREATION_TYPES} from '../../../infra/constants/creation-types'
 import {InspirationPages} from '../inspiration/components/InspirationPages'
 import {Select} from '../../components/basic/Select'
 import {useTracker} from 'meteor/react-meteor-data'
 import {COMPONENT_CATEGORIES} from '../../../infra/constants/component-categories'
 import {ComponentsCollection} from '../../../collections/components'
+import {Form} from '../../components/form/Form'
 
 export const NewPage = () => {
+  const {id: appId} = useParams() || {}
   const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.SCRATCH)
-  const {register, handleSubmit} = useForm()
   const history = useHistory()
 
   const {components} = useTracker(() => {
@@ -43,16 +43,16 @@ export const NewPage = () => {
     },
   })
 
-  const onSubmit = ({name, path, layoutComponentId}) => {
-    createPage.call({name, path, layoutComponentId})
+  const handleSubmit = ({name, path, layoutComponentId}) => {
+    createPage.call({appId, name, path, layoutComponentId})
   }
 
   return (
     <SidebarLayout menuMinimized>
       <PageHeader title="New page" />
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-        <TextInput register={register} name="name" placeholder="Name" />
-        <TextInput register={register} name="path" placeholder="Route path" />
+      <Form onSubmit={handleSubmit}>
+        <TextInput name="name" placeholder="Name" />
+        <TextInput name="path" placeholder="Route path" />
         <ToggleButtonGroup
           buttons={CREATION_OPTIONS}
           activeButton={selectedCreationType}
@@ -61,7 +61,6 @@ export const NewPage = () => {
         {selectedCreationType === CREATION_TYPES.SCRATCH && (
           <>
             <Select
-              register={register}
               name="layoutComponentId"
               options={[
                 {value: '', label: 'Choose a layout component...'},
@@ -79,7 +78,7 @@ export const NewPage = () => {
         <Button type="submit" style="primary">
           Create
         </Button>
-      </form>
+      </Form>
     </SidebarLayout>
   )
 }
