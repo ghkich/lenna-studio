@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import {SidebarLayout} from '../../components/layouts/SidebarLayout'
 import {PageHeader} from '../../components/PageHeader'
 import {RoutePaths} from '../../app/routes'
-import {useForm} from 'react-hook-form'
 import {Button} from '../../components/basic/Button'
 import {TextInput} from '../../components/basic/TextInput'
 import {ToggleButtonGroup} from '../../components/basic/ToggleButtonGroup'
@@ -10,10 +9,10 @@ import {InspirationApps} from '../inspiration/components/InspirationApps'
 import {useMethod} from '../../../infra/hooks/useMethod'
 import {useHistory} from 'react-router-dom'
 import {CREATION_OPTIONS, CREATION_TYPES} from '../../../infra/constants/creation-types'
+import {Form} from '../../components/form/Form'
 
 export const NewApp = () => {
   const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.SCRATCH)
-  const {register, handleSubmit} = useForm()
   const history = useHistory()
 
   const createPagesByIds = useMethod('pages.createByIds', {})
@@ -29,15 +28,15 @@ export const NewApp = () => {
     },
   })
 
-  const onSubmit = (data) => {
-    createApp.call({name: data.name})
+  const handleSubmit = ({name}) => {
+    createApp.call({name})
   }
 
   return (
     <SidebarLayout menuMinimized>
       <PageHeader title="New app" />
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-        <TextInput register={register} name="name" placeholder="Name" />
+      <Form onSubmit={handleSubmit} className="flex flex-col gap-2">
+        <TextInput name="name" placeholder="Name" />
         <ToggleButtonGroup
           buttons={CREATION_OPTIONS}
           activeButton={selectedCreationType}
@@ -52,7 +51,7 @@ export const NewApp = () => {
         <Button type="submit" style="primary">
           Create
         </Button>
-      </form>
+      </Form>
     </SidebarLayout>
   )
 }
