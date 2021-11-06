@@ -5,7 +5,10 @@ import {STRUCTURE_TYPES} from '../infra/constants/structure-types'
 import {timestampsSchema} from '../schemas/timestamps'
 
 export const ElementSchema = new SimpleSchema({
-  appId: SimpleSchema.RegEx.Id,
+  appId: {
+    type: SimpleSchema.RegEx.Id,
+    optional: true,
+  },
   pageId: {
     type: SimpleSchema.RegEx.Id,
     optional: true,

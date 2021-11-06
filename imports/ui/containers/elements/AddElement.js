@@ -7,7 +7,6 @@ import {Form} from '../../components/form/Form'
 import {useMethod} from '../../../infra/hooks/useMethod'
 import {Button} from '../../components/basic/Button'
 import {STRUCTURE_TYPES} from '../../../infra/constants/structure-types'
-import {useParams} from 'react-router-dom'
 import {TextInput} from '../../components/basic/TextInput'
 
 export const ELEMENT_TYPES = {
@@ -16,8 +15,7 @@ export const ELEMENT_TYPES = {
   TEXT: 'Text',
 }
 
-export const AddElement = ({element}) => {
-  const {id: pageId} = useParams() || {}
+export const AddElement = ({parentElement}) => {
   const [addMode, setAddMode] = useState(false)
   const [selectedElementType, setSelectedElementType] = useState(ELEMENT_TYPES.TAG)
   const [selectedComponentCategory, setSelectedComponentCategory] = useState()
@@ -69,9 +67,10 @@ export const AddElement = ({element}) => {
       text = formValues.text
     }
     addElement.call({
-      appId: element.appId,
-      pageId,
-      parentId: !element.parentId ? null : element._id,
+      appId: parentElement.appId,
+      pageId: parentElement.pageId,
+      componentId: parentElement.componentId,
+      parentId: parentElement._id,
       component,
       tagName,
       text,

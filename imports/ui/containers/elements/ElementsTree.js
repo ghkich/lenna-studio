@@ -6,7 +6,7 @@ import {AddElement} from './AddElement'
 import {RemoveElement} from './RemoveElement'
 import {ComponentsCollection} from '../../../collections/components'
 
-export const ElementsTree = ({elements, allowAddChildren, onElementClick}) => {
+export const ElementsTree = ({elements, addElementDisabled, onElementClick}) => {
   const [selectedElement, setSelectedElement] = useState({})
 
   const containerElement = elements?.find((el) => !el?.parentId)
@@ -24,9 +24,9 @@ export const ElementsTree = ({elements, allowAddChildren, onElementClick}) => {
               elements={elements}
               element={element}
               selectedElement={selectedElement}
-              allowAddChildren={allowAddChildren}
+              addElementDisabled={addElementDisabled}
               onClick={(element) => {
-                if (!allowAddChildren) return null
+                if (addElementDisabled) return null
                 onElementClick && onElementClick(element)
                 setSelectedElement((prev) => (prev._id !== element._id ? element : {}))
               }}
@@ -60,11 +60,15 @@ const Element = ({elements, element, level, renderChildren, onClick, selectedEle
 
   const isSelected = selectedElement?._id === element._id
 
-  let component = ComponentsCollection.findOne(element.component?._id)
-  if (!element.parentId) {
-    component = ComponentsCollection.findOne(element.componentId)
-  }
-  const acceptChildren = component ? checkIfComponentAcceptChildren(component) : checkIfElementAcceptChildren(element)
+  let elementComponent = ComponentsCollection.findOne(element.component?._id)
+  // if (!element.parentId) {
+  //   elementComponent = ComponentsCollection.findOne(element.componentId)
+  // }
+  // console.log(element)
+  // console.log(elementComponent)
+  const acceptChildren = elementComponent
+    ? checkIfComponentAcceptChildren(elementComponent)
+    : checkIfElementAcceptChildren(element)
   const children = elements?.filter((el) => el?.parentId === element._id)
 
   return (
@@ -88,14 +92,14 @@ const Element = ({elements, element, level, renderChildren, onClick, selectedEle
               <FontAwesomeIcon icon={open ? faCaretRight : faCaretDown} className="text-2xs" />
             </button>
           )}
-          {component?.name || element?.tagName || <span className="text-2xs">Text: "{element?.text}"</span>}
+          {elementComponent?.name || element?.tagName || <span className="text-2xs">Text: "{element?.text}"</span>}
         </div>
         {isSelected && element.parentId && <RemoveElement element={element} />}
       </div>
       {isSelected && (
         <div className="p-2">
           {acceptChildren ? (
-            <AddElement element={element} />
+            <AddElement parentElement={element} />
           ) : (
             <div className="py-1 px-2 bg-gray-300 border bg-opacity-25 text-2xs text-center">
               This element does not accept children
