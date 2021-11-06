@@ -21,11 +21,14 @@ import '../imports/api/pages/publications/by-id'
 import '../imports/api/components/publications/by-app-id'
 import '../imports/api/components/publications/by-category'
 import '../imports/api/components/publications/by-id'
+import '../imports/api/components/publications/by-ids'
 import '../imports/api/elements/publications/by-app-id'
 import '../imports/api/elements/publications/by-component-id'
+import '../imports/api/elements/publications/by-component-ids'
 import '../imports/api/elements/publications/by-page-id'
-import '../imports/api/selectors/publications/by-component-id'
 import '../imports/api/selectors/publications/by-app-id'
+import '../imports/api/selectors/publications/by-component-id'
+import '../imports/api/selectors/publications/by-component-ids'
 
 // METHODS
 import '../imports/api/apps/methods'
@@ -54,139 +57,139 @@ Meteor.startup(() => {
     password: '123',
   })
 
-  THEMES_SEED.forEach((theme) =>
-    ThemesCollection.insert({
-      userId,
-      ...theme,
-    }),
-  )
-
-  const createOrUpdateSelectors = ({appId, componentId, selectors, style, state}) => {
-    if (!appId || !selectors || !componentId) return
-    selectors.forEach(({value, classes}) => {
-      const selectorValue = value || undefined
-      const selector = SelectorsCollection.findOne({appId, componentId, value: selectorValue}) || {}
-      if (selector?._id) {
-        if (style) {
-          SelectorsCollection.update(
-            {_id: selector._id, 'classesByStyles.style': style},
-            {
-              $pull: {classesByStyles: {style}},
-            },
-          )
-          return SelectorsCollection.update(
-            {_id: selector._id},
-            {
-              $addToSet: {classesByStyles: {style, classes}},
-            },
-          )
-        }
-        if (state) {
-          SelectorsCollection.update(
-            {_id: selector._id, 'classesByStates.state': state},
-            {
-              $pull: {classesByStates: {state}},
-            },
-          )
-          return SelectorsCollection.update(
-            {_id: selector._id},
-            {
-              $addToSet: {classesByStates: {state, classes}},
-            },
-          )
-        }
-        return SelectorsCollection.update(
-          {_id: selector._id},
-          {
-            $set: {classes},
-          },
-        )
-      }
-      let propsToInsert = {
-        classes,
-      }
-      if (style) {
-        propsToInsert = {
-          classesByStyles: [{style, classes}],
-        }
-      }
-      if (state) {
-        propsToInsert = {
-          classesByStates: [{state, classes}],
-        }
-      }
-      return SelectorsCollection.insert({
-        appId,
-        componentId,
-        value,
-        ...propsToInsert,
-      })
-    })
-  }
-
-  APPS_SEED.forEach((app) => {
-    const appId = AppsCollection.insert({
-      ...(app.addForUser ? {userId} : {}),
-      ...app,
-    })
-
-    COMPONENTS_SEED.forEach((component) => {
-      const componentId = ComponentsCollection.insert({
-        userId,
-        appId,
-        name: component.name,
-        category: component.category,
-      })
-
-      createOrUpdateSelectors({appId, componentId, selectors: component.selectors})
-
-      component.styles?.forEach((style) => {
-        createOrUpdateSelectors({appId, componentId, selectors: style.selectors, style: style.value})
-        ComponentsCollection.update(
-          {_id: componentId},
-          {
-            $addToSet: {
-              styles: style.value,
-            },
-          },
-        )
-      })
-
-      component.states?.forEach((state) => {
-        createOrUpdateSelectors({appId, componentId, selectors: state.selectors, state: state.value})
-        ComponentsCollection.update(
-          {_id: componentId},
-          {
-            $addToSet: {
-              states: state.value,
-            },
-          },
-        )
-      })
-      createElementsFor({
-        appId,
-        componentId,
-        nodes: component.childNodes,
-        structureType: STRUCTURE_TYPES.EXPECTED,
-      })
-    })
-
-    PAGES_SEED.forEach((page) => {
-      const layoutComponentId = ComponentsCollection.findOne({name: page.layout})?._id
-      const pageId = PagesCollection.insert({
-        userId,
-        appId,
-        category: page.category,
-        layoutComponentId,
-        name: page.name,
-        path: page.path,
-      })
-      createElementsFor({
-        appId,
-        pageId,
-        nodes: page.childNodes,
-        structureType: STRUCTURE_TYPES.EXPECTED,
-      })
-    })
-  })
+  // THEMES_SEED.forEach((theme) =>
+  //   ThemesCollection.insert({
+  //     userId,
+  //     ...theme,
+  //   }),
+  // )
+  //
+  // const createOrUpdateSelectors = ({appId, componentId, selectors, style, state}) => {
+  //   if (!appId || !selectors || !componentId) return
+  //   selectors.forEach(({value, classes}) => {
+  //     const selectorValue = value || undefined
+  //     const selector = SelectorsCollection.findOne({appId, componentId, value: selectorValue}) || {}
+  //     if (selector?._id) {
+  //       if (style) {
+  //         SelectorsCollection.update(
+  //           {_id: selector._id, 'classesByStyles.style': style},
+  //           {
+  //             $pull: {classesByStyles: {style}},
+  //           },
+  //         )
+  //         return SelectorsCollection.update(
+  //           {_id: selector._id},
+  //           {
+  //             $addToSet: {classesByStyles: {style, classes}},
+  //           },
+  //         )
+  //       }
+  //       if (state) {
+  //         SelectorsCollection.update(
+  //           {_id: selector._id, 'classesByStates.state': state},
+  //           {
+  //             $pull: {classesByStates: {state}},
+  //           },
+  //         )
+  //         return SelectorsCollection.update(
+  //           {_id: selector._id},
+  //           {
+  //             $addToSet: {classesByStates: {state, classes}},
+  //           },
+  //         )
+  //       }
+  //       return SelectorsCollection.update(
+  //         {_id: selector._id},
+  //         {
+  //           $set: {classes},
+  //         },
+  //       )
+  //     }
+  //     let propsToInsert = {
+  //       classes,
+  //     }
+  //     if (style) {
+  //       propsToInsert = {
+  //         classesByStyles: [{style, classes}],
+  //       }
+  //     }
+  //     if (state) {
+  //       propsToInsert = {
+  //         classesByStates: [{state, classes}],
+  //       }
+  //     }
+  //     return SelectorsCollection.insert({
+  //       appId,
+  //       componentId,
+  //       value,
+  //       ...propsToInsert,
+  //     })
+  //   })
+  // }
+  //
+  // APPS_SEED.forEach((app) => {
+  //   const appId = AppsCollection.insert({
+  //     ...(app.addForUser ? {userId} : {}),
+  //     ...app,
+  //   })
+  //
+  //   COMPONENTS_SEED.forEach((component) => {
+  //     const componentId = ComponentsCollection.insert({
+  //       userId,
+  //       appId,
+  //       name: component.name,
+  //       category: component.category,
+  //     })
+  //
+  //     createOrUpdateSelectors({appId, componentId, selectors: component.selectors})
+  //
+  //     component.styles?.forEach((style) => {
+  //       createOrUpdateSelectors({appId, componentId, selectors: style.selectors, style: style.value})
+  //       ComponentsCollection.update(
+  //         {_id: componentId},
+  //         {
+  //           $addToSet: {
+  //             styles: style.value,
+  //           },
+  //         },
+  //       )
+  //     })
+  //
+  //     component.states?.forEach((state) => {
+  //       createOrUpdateSelectors({appId, componentId, selectors: state.selectors, state: state.value})
+  //       ComponentsCollection.update(
+  //         {_id: componentId},
+  //         {
+  //           $addToSet: {
+  //             states: state.value,
+  //           },
+  //         },
+  //       )
+  //     })
+  //     createElementsFor({
+  //       appId,
+  //       componentId,
+  //       nodes: component.childNodes,
+  //       structureType: STRUCTURE_TYPES.EXPECTED,
+  //     })
+  //   })
+  //
+  //   PAGES_SEED.forEach((page) => {
+  //     const layoutComponentId = ComponentsCollection.findOne({name: page.layout})?._id
+  //     const pageId = PagesCollection.insert({
+  //       userId,
+  //       appId,
+  //       category: page.category,
+  //       layoutComponentId,
+  //       name: page.name,
+  //       path: page.path,
+  //     })
+  //     createElementsFor({
+  //       appId,
+  //       pageId,
+  //       nodes: page.childNodes,
+  //       structureType: STRUCTURE_TYPES.EXPECTED,
+  //     })
+  //   })
+  // })
 })

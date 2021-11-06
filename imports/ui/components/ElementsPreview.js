@@ -7,26 +7,28 @@ import {generateCss} from '../../api/generate-css'
 import {ComponentsCollection} from '../../collections/components'
 import {ElementsCollection} from '../../collections/elements'
 
-export const ElementsPreview = ({elements, componentId, selectedStyle, selectedState}) => {
+export const ElementsPreview = ({elements, selectedComponentId, selectedStyle, selectedState}) => {
   const [css, setCss] = useState('')
-  const appId = elements?.[0]?.appId
 
   useTracker(() => {
-    if (!appId) return {}
-    Meteor.subscribe('selectors.byAppId', {appId})
-    Meteor.subscribe('components.byAppId', {appId})
-    Meteor.subscribe('elements.byAppId', {appId})
-    const appSelectors = SelectorsCollection.find().fetch()
-
-    const css = generateCss({selectors: appSelectors})
+    if (!elements) return {}
+    const componentIds = elements
+      ?.map((element) => (element.parentId ? element?.component?._id : element.componentId))
+      .filter(Boolean)
+    if (componentIds.length === 0) return {}
+    Meteor.subscribe('components.byIds', componentIds)
+    Meteor.subscribe('selectors.byComponentIds', componentIds)
+    Meteor.subscribe('elements.byComponentIds', componentIds)
+    const selectors = SelectorsCollection.find({componentId: {$in: componentIds}}).fetch()
+    const css = generateCss({selectors})
     setCss(css)
-  }, [appId])
+  }, [elements])
 
   useEffect(() => {
-    if (componentId) {
+    if (selectedComponentId) {
       const updateComponentElementCustomData = () => {
         setTimeout(() => {
-          const domComponent = document.getElementById(componentId)
+          const domComponent = document.getElementById(selectedComponentId)
           if (domComponent) {
             domComponent?.setAttribute(CUSTOM_ATTR_KEYS.STYLE, selectedStyle)
             domComponent?.setAttribute(CUSTOM_ATTR_KEYS.STATE, selectedState)
@@ -37,7 +39,7 @@ export const ElementsPreview = ({elements, componentId, selectedStyle, selectedS
       }
       updateComponentElementCustomData()
     }
-  }, [componentId, selectedStyle, selectedState])
+  }, [selectedComponentId, selectedStyle, selectedState])
 
   const containerElement = elements?.find((el) => !el?.parentId)
   if (!containerElement) return null
@@ -76,7 +78,7 @@ export const ElementsPreview = ({elements, componentId, selectedStyle, selectedS
   return (
     <>
       <style>{css}</style>
-      {renderChildren([containerElement], componentId)}
+      {renderChildren([containerElement], selectedComponentId)}
     </>
   )
 }
