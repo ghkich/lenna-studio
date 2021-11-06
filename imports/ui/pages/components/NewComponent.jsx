@@ -16,8 +16,6 @@ export const NewComponent = () => {
   const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.SCRATCH)
   const history = useHistory()
 
-  const createElementsByIds = useMethod('elements.createByIds', {})
-
   const createComponent = useMethod('components.create', {
     onSuccess: (componentId) => {
       if (componentId) {
@@ -29,8 +27,9 @@ export const NewComponent = () => {
     },
   })
 
-  const handleSubmit = ({name, category}) => {
-    createComponent.call({name, category})
+  const handleSubmit = ({name, category, structure}) => {
+    const elements = [{tagName: structure}]
+    createComponent.call({name, category, elements})
   }
 
   return (
