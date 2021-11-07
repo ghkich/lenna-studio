@@ -13,6 +13,8 @@ import {NewPage} from '../pages/pages/NewPage'
 import {NewComponent} from '../pages/components/NewComponent'
 import {ViewComponent} from '../pages/components/ViewComponent'
 import {ViewPage} from '../pages/pages/ViewPage'
+import {ViewTheme} from '../pages/themes/ViewTheme'
+import {NewTheme} from '../pages/themes/NewTheme'
 
 export const RoutePaths = {
   HOME: '/',
@@ -102,8 +104,24 @@ export const authenticatedRoutes = [
     component: ViewComponent,
   },
   {
+    exact: true,
     path: RoutePaths.THEMES,
     component: Themes,
+  },
+  {
+    exact: true,
+    path: RoutePaths.NEW_THEME,
+    component: NewTheme,
+  },
+  {
+    exact: true,
+    path: `${RoutePaths.APPS}/:id${RoutePaths.NEW_THEME}`,
+    component: NewTheme,
+  },
+  {
+    exact: true,
+    path: `${RoutePaths.THEMES}/:id`,
+    component: ViewTheme,
   },
   {
     path: RoutePaths.PROFILE,
