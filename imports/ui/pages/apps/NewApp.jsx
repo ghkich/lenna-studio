@@ -10,12 +10,23 @@ import {useMethod} from '../../../infra/hooks/useMethod'
 import {useHistory} from 'react-router-dom'
 import {CREATION_OPTIONS, CREATION_TYPES} from '../../../infra/constants/creation-types'
 import {Form} from '../../components/form/Form'
+import {Select} from '../../components/basic/Select'
+import {useTracker} from 'meteor/react-meteor-data'
+import {ThemesCollection} from '../../../collections/themes'
 
 export const NewApp = () => {
   const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.SCRATCH)
   const history = useHistory()
 
-  const createPagesByIds = useMethod('pages.createByIds', {})
+  const {themes} = useTracker(() => {
+    Meteor.subscribe('themes.byUserId')
+    Meteor.subscribe('themes.global')
+    const themes = ThemesCollection.find().fetch()
+
+    return {
+      themes,
+    }
+  }, [])
 
   const createApp = useMethod('apps.create', {
     onSuccess: (appId) => {
@@ -28,8 +39,8 @@ export const NewApp = () => {
     },
   })
 
-  const handleSubmit = ({name}) => {
-    createApp.call({name})
+  const handleSubmit = ({name, themeId}) => {
+    createApp.call({name, themeId})
   }
 
   return (
@@ -37,6 +48,13 @@ export const NewApp = () => {
       <PageHeader title="New app" />
       <Form onSubmit={handleSubmit}>
         <TextInput name="name" placeholder="Name" />
+        <Select
+          name="themeId"
+          options={[
+            {value: '', label: 'Choose a theme...'},
+            ...themes?.map((theme) => ({value: theme._id, label: theme.name})),
+          ]}
+        />
         <ToggleButtonGroup
           buttons={CREATION_OPTIONS}
           activeButton={selectedCreationType}
