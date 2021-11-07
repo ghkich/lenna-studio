@@ -29,6 +29,9 @@ import '../imports/api/elements/publications/by-page-id'
 import '../imports/api/selectors/publications/by-app-id'
 import '../imports/api/selectors/publications/by-component-id'
 import '../imports/api/selectors/publications/by-component-ids'
+import '../imports/api/themes/publications/by-id'
+import '../imports/api/themes/publications/by-user-id'
+import '../imports/api/themes/publications/global'
 
 // METHODS
 import '../imports/api/apps/methods'
@@ -36,6 +39,7 @@ import '../imports/api/pages/methods'
 import '../imports/api/components/methods'
 import '../imports/api/elements/methods'
 import '../imports/api/selectors/methods'
+import '../imports/api/themes/methods'
 
 import './api/index'
 import {createElementsFor} from '../imports/api/elements/methods/create-elements-for'
