@@ -25,8 +25,8 @@ Meteor.methods({
     }
     return componentId
   },
-  ['components.update']({_id, ...component}) {
-    return ComponentsCollection.update(_id, {$set: component})
+  ['components.update']({componentId, ...component}) {
+    return ComponentsCollection.update(componentId, {$set: component})
   },
   ['components.addStyle']({componentId, style}) {
     if (!style) return
