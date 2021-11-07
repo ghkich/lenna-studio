@@ -4,6 +4,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faTrashCan} from '@fortawesome/pro-solid-svg-icons'
 
 export const RemoveElement = ({element}) => {
+  if (!element.parentId) return null
   const removeElement = useMethod('elements.remove', {
     onSuccess: (teste) => {
       console.log('teste', teste)
