@@ -15,7 +15,7 @@ export const ELEMENT_TYPES = {
   TEXT: 'Text',
 }
 
-export const AddElement = ({parentElement}) => {
+export const AddElement = ({targetComponent, targetPage, parentElement}) => {
   const [addMode, setAddMode] = useState(false)
   const [selectedElementType, setSelectedElementType] = useState(ELEMENT_TYPES.TAG)
   const [selectedComponentCategory, setSelectedComponentCategory] = useState()
@@ -43,11 +43,7 @@ export const AddElement = ({parentElement}) => {
     }
   }, [selectedComponent])
 
-  const addElement = useMethod('elements.create', {
-    onSuccess: (teste) => {
-      console.log('teste', teste)
-    },
-  })
+  const addElement = useMethod('elements.create')
 
   const handleSubmit = (formValues) => {
     let component
@@ -68,8 +64,8 @@ export const AddElement = ({parentElement}) => {
     }
     addElement.call({
       appId: parentElement.appId,
-      pageId: parentElement.pageId,
-      componentId: parentElement.componentId,
+      pageId: targetPage?._id,
+      componentId: targetComponent?._id,
       parentId: parentElement._id,
       component,
       tagName,

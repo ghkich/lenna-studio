@@ -5,8 +5,9 @@ import {VOID_ELEMENTS} from '../../../infra/constants/void-elements'
 import {AddElement} from './AddElement'
 import {RemoveElement} from './RemoveElement'
 import {ComponentsCollection} from '../../../collections/components'
+import {TurnElementIntoChildrenContainer} from './TurnElementIntoChildrenContainer'
 
-export const ElementsTree = ({elements, addElementDisabled, onElementClick}) => {
+export const ElementsTree = ({targetComponent, targetPage, elements, addElementDisabled, onElementClick}) => {
   const [selectedElement, setSelectedElement] = useState({})
 
   const containerElement = elements?.find((el) => !el?.parentId)
@@ -21,8 +22,10 @@ export const ElementsTree = ({elements, addElementDisabled, onElementClick}) => 
           return (
             <Element
               key={element?._id}
-              elements={elements}
+              targetComponent={targetComponent}
+              targetPage={targetPage}
               element={element}
+              elementChildren={elements?.filter((el) => el?.parentId === element._id)}
               selectedElement={selectedElement}
               addElementDisabled={addElementDisabled}
               onClick={(element) => {
@@ -53,35 +56,36 @@ const checkIfElementAcceptChildren = (element) => {
   return element.tagName && !VOID_ELEMENTS.includes(element.tagName)
 }
 
-const Element = ({elements, element, level, renderChildren, onClick, selectedElement}) => {
+const Element = ({
+  targetComponent,
+  targetPage,
+  element,
+  elementChildren,
+  level,
+  renderChildren,
+  onClick,
+  selectedElement,
+}) => {
   const [open, setOpen] = useState(true)
 
   if (!element) return null
-
   const isSelected = selectedElement?._id === element._id
-
-  let elementComponent = ComponentsCollection.findOne(element.component?._id)
-  // if (!element.parentId) {
-  //   elementComponent = ComponentsCollection.findOne(element.componentId)
-  // }
-  // console.log(element)
-  // console.log(elementComponent)
+  const elementComponent = ComponentsCollection.findOne(element.component?._id)
   const acceptChildren = elementComponent
     ? checkIfComponentAcceptChildren(elementComponent)
     : checkIfElementAcceptChildren(element)
-  const children = elements?.filter((el) => el?.parentId === element._id)
 
   return (
     <div className={` ${isSelected ? 'bg-gray-100 border-0 hover:bg-gray-100' : 'bg-white'}`}>
       <div
-        className={`flex justify-between items-center border-b cursor-pointer px-2 ${isSelected ? 'h-10' : 'h-6'}`}
+        className={`flex items-center gap-1 border-b cursor-pointer px-2 ${isSelected ? 'h-10' : 'h-6'}`}
         style={{paddingLeft: `${level * 10 || 3}px`}}
         onClick={() => {
           onClick(element)
         }}
       >
-        <div>
-          {children?.length > 0 && (
+        <div className="flex-1">
+          {elementChildren?.length > 0 && (
             <button
               type="button"
               className={`px-2 -ml-2 py-1 ${isSelected ? 'py-2' : ''}`}
@@ -93,13 +97,24 @@ const Element = ({elements, element, level, renderChildren, onClick, selectedEle
             </button>
           )}
           {elementComponent?.name || element?.tagName || <span className="text-2xs">Text: "{element?.text}"</span>}
+          {targetPage && !element.parentId && <span className="text-2xs opacity-50"> {'{childrenContainer}'}</span>}
         </div>
-        {isSelected && element.parentId && <RemoveElement element={element} />}
+        {isSelected && (
+          <>
+            {targetComponent && !elementComponent && (
+              <TurnElementIntoChildrenContainer
+                element={element}
+                active={element._id === targetComponent?.childrenContainerElementId}
+              />
+            )}
+            <RemoveElement element={element} />
+          </>
+        )}
       </div>
       {isSelected && (
         <div className="p-2">
           {acceptChildren ? (
-            <AddElement parentElement={element} />
+            <AddElement targetComponent={targetComponent} targetPage={targetPage} parentElement={element} />
           ) : (
             <div className="py-1 px-2 bg-gray-300 border bg-opacity-25 text-2xs text-center">
               This element does not accept children
@@ -107,9 +122,9 @@ const Element = ({elements, element, level, renderChildren, onClick, selectedEle
           )}
         </div>
       )}
-      {children?.length > 0 && (
+      {elementChildren?.length > 0 && (
         <div className={`${open ? 'block bg-gray-100' : 'hidden'} ${isSelected ? 'p-2' : ''}`}>
-          {renderChildren(children, level)}
+          {renderChildren(elementChildren, level)}
         </div>
       )}
     </div>

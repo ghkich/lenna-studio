@@ -33,7 +33,7 @@ export const ViewPage = () => {
     }
   }, [pageId])
 
-  const {treeElements, previewElements, allowAddChildren} = useTracker(() => {
+  const {previewElements, treeElements, layoutHasChildrenContainer} = useTracker(() => {
     if (!pageId || !layoutComponentId) return {}
     const subs = [
       Meteor.subscribe('components.byId', {_id: layoutComponentId}),
@@ -65,9 +65,9 @@ export const ViewPage = () => {
     }
 
     return {
-      treeElements,
       previewElements,
-      allowAddChildren: !!layoutChildrenContainer,
+      treeElements,
+      layoutHasChildrenContainer: !!layoutChildrenContainer,
       loading: subs.some((sub) => !sub.ready()),
     }
   }, [pageId, layoutComponentId])
@@ -114,7 +114,11 @@ export const ViewPage = () => {
           </Form>
           {page?._id && treeElements?.length > 0 && (
             <>
-              <ElementsTree elements={treeElements} allowAddChildren={allowAddChildren} />
+              <ElementsTree
+                targetPage={page}
+                elements={treeElements}
+                addElementDisabled={!layoutHasChildrenContainer}
+              />
               <div className="mb-2" />
             </>
           )}

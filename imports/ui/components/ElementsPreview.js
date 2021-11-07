@@ -10,18 +10,47 @@ import {ElementsCollection} from '../../collections/elements'
 export const ElementsPreview = ({elements, selectedComponentId, selectedStyle, selectedState}) => {
   const [css, setCss] = useState('')
 
-  useTracker(() => {
+  const {allElements} = useTracker(() => {
     if (!elements) return {}
     const componentIds = elements
       ?.map((element) => (element.parentId ? element?.component?._id : element.componentId))
       .filter(Boolean)
     if (componentIds.length === 0) return {}
     Meteor.subscribe('components.byIds', componentIds)
-    Meteor.subscribe('selectors.byComponentIds', componentIds)
     Meteor.subscribe('elements.byComponentIds', componentIds)
+    Meteor.subscribe('selectors.byComponentIds', componentIds)
+
+    const allElements = []
+
+    let component
+
+    elements.forEach((element) => {
+      const componentId = element?.component?._id
+      if (componentId) {
+        component = ComponentsCollection.findOne({_id: componentId})
+        const componentElements = ElementsCollection.find({componentId}).fetch()
+        const componentContainerElement = componentElements.find((el) => !el.parentId)
+        componentElements
+          .filter((el) => el.parentId && el.parentId !== component?.childrenContainerElementId)
+          .forEach((el) => {
+            if (el.parentId === componentContainerElement?._id) {
+              allElements.push({...el, parentId: element._id})
+            } else {
+              allElements.push(el)
+            }
+          })
+      }
+      if (element.parentId !== component?.childrenContainerElementId) {
+        allElements.push(element)
+      }
+    })
+
     const selectors = SelectorsCollection.find({componentId: {$in: componentIds}}).fetch()
     const css = generateCss({selectors})
     setCss(css)
+    return {
+      allElements,
+    }
   }, [elements])
 
   useEffect(() => {
@@ -60,7 +89,7 @@ export const ElementsPreview = ({elements, selectedComponentId, selectedStyle, s
         return element?.text
       }
       if (!tagName) return null
-      const children = elements?.filter((el) => el?.parentId === element._id)
+      const children = allElements?.filter((el) => el?.parentId === element._id)
       return React.createElement(
         tagName,
         {

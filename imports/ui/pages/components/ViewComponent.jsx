@@ -67,7 +67,7 @@ export const ViewComponent = () => {
       contentComponent={
         <ElementsPreview
           elements={elements}
-          componentId={component?._id}
+          selectedComponentId={component?._id}
           selectedStyle={selectedStyle}
           selectedState={selectedState}
         />
@@ -76,13 +76,8 @@ export const ViewComponent = () => {
       <PageHeader title={component?.name} />
       {component?._id && (
         <>
-          <input
-            placeholder="Selector"
-            value={selectedSelectorValue}
-            onChange={(e) => setSelectedSelectorValue(e.target.value)}
-            className="w-full p-2 mb-2 border"
-          />
           <ElementsTree
+            targetComponent={component}
             elements={elements}
             onElementClick={(element) => {
               if (element.component?.name) {
@@ -91,6 +86,12 @@ export const ViewComponent = () => {
             }}
           />
           <div className="mb-2" />
+          <input
+            placeholder="Selector"
+            value={selectedSelectorValue}
+            onChange={(e) => setSelectedSelectorValue(e.target.value)}
+            className="w-full p-2 mb-2 border"
+          />
           <ClassesInput
             componentId={component._id}
             selectorId={selectedSelector?._id}
