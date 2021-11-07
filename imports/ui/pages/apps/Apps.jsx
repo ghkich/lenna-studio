@@ -27,6 +27,7 @@ export const Apps = () => {
         searchValue={appSearchValue}
         onSearch={(value) => setAppSearchValue(value)}
         onAddClickGoTo={RoutePaths.NEW_APP}
+        placeholder="Search apps..."
       />
       <div className="flex flex-col gap-1 mt-1">
         {apps.map((app) => (
