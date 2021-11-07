@@ -10,7 +10,7 @@ WebApp.connectHandlers.use('/api/sendHtml', (req, res, next) => {
     'data',
     Meteor.bindEnvironment((data) => {
       const {pathname, html} = JSON.parse(data)
-      const appId = AppsCollection.findOne({name: 'Admin sample app'})?._id
+      const appId = AppsCollection.findOne()?._id
       const pageId = PagesCollection.findOne({path: pathname})?._id
       const htmlNodes = parse(html)?.childNodes
       createElementsFor({
