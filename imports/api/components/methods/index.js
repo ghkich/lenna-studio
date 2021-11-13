@@ -4,16 +4,20 @@ import {ElementsCollection} from '../../../collections/elements'
 import {STRUCTURE_TYPES} from '../../../infra/constants/structure-types'
 
 Meteor.methods({
-  ['components.create']({name, category, elements}) {
-    if (!name) return
-    const existingComponentName = ComponentsCollection.find({name}).fetch()
+  ['components.byName'](name) {
+    return ComponentsCollection.findOne({name})
+  },
+  ['components.create'](component, elements) {
+    if (!component?.name) return
+    const existingComponentName = ComponentsCollection.find({appId: component?.appId, name: component?.name}).fetch()
     if (existingComponentName?.length > 0) {
       throw new Meteor.Error('component name already exists')
     }
-    const componentId = ComponentsCollection.insert({name, category, userId: this.userId})
+    const componentId = ComponentsCollection.insert({...component, userId: this.userId})
     if (componentId && elements) {
       elements.forEach((element) => {
         ElementsCollection.insert({
+          appId: component?.appId,
           userId: this.userId,
           componentId,
           tagName: element.tagName,

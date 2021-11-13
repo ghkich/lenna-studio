@@ -69,14 +69,8 @@ const margins = Object.entries(spacing).reduce((newObj, [key, val]) => {
   }
 }, {})
 
-export const transformClassToCss = (className) => {
-  const theme = {
-    colors: {
-      primary: '#333333',
-      secondary: '#ff0000',
-    },
-  }
-
+export const transformClassToCss = (className, theme) => {
+  const settings = theme?.settings
   const obj = {
     hidden: `display: none;`,
     block: `display: block;`,
@@ -88,13 +82,13 @@ export const transformClassToCss = (className) => {
     'flex-col': `flex-direction: column;`,
     'justify-center': `justify-content: center;`,
     'items-center': `align-items: center;`,
-    'bg-primary': `background-color: ${theme.colors.primary};`,
-    'bg-secondary': `background-color: ${theme.colors.secondary};`,
+    'bg-primary': `background-color: ${settings?.colors?.primary};`,
+    'bg-secondary': `background-color: ${settings?.colors?.secondary};`,
     'bg-white': `background-color: white;`,
     'border-white': `border-color: white;`,
     'border-gray': `border-color: gray;`,
-    'text-primary': `color: ${theme.colors.primary};`,
-    'text-secondary': `color: ${theme.colors.secondary};`,
+    'text-primary': `color: ${settings?.colors?.primary};`,
+    'text-secondary': `color: ${settings?.colors?.secondary};`,
     'text-white': `color: white;`,
     'text-sm': `font-size: 12px;`,
     'shadow-lg': `box-shadow: 0 2px 10px rgba(0,0,0,0.2);`,

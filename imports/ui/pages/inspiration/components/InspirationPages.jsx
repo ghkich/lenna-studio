@@ -10,7 +10,6 @@ export const InspirationPages = () => {
   const [selectedPageId, setSelectedPageId] = useState()
 
   const {pages} = useTracker(() => {
-    if (!selectedPageCategory) return {}
     const sub = Meteor.subscribe('pages.byCategory', {category: selectedPageCategory})
     const pages = PagesCollection.find({category: selectedPageCategory}).fetch()
 
@@ -28,7 +27,10 @@ export const InspirationPages = () => {
         <Select
           value={selectedPageCategory}
           onChange={(e) => setSelectedPageCategory(e.target.value)}
-          options={Object.values(PAGE_CATEGORIES).map((value) => ({value, label: value}))}
+          options={[
+            {value: '', label: 'Choose a category...'},
+            ...Object.values(PAGE_CATEGORIES).map((category) => ({value: category, label: category})),
+          ]}
         />
       </div>
       <PagesList pages={pages} selectedPageId={selectedPageId} onSelectPage={(pageId) => setSelectedPageId(pageId)} />

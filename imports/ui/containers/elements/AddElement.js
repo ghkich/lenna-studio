@@ -15,7 +15,7 @@ export const ELEMENT_TYPES = {
   TEXT: 'Text',
 }
 
-export const AddElement = ({targetComponent, targetPage, parentElement}) => {
+export const AddElement = ({appId, targetComponent, targetPage, parentElement}) => {
   const [addMode, setAddMode] = useState(false)
   const [selectedElementType, setSelectedElementType] = useState(ELEMENT_TYPES.TAG)
   const [selectedComponentCategory, setSelectedComponentCategory] = useState()
@@ -25,8 +25,8 @@ export const AddElement = ({targetComponent, targetPage, parentElement}) => {
 
   const {components = []} = useTracker(() => {
     if (!selectedComponentCategory) return {}
-    const sub = Meteor.subscribe('components.byCategory', {category: selectedComponentCategory})
-    const components = ComponentsCollection.find({category: selectedComponentCategory}).fetch()
+    const sub = Meteor.subscribe('components.byCategory', {appId, category: selectedComponentCategory})
+    const components = ComponentsCollection.find({appId, category: selectedComponentCategory}).fetch()
 
     return {
       components,
@@ -63,7 +63,7 @@ export const AddElement = ({targetComponent, targetPage, parentElement}) => {
       text = formValues.text
     }
     addElement.call({
-      appId: parentElement.appId,
+      appId,
       pageId: targetPage?._id,
       componentId: targetComponent?._id,
       parentId: parentElement._id,

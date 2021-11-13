@@ -17,7 +17,7 @@ export const NODE_TYPES = {
 export const createElementsFor = ({appId, pageId, componentId, nodes, structureType}) => {
   let topDownIndex = 0
   if (pageId) {
-    ElementsCollection.remove({appId, pageId, structureType})
+    ElementsCollection.remove({appId, pageId, 'structure.type': structureType})
   }
   if (componentId) {
     ElementsCollection.remove({appId, componentId})
@@ -66,7 +66,7 @@ export const createElementsFor = ({appId, pageId, componentId, nodes, structureT
         parentId,
         component,
         tagName: node.tagName?.toLowerCase(),
-        text: node.text,
+        text: !node.tagName && node.text ? node.text : undefined,
         attrs: node.attrs,
         structure: {
           type: structureType,

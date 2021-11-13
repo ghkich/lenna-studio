@@ -1,22 +1,18 @@
 import {ThemesCollection} from '../../../collections/themes'
 
 Meteor.methods({
-  ['themes.create'](page) {
-    if (!page?.name) return
-    const existingPageName = ThemesCollection.find({appId: page?.appId, name: page.name}).fetch()
+  ['themes.create'](theme) {
+    if (!theme?.name) return
+    const existingPageName = ThemesCollection.find({appId: theme?.appId, name: theme.name}).fetch()
     if (existingPageName?.length > 0) {
-      throw new Meteor.Error('page name already exists')
+      throw new Meteor.Error('theme name already exists')
     }
-    const terms = {...page, userId: this.userId}
+    const terms = {...theme, userId: this.userId}
     return ThemesCollection.insert(terms)
   },
-  ['themes.update']({_id, ...page}) {
-    if (!page?.name) return
-    const existingPageName = ThemesCollection.find({_id: {$ne: _id}, appId: page?.appId, name: page.name}).fetch()
-    if (existingPageName?.length > 0) {
-      throw new Meteor.Error('page name already exists')
-    }
-    return ThemesCollection.update(_id, {$set: page})
+  ['themes.update'](_id, theme) {
+    if (!theme?.name) return
+    return ThemesCollection.update(_id, {$set: theme})
   },
   ['themes.remove'](_id) {
     return ThemesCollection.remove(_id)
