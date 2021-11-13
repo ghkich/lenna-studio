@@ -2,10 +2,8 @@ import React, {useEffect, useState} from 'react'
 import {useMethod} from '../../../../infra/hooks/useMethod'
 import {useAppContext} from '../../../app/AuthContext'
 
-export const ClassesInput = ({componentId, selectorId, selectorValue, classes, style, state, disabled}) => {
+export const ClassesInput = ({appId, componentId, selectorId, selectorValue, classes, style, state, disabled}) => {
   const [value, setValue] = useState()
-  const appContext = useAppContext()
-  const appId = appContext?.state.selectedAppId
 
   useEffect(() => {
     setValue(classes?.join(' '))

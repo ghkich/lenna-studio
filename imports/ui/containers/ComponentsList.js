@@ -24,22 +24,22 @@ export const ComponentsList = ({appId}) => {
       <ListControls
         searchValue={searchValue}
         onSearch={(value) => setSearchValue(value)}
-        onAddClickGoTo={RoutePaths.NEW_COMPONENT}
+        onAddClickGoTo={`${RoutePaths.APPS}/${appId}${RoutePaths.NEW_COMPONENT}`}
         placeholder="Search components..."
       />
-      <ComponentsListComponent components={components} />
+      <ComponentsListComponent components={components} appId={appId} />
     </>
   )
 }
 
-const ComponentsListComponent = ({components}) => {
+const ComponentsListComponent = ({components, appId}) => {
   return (
     <div className="flex flex-col gap-0.5 mt-1">
       {components?.map((comp) => (
         <NavLink
           key={comp._id}
           className={`border rounded-sm px-2 py-1 hover:bg-gray-50 cursor-pointer`}
-          to={`${RoutePaths.COMPONENTS}/${comp._id}`}
+          to={`${RoutePaths.APPS}/${appId}${RoutePaths.COMPONENTS}/${comp._id}`}
         >
           {comp.name}
         </NavLink>

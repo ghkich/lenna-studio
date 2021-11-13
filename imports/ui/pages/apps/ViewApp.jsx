@@ -1,19 +1,25 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {SidebarLayout} from '../../components/layouts/SidebarLayout'
-import {RoutePaths} from '../../app/routes'
-import {PageHeader} from '../../components/PageHeader'
 import {useParams} from 'react-router-dom'
-import {PagesList} from '../../containers/PagesList'
 import {useTracker} from 'meteor/react-meteor-data'
 import {AppsCollection} from '../../../collections/apps'
+import {TextInput} from '../../components/basic/TextInput'
+import {Select} from '../../components/basic/Select'
+import {Button} from '../../components/basic/Button'
+import {Form} from '../../components/form/Form'
+import {useMethod} from '../../../infra/hooks/useMethod'
+import {ThemesCollection} from '../../../collections/themes'
 
 export const ViewApp = () => {
-  const {id: appId} = useParams() || {}
+  const {appId} = useParams() || {}
+  const [themeId, setThemeId] = useState()
 
   const {app} = useTracker(() => {
     if (!appId) return {}
-    const sub = Meteor.subscribe('apps.byId', {appId})
-    const app = AppsCollection.findOne({_id: appId})
+    const sub = Meteor.subscribe('apps.byId', appId)
+    const app = AppsCollection.findOne(appId)
+
+    setThemeId(app?.themeId)
 
     return {
       app,
@@ -21,10 +27,43 @@ export const ViewApp = () => {
     }
   }, [appId])
 
+  const {themes} = useTracker(() => {
+    Meteor.subscribe('themes.byUserId')
+    Meteor.subscribe('themes.global')
+    const themes = ThemesCollection.find().fetch()
+
+    return {
+      themes,
+    }
+  }, [])
+
+  const updateApp = useMethod('apps.update')
+
+  const handleSubmit = ({name}) => {
+    updateApp.call(appId, {name, themeId})
+  }
+
+  if (!app) return null
+
   return (
-    <SidebarLayout menuMinimized>
-      <PageHeader title={app?.name} goBackTo={RoutePaths.APPS} />
-      <PagesList appId={appId} />
+    <SidebarLayout menuMinimized={false}>
+      <Form onSubmit={handleSubmit} defaultValues={{name: app.name}}>
+        <TextInput name="name" placeholder="Name" />
+        <Select
+          value={themeId}
+          onChange={(e) => setThemeId(e.target.value)}
+          options={[
+            {value: '', label: 'Choose a theme...'},
+            ...themes?.map((theme) => ({value: theme._id, label: theme.name})),
+          ]}
+        />
+        <div className="border-t opacity-50" />
+        <div className="flex gap-2">
+          <Button type="submit" className="flex-1">
+            Save
+          </Button>
+        </div>
+      </Form>
     </SidebarLayout>
   )
 }

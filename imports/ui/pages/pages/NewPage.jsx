@@ -14,15 +14,16 @@ import {useTracker} from 'meteor/react-meteor-data'
 import {COMPONENT_CATEGORIES} from '../../../infra/constants/component-categories'
 import {ComponentsCollection} from '../../../collections/components'
 import {Form} from '../../components/form/Form'
+import {PAGE_CATEGORIES} from '../../../infra/constants/page-categories'
 
 export const NewPage = () => {
-  const {id: appId} = useParams() || {}
+  const {appId} = useParams() || {}
   const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.SCRATCH)
   const history = useHistory()
 
   const {components} = useTracker(() => {
-    const sub = Meteor.subscribe('components.byCategory', {category: COMPONENT_CATEGORIES.LAYOUTS})
-    const components = ComponentsCollection.find({category: COMPONENT_CATEGORIES.LAYOUTS}).fetch()
+    const sub = Meteor.subscribe('components.byCategory', {appId, category: COMPONENT_CATEGORIES.LAYOUTS})
+    const components = ComponentsCollection.find({appId, category: COMPONENT_CATEGORIES.LAYOUTS}).fetch()
 
     return {
       components,
@@ -36,15 +37,15 @@ export const NewPage = () => {
     onSuccess: (pageId) => {
       if (pageId) {
         if (selectedCreationType === CREATION_TYPES.SCRATCH) {
-          history.push(`${RoutePaths.PAGES}/${pageId}`)
+          history.push(`${RoutePaths.APPS}/${appId}${RoutePaths.PAGES}/${pageId}`)
         } else {
         }
       }
     },
   })
 
-  const handleSubmit = ({name, path, layoutComponentId}) => {
-    createPage.call({appId, name, path, layoutComponentId})
+  const handleSubmit = ({name, path, category, layoutComponentId}) => {
+    createPage.call({appId, name, path, category, layoutComponentId})
   }
 
   return (
@@ -60,6 +61,13 @@ export const NewPage = () => {
         />
         {selectedCreationType === CREATION_TYPES.SCRATCH && (
           <>
+            <Select
+              name="category"
+              options={[
+                {value: '', label: 'Choose a category...'},
+                ...Object.values(PAGE_CATEGORIES).map((category) => ({value: category, label: category})),
+              ]}
+            />
             <Select
               name="layoutComponentId"
               options={[

@@ -14,7 +14,7 @@ import {PageHeader} from '../../components/PageHeader'
 import {CUSTOM_ATTR_KEYS} from '../../../infra/constants/custom-attr-keys'
 
 export const ViewComponent = () => {
-  const {id: componentId} = useParams() || {}
+  const {appId, componentId} = useParams() || {}
   const [selectedState, setSelectedState] = useState()
   const [selectedStyle, setSelectedStyle] = useState()
   const [selectedSelectorValue, setSelectedSelectorValue] = useState()
@@ -66,6 +66,7 @@ export const ViewComponent = () => {
       menuMinimized
       contentComponent={
         <ElementsPreview
+          appId={appId}
           elements={elements}
           selectedComponentId={component?._id}
           selectedStyle={selectedStyle}
@@ -77,6 +78,7 @@ export const ViewComponent = () => {
       {component?._id && (
         <>
           <ElementsTree
+            appId={appId}
             targetComponent={component}
             elements={elements}
             onElementClick={(element) => {
@@ -93,6 +95,7 @@ export const ViewComponent = () => {
             className="w-full p-2 mb-2 border"
           />
           <ClassesInput
+            appId={appId}
             componentId={component._id}
             selectorId={selectedSelector?._id}
             selectorValue={selectedSelectorValue}
@@ -105,6 +108,7 @@ export const ViewComponent = () => {
             onChangeStyle={(style) => setSelectedStyle(style)}
           />
           <ClassesInput
+            appId={appId}
             componentId={component._id}
             selectorId={selectedSelector?._id}
             selectorValue={selectedSelectorValue}
@@ -119,6 +123,7 @@ export const ViewComponent = () => {
             onChangeState={(state) => setSelectedState(state)}
           />
           <ClassesInput
+            appId={appId}
             componentId={component._id}
             selectorId={selectedSelector?._id}
             selectorValue={selectedSelectorValue}

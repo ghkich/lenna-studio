@@ -34,19 +34,19 @@ export const PagesList = ({appId}) => {
         onAddClickGoTo={appId ? `${RoutePaths.APPS}/${appId}${RoutePaths.NEW_PAGE}` : RoutePaths.NEW_PAGE}
         placeholder="Search pages..."
       />
-      <PagesListComponent pages={pages} />
+      <PagesListComponent pages={pages} appId={appId} />
     </>
   )
 }
 
-const PagesListComponent = ({pages}) => {
+const PagesListComponent = ({pages, appId}) => {
   return (
     <div className="flex flex-col gap-0.5 mt-1">
       {pages?.map((page) => (
         <NavLink
           key={page._id}
           className={`border rounded-sm px-2 py-1 hover:bg-gray-50 cursor-pointer`}
-          to={`${RoutePaths.PAGES}/${page._id}`}
+          to={`${RoutePaths.APPS}/${appId}${RoutePaths.PAGES}/${page._id}`}
         >
           {page.name}
         </NavLink>

@@ -10,7 +10,7 @@ import {Button} from '../../components/basic/Button'
 import {ThemesCollection} from '../../../collections/themes'
 
 export const ViewTheme = () => {
-  const {id: themeId} = useParams() || {}
+  const {themeId} = useParams() || {}
 
   const {theme} = useTracker(() => {
     if (!themeId) return {}
@@ -27,8 +27,8 @@ export const ViewTheme = () => {
     onSuccess: () => {},
   })
 
-  const onSubmit = ({name}) => {
-    updateTheme.call({_id: theme?._id, name, settings: {...theme.settings}})
+  const onSubmit = ({name, colors}) => {
+    updateTheme.call(theme?._id, {name, settings: {...theme.settings, colors}})
   }
 
   return (
@@ -51,8 +51,18 @@ export const ViewTheme = () => {
               </Button>
             </div>
             <h2 className="text-gray-500 pt-1 leading-none text-2xs uppercase">Colors</h2>
-            <TextInput name="colors.primary" placeholder="Primary" />
-            <TextInput name="colors.secondary" placeholder="Secondary" />
+            <TextInput
+              name="colors.primary"
+              placeholder="Primary"
+              className="text-white"
+              style={{backgroundColor: theme.settings?.colors?.primary}}
+            />
+            <TextInput
+              name="colors.secondary"
+              placeholder="Secondary"
+              className="text-white"
+              style={{backgroundColor: theme.settings?.colors?.secondary}}
+            />
           </Form>
         </>
       )}

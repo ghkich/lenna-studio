@@ -11,7 +11,7 @@ import {CREATION_OPTIONS, CREATION_TYPES} from '../../../infra/constants/creatio
 import {Form} from '../../components/form/Form'
 
 export const NewTheme = () => {
-  const {id: appId} = useParams() || {}
+  const {appId} = useParams() || {}
   const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.SCRATCH)
   const history = useHistory()
 
@@ -19,7 +19,7 @@ export const NewTheme = () => {
     onSuccess: (themeId) => {
       if (themeId) {
         if (selectedCreationType === CREATION_TYPES.SCRATCH) {
-          history.push(`${RoutePaths.THEMES}/${themeId}`)
+          history.push(`${RoutePaths.APPS}/${appId}${RoutePaths.THEMES}/${themeId}`)
         } else {
         }
       }

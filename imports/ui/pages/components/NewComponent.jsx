@@ -6,13 +6,14 @@ import {Button} from '../../components/basic/Button'
 import {TextInput} from '../../components/basic/TextInput'
 import {ToggleButtonGroup} from '../../components/basic/ToggleButtonGroup'
 import {useMethod} from '../../../infra/hooks/useMethod'
-import {useHistory} from 'react-router-dom'
+import {useHistory, useParams} from 'react-router-dom'
 import {CREATION_OPTIONS, CREATION_TYPES} from '../../../infra/constants/creation-types'
 import {Form} from '../../components/form/Form'
 import {COMPONENT_CATEGORIES} from '../../../infra/constants/component-categories'
 import {Select} from '../../components/basic/Select'
 
 export const NewComponent = () => {
+  const {appId} = useParams() || {}
   const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.SCRATCH)
   const history = useHistory()
 
@@ -20,7 +21,7 @@ export const NewComponent = () => {
     onSuccess: (componentId) => {
       if (componentId) {
         if (selectedCreationType === CREATION_TYPES.SCRATCH) {
-          history.push(`${RoutePaths.COMPONENTS}/${componentId}`)
+          history.push(`${RoutePaths.APPS}/${appId}${RoutePaths.COMPONENTS}/${componentId}`)
         } else {
         }
       }
@@ -29,7 +30,7 @@ export const NewComponent = () => {
 
   const handleSubmit = ({name, category, structure}) => {
     const elements = [{tagName: structure}]
-    createComponent.call({name, category, elements})
+    createComponent.call({appId, name, category}, elements)
   }
 
   return (
@@ -47,7 +48,7 @@ export const NewComponent = () => {
             <Select
               name="category"
               options={[
-                {value: '', label: 'Choose a component category...'},
+                {value: '', label: 'Choose a category...'},
                 ...Object.values(COMPONENT_CATEGORIES).map((category) => ({value: category, label: category})),
               ]}
             />

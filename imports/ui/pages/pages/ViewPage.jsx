@@ -17,7 +17,7 @@ import {STRUCTURE_TYPES} from '../../../infra/constants/structure-types'
 import {Button} from '../../components/basic/Button'
 
 export const ViewPage = () => {
-  const {id: pageId} = useParams() || {}
+  const {appId, pageId} = useParams() || {}
   const [layoutComponentId, setLayoutComponentId] = useState()
 
   const {page} = useTracker(() => {
@@ -68,13 +68,13 @@ export const ViewPage = () => {
       previewElements,
       treeElements,
       layoutHasChildrenContainer: !!layoutChildrenContainer,
-      loading: subs.some((sub) => !sub.ready()),
+      loading: subs.some((sub) => !sub?.ready()),
     }
   }, [pageId, layoutComponentId])
 
   const {components} = useTracker(() => {
-    const sub = Meteor.subscribe('components.byCategory', {category: COMPONENT_CATEGORIES.LAYOUTS})
-    const components = ComponentsCollection.find({category: COMPONENT_CATEGORIES.LAYOUTS}).fetch()
+    const sub = Meteor.subscribe('components.byCategory', {appId, category: COMPONENT_CATEGORIES.LAYOUTS})
+    const components = ComponentsCollection.find({appId, category: COMPONENT_CATEGORIES.LAYOUTS}).fetch()
 
     return {
       components,
@@ -87,11 +87,11 @@ export const ViewPage = () => {
   })
 
   const onSubmit = ({name, path}) => {
-    savePage.call({_id: page?._id, name, path, layoutComponentId})
+    savePage.call({...page, appId, name, path, layoutComponentId})
   }
 
   return (
-    <SidebarLayout menuMinimized contentComponent={<ElementsPreview elements={previewElements} />}>
+    <SidebarLayout menuMinimized contentComponent={<ElementsPreview appId={appId} elements={previewElements} />}>
       <PageHeader title={page?.name} />
       {page?.name && (
         <>
@@ -115,6 +115,7 @@ export const ViewPage = () => {
           {page?._id && treeElements?.length > 0 && (
             <>
               <ElementsTree
+                appId={appId}
                 targetPage={page}
                 elements={treeElements}
                 addElementDisabled={!layoutHasChildrenContainer}

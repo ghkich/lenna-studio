@@ -7,7 +7,7 @@ import {RemoveElement} from './RemoveElement'
 import {ComponentsCollection} from '../../../collections/components'
 import {TurnElementIntoChildrenContainer} from './TurnElementIntoChildrenContainer'
 
-export const ElementsTree = ({targetComponent, targetPage, elements, addElementDisabled, onElementClick}) => {
+export const ElementsTree = ({appId, targetComponent, targetPage, elements, addElementDisabled, onElementClick}) => {
   const [selectedElement, setSelectedElement] = useState({})
 
   const containerElement = elements?.find((el) => !el?.parentId)
@@ -22,6 +22,7 @@ export const ElementsTree = ({targetComponent, targetPage, elements, addElementD
           return (
             <Element
               key={element?._id}
+              appId={appId}
               targetComponent={targetComponent}
               targetPage={targetPage}
               element={element}
@@ -57,6 +58,7 @@ const checkIfElementAcceptChildren = (element) => {
 }
 
 const Element = ({
+  appId,
   targetComponent,
   targetPage,
   element,
@@ -114,7 +116,12 @@ const Element = ({
       {isSelected && (
         <div className="p-2">
           {acceptChildren ? (
-            <AddElement targetComponent={targetComponent} targetPage={targetPage} parentElement={element} />
+            <AddElement
+              appId={appId}
+              targetComponent={targetComponent}
+              targetPage={targetPage}
+              parentElement={element}
+            />
           ) : (
             <div className="py-1 px-2 bg-gray-300 border bg-opacity-25 text-2xs text-center">
               This element does not accept children

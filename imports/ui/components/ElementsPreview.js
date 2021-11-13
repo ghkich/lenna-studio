@@ -6,19 +6,38 @@ import {SelectorsCollection} from '../../collections/selectors'
 import {generateCss} from '../../api/generate-css'
 import {ComponentsCollection} from '../../collections/components'
 import {ElementsCollection} from '../../collections/elements'
+import {ThemesCollection} from '../../collections/themes'
+import {AppsCollection} from '../../collections/apps'
 
-export const ElementsPreview = ({elements, selectedComponentId, selectedStyle, selectedState}) => {
+export const ElementsPreview = ({appId, elements, selectedComponentId, selectedStyle, selectedState}) => {
   const [css, setCss] = useState('')
 
-  const {allElements} = useTracker(() => {
+  const {allElements, theme, selectors} = useTracker(() => {
     if (!elements) return {}
     const componentIds = elements
-      ?.map((element) => (element.parentId ? element?.component?._id : element.componentId))
+      ?.map((element) => {
+        if (!element.parentId && element.componentId) {
+          return element.componentId
+        }
+        if (element?.component?._id) {
+          return element.component._id
+        } else {
+          const componentName = element.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT]
+          if (componentName) {
+            return ComponentsCollection.findOne({appId, name: componentName})?._id
+          }
+        }
+      })
       .filter(Boolean)
-    if (componentIds.length === 0) return {}
+    Meteor.subscribe('apps.byId', appId)
+    Meteor.subscribe('components.byAppId', {appId})
     Meteor.subscribe('components.byIds', componentIds)
     Meteor.subscribe('elements.byComponentIds', componentIds)
     Meteor.subscribe('selectors.byComponentIds', componentIds)
+    Meteor.subscribe('themes.byUserId')
+    const selectors = SelectorsCollection.find({componentId: {$in: componentIds}}).fetch()
+    const app = AppsCollection.findOne(appId)
+    const theme = ThemesCollection.findOne(app?.themeId)
 
     const allElements = []
 
@@ -45,13 +64,18 @@ export const ElementsPreview = ({elements, selectedComponentId, selectedStyle, s
       }
     })
 
-    const selectors = SelectorsCollection.find({componentId: {$in: componentIds}}).fetch()
-    const css = generateCss({selectors})
-    setCss(css)
     return {
       allElements,
+      theme,
+      selectors,
     }
   }, [elements])
+
+  useEffect(() => {
+    if (!theme || !selectors) return null
+    const css = generateCss({theme, selectors})
+    setCss(css)
+  }, [theme, selectors])
 
   useEffect(() => {
     if (selectedComponentId) {
@@ -81,9 +105,11 @@ export const ElementsPreview = ({elements, selectedComponentId, selectedStyle, s
       }
       const tagName = element?.tagName || ElementsCollection.findOne({componentId: component?._id})?.tagName
       const componentProps = {
-        [CUSTOM_ATTR_KEYS.COMPONENT]: component?.name,
-        [CUSTOM_ATTR_KEYS.STYLE]: element.component?.style || component?.styles?.[0],
-        [CUSTOM_ATTR_KEYS.STATE]: element.component?.state || component?.states?.[0],
+        [CUSTOM_ATTR_KEYS.COMPONENT]: component?.name || element.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT],
+        [CUSTOM_ATTR_KEYS.STYLE]:
+          element.component?.style || component?.styles?.[0] || element.attrs?.[CUSTOM_ATTR_KEYS.STYLE],
+        [CUSTOM_ATTR_KEYS.STATE]:
+          element.component?.state || component?.states?.[0] || element.attrs?.[CUSTOM_ATTR_KEYS.STATE],
       }
       if (element?.text) {
         return element?.text
@@ -95,7 +121,7 @@ export const ElementsPreview = ({elements, selectedComponentId, selectedStyle, s
         {
           key: element?._id,
           id: containerComponentId,
-          ...omit(['class', 'viewbox'], element?.attrs),
+          ...omit(['class', 'viewbox', 'style'], element?.attrs),
           className: element?.attrs?.class,
           viewBox: element?.attrs?.viewbox,
           ...componentProps,
