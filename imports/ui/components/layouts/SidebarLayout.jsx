@@ -57,7 +57,9 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
             </div>
             {app && (
               <NavLink
-                className="py-3 px-3 flex justify-start items-center gap-2 border-b bg-gray-50 uppercase text-2xs"
+                className={`${
+                  menuMinimized ? 'py-2' : 'py-3'
+                } px-3 flex justify-start items-center gap-2 border-b bg-gray-50 uppercase text-2xs`}
                 to={RoutePaths.APPS}
               >
                 <FontAwesomeIcon icon={faArrowLeft} className="" />
