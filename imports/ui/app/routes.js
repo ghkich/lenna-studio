@@ -60,67 +60,52 @@ export const authenticatedRoutes = [
   },
   {
     exact: true,
-    path: `${RoutePaths.APPS}/:id`,
+    path: `${RoutePaths.APPS}/:appId`,
     component: ViewApp,
   },
   {
     exact: true,
-    path: RoutePaths.PAGES,
+    path: `${RoutePaths.APPS}/:appId${RoutePaths.PAGES}`,
     component: Pages,
   },
   {
     exact: true,
-    path: RoutePaths.NEW_PAGE,
+    path: `${RoutePaths.APPS}/:appId${RoutePaths.NEW_PAGE}`,
     component: NewPage,
   },
   {
     exact: true,
-    path: `${RoutePaths.APPS}/:id${RoutePaths.NEW_PAGE}`,
-    component: NewPage,
-  },
-  {
-    exact: true,
-    path: `${RoutePaths.PAGES}/:id`,
+    path: `${RoutePaths.APPS}/:appId${RoutePaths.PAGES}/:pageId`,
     component: ViewPage,
   },
   {
     exact: true,
-    path: RoutePaths.COMPONENTS,
+    path: `${RoutePaths.APPS}/:appId${RoutePaths.COMPONENTS}`,
     component: Components,
   },
   {
     exact: true,
-    path: RoutePaths.NEW_COMPONENT,
+    path: `${RoutePaths.APPS}/:appId${RoutePaths.NEW_COMPONENT}`,
     component: NewComponent,
   },
   {
     exact: true,
-    path: `${RoutePaths.APPS}/:id${RoutePaths.NEW_COMPONENT}`,
-    component: NewComponent,
-  },
-  {
-    exact: true,
-    path: `${RoutePaths.COMPONENTS}/:id`,
+    path: `${RoutePaths.APPS}/:appId${RoutePaths.COMPONENTS}/:componentId`,
     component: ViewComponent,
   },
   {
     exact: true,
-    path: RoutePaths.THEMES,
+    path: `${RoutePaths.APPS}/:appId${RoutePaths.THEMES}`,
     component: Themes,
   },
   {
     exact: true,
-    path: RoutePaths.NEW_THEME,
+    path: `${RoutePaths.APPS}/:appId${RoutePaths.NEW_THEME}`,
     component: NewTheme,
   },
   {
     exact: true,
-    path: `${RoutePaths.APPS}/:id${RoutePaths.NEW_THEME}`,
-    component: NewTheme,
-  },
-  {
-    exact: true,
-    path: `${RoutePaths.THEMES}/:id`,
+    path: `${RoutePaths.APPS}/:appId${RoutePaths.THEMES}/:themeId`,
     component: ViewTheme,
   },
   {
