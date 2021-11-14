@@ -29,6 +29,7 @@ import '../imports/api/themes/publications/by-user-id'
 import '../imports/api/themes/publications/global'
 
 // METHODS
+import '../imports/api/accounts/methods'
 import '../imports/api/apps/methods'
 import '../imports/api/pages/methods'
 import '../imports/api/components/methods'
