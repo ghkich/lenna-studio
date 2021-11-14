@@ -8,7 +8,7 @@ import {generateCss} from '../../imports/api/generate-css'
 import {ThemesCollection} from '../../imports/collections/themes'
 import {SelectorsCollection} from '../../imports/collections/selectors'
 
-WebApp.connectHandlers.use('/api/sendHtml', (req, res, next) => {
+WebApp.connectHandlers.use('/api/sendHtml', (req, res) => {
   req.on(
     'data',
     Meteor.bindEnvironment((data) => {
@@ -41,7 +41,7 @@ WebApp.connectHandlers.use('/api/sendHtml', (req, res, next) => {
   )
 })
 
-WebApp.connectHandlers.use('/api/getCss', (req, res, next) => {
+WebApp.connectHandlers.use('/api/getCss', (req, res) => {
   let css
   req.on(
     'data',
