@@ -16,6 +16,13 @@ export const ElementsComparison = ({actual, expected}) => {
           ...actual[i],
           error: true,
         }
+        if (!expectedEl?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT]) {
+          setError(`Missing children container`)
+          setActualString('No children container')
+          setExpectedString('To find a children container')
+          asserted.push(newElement)
+          return false
+        }
         if (expectedEl?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT] !== actual[i]?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT]) {
           setError(`Wrong component container`)
           setActualString(actual[i]?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT])
@@ -32,7 +39,7 @@ export const ElementsComparison = ({actual, expected}) => {
         }
         const expectedElChildren = expected.filter((e) => e.parentId === expectedEl?._id)
         const actualElChildren = actual.filter((a) => a.parentId === actual[i]?._id)
-        if (expectedElChildren?.length > 0 && actualElChildren?.length !== expectedElChildren?.length) {
+        if (actualElChildren?.length !== expectedElChildren?.length) {
           setError(`Wrong children length`)
           asserted.push(newElement)
           asserted = [...asserted, ...actualElChildren]
