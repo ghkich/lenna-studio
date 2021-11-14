@@ -8,6 +8,7 @@ import {ComponentsCollection} from '../../collections/components'
 import {ElementsCollection} from '../../collections/elements'
 import {ThemesCollection} from '../../collections/themes'
 import {AppsCollection} from '../../collections/apps'
+import {STRUCTURE_TYPES} from '../../infra/constants/structure-types'
 
 export const ElementsPreview = ({appId, elements, selectedComponentId, selectedStyle, selectedState}) => {
   const [css, setCss] = useState('')
@@ -47,7 +48,8 @@ export const ElementsPreview = ({appId, elements, selectedComponentId, selectedS
       const componentId = element?.component?._id
       if (componentId) {
         component = ComponentsCollection.findOne({_id: componentId})
-        const componentElements = ElementsCollection.find({componentId}).fetch()
+        const componentElements =
+          element?.structure.type === STRUCTURE_TYPES.ACTUAL ? [] : ElementsCollection.find({componentId}).fetch()
         const componentContainerElement = componentElements.find((el) => !el.parentId)
         componentElements
           .filter((el) => el.parentId && el.parentId !== component?.childrenContainerElementId)

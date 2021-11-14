@@ -15,10 +15,15 @@ import {ComponentsCollection} from '../../../collections/components'
 import {Form} from '../../components/form/Form'
 import {STRUCTURE_TYPES} from '../../../infra/constants/structure-types'
 import {Button} from '../../components/basic/Button'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faArrowRightArrowLeft} from '@fortawesome/pro-duotone-svg-icons'
+import {ElementsComparison} from '../../components/ElementsComparison'
+import {CUSTOM_ATTR_KEYS} from '../../../infra/constants/custom-attr-keys'
 
 export const ViewPage = () => {
   const {appId, pageId} = useParams() || {}
   const [layoutComponentId, setLayoutComponentId] = useState()
+  const [structureType, setStructureType] = useState()
 
   const {page} = useTracker(() => {
     if (!pageId) return {}
@@ -33,7 +38,7 @@ export const ViewPage = () => {
     }
   }, [pageId])
 
-  const {previewElements, treeElements, layoutHasChildrenContainer} = useTracker(() => {
+  const {actualElements, previewElements, treeElements, layoutHasChildrenContainer} = useTracker(() => {
     if (!pageId || !layoutComponentId) return {}
     const subs = [
       Meteor.subscribe('components.byId', {_id: layoutComponentId}),
@@ -43,6 +48,7 @@ export const ViewPage = () => {
     const pageElements = ElementsCollection.find({pageId, 'structure.type': STRUCTURE_TYPES.EXPECTED}).fetch()
     const layoutComponent = ComponentsCollection.findOne({_id: layoutComponentId})
     const layoutElements = ElementsCollection.find({componentId: layoutComponentId}).fetch()
+    const actualElements = ElementsCollection.find({pageId, 'structure.type': STRUCTURE_TYPES.ACTUAL}).fetch()
 
     const layoutChildrenContainer = layoutElements.find((el) => el?._id === layoutComponent?.childrenContainerElementId)
 
@@ -59,12 +65,18 @@ export const ViewPage = () => {
         ...pageElementsInLayoutContainer,
       ]
       treeElements = [
+        {
+          ...layoutChildrenContainer,
+          component: mainLayoutContainerElement?.component,
+          parentId: undefined,
+          attrs: {[CUSTOM_ATTR_KEYS.COMPONENT]: layoutComponent?.name},
+        },
         ...pageElementsInLayoutContainer,
-        {...layoutChildrenContainer, component: mainLayoutContainerElement?.component, parentId: undefined},
       ]
     }
 
     return {
+      actualElements,
       previewElements,
       treeElements,
       layoutHasChildrenContainer: !!layoutChildrenContainer,
@@ -91,7 +103,15 @@ export const ViewPage = () => {
   }
 
   return (
-    <SidebarLayout menuMinimized contentComponent={<ElementsPreview appId={appId} elements={previewElements} />}>
+    <SidebarLayout
+      menuMinimized
+      contentComponent={
+        <ElementsPreview
+          appId={appId}
+          elements={structureType === STRUCTURE_TYPES.ACTUAL ? actualElements : previewElements}
+        />
+      }
+    >
       <PageHeader title={page?.name} />
       {page?.name && (
         <>
@@ -114,12 +134,52 @@ export const ViewPage = () => {
           </Form>
           {page?._id && treeElements?.length > 0 && (
             <>
-              <ElementsTree
-                appId={appId}
-                targetPage={page}
-                elements={treeElements}
-                addElementDisabled={!layoutHasChildrenContainer}
-              />
+              <div className="flex mb-2">
+                <div
+                  className={`p-2 flex-1 bg-gray-100 border text-center cursor-pointer ${
+                    structureType === STRUCTURE_TYPES.ACTUAL ? 'text-blue-500 bg-blue-50' : ''
+                  }`}
+                  onClick={() => setStructureType(STRUCTURE_TYPES.ACTUAL)}
+                >
+                  Actual
+                </div>
+                <div
+                  className={`px-4 flex items-center border mx-1.5 bg-gray-100 cursor-pointer text-md ${
+                    structureType === undefined ? 'text-white bg-blue-500 border-blue-600' : ''
+                  }`}
+                  onClick={() => setStructureType(undefined)}
+                >
+                  <FontAwesomeIcon icon={faArrowRightArrowLeft} />
+                </div>
+                <div
+                  className={`p-2 flex-1 bg-gray-100 border text-center cursor-pointer ${
+                    structureType === STRUCTURE_TYPES.EXPECTED ? 'text-blue-500 bg-blue-50' : ''
+                  }`}
+                  onClick={() => setStructureType(STRUCTURE_TYPES.EXPECTED)}
+                >
+                  Expected
+                </div>
+              </div>
+              {!structureType && <ElementsComparison actual={actualElements} expected={treeElements} />}
+              {structureType === STRUCTURE_TYPES.EXPECTED && (
+                <ElementsTree
+                  appId={appId}
+                  targetPage={page}
+                  elements={treeElements}
+                  addElementDisabled={!layoutHasChildrenContainer}
+                />
+              )}
+              {structureType === STRUCTURE_TYPES.ACTUAL && (
+                <>
+                  {actualElements.length > 0 ? (
+                    <ElementsTree elements={actualElements} addElementDisabled />
+                  ) : (
+                    <div className="bg-gray-50 border p-2 text-center text-2xs">
+                      No elements received for <b>{page.path}</b>.
+                    </div>
+                  )}
+                </>
+              )}
               <div className="mb-2" />
             </>
           )}

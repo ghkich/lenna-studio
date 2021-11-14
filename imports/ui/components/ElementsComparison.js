@@ -30,13 +30,14 @@ export const ElementsComparison = ({actual, expected}) => {
           asserted.push(newElement)
           return false
         }
-        if (expectedEl?.childrenIds?.length > 0 && actual[i]?.childrenIds?.length !== expectedEl?.childrenIds?.length) {
+        const expectedElChildren = expected.filter((e) => e.parentId === expectedEl?._id)
+        const actualElChildren = actual.filter((a) => a.parentId === actual[i]?._id)
+        if (expectedElChildren?.length > 0 && actualElChildren?.length !== expectedElChildren?.length) {
           setError(`Wrong children length`)
           asserted.push(newElement)
-          const childrenElements = actual.filter((el) => actual[i]?.childrenIds?.includes(el?._id))
-          asserted = [...asserted, ...childrenElements]
-          setActualString(String(actual[i]?.childrenIds?.length || 0))
-          setExpectedString(String(expectedEl?.childrenIds?.length))
+          asserted = [...asserted, ...actualElChildren]
+          setActualString(String(actualElChildren?.length || 0))
+          setExpectedString(String(expectedElChildren?.length))
           return false
         }
         newElement = {
@@ -54,7 +55,7 @@ export const ElementsComparison = ({actual, expected}) => {
 
   return (
     <div>
-      <ElementsTree elements={assertedElements} />
+      <ElementsTree elements={assertedElements} addElementDisabled />
       {error && (
         <div className="bg-red-50 p-2 mt-2 border border-red-400 text-2xs">
           <div className="pb-1 mb-1 border-b border-red-100 text-red-400 text-xs font-semibold">{error}</div>
