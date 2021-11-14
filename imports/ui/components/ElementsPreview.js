@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {omit} from '../utils/object-utils'
+import {ObjectUtils} from '../utils/object-utils'
 import {CUSTOM_ATTR_KEYS} from '../../infra/constants/custom-attr-keys'
 import {useTracker} from 'meteor/react-meteor-data'
 import {SelectorsCollection} from '../../collections/selectors'
@@ -81,12 +81,19 @@ export const ElementsPreview = ({appId, elements, selectedComponentId, selectedS
 
   useEffect(() => {
     if (selectedComponentId) {
+      const selectedComponent = ComponentsCollection.findOne(selectedComponentId)
       const updateComponentElementCustomData = () => {
         setTimeout(() => {
-          const domComponent = document.getElementById(selectedComponentId)
-          if (domComponent) {
-            domComponent?.setAttribute(CUSTOM_ATTR_KEYS.STYLE, selectedStyle)
-            domComponent?.setAttribute(CUSTOM_ATTR_KEYS.STATE, selectedState)
+          const domComponents = document.querySelectorAll(`[data-component=${selectedComponent.name}]`)
+          if (domComponents?.length > 0) {
+            domComponents.forEach((domComp) => {
+              if (selectedStyle) {
+                domComp?.setAttribute(CUSTOM_ATTR_KEYS.STYLE, selectedStyle)
+              }
+              if (selectedState) {
+                domComp?.setAttribute(CUSTOM_ATTR_KEYS.STATE, selectedState)
+              }
+            })
           } else {
             updateComponentElementCustomData()
           }
@@ -98,7 +105,7 @@ export const ElementsPreview = ({appId, elements, selectedComponentId, selectedS
 
   const containerElement = elements?.find((el) => !el?.parentId)
   if (!containerElement) return null
-  const renderChildren = (children, containerComponentId) => {
+  const renderChildren = (children) => {
     if (!children || children.length === 0) return null
     return children?.map((element) => {
       let component = ComponentsCollection.findOne(element.component?._id)
@@ -122,8 +129,7 @@ export const ElementsPreview = ({appId, elements, selectedComponentId, selectedS
         tagName,
         {
           key: element?._id,
-          id: containerComponentId,
-          ...omit(['class', 'viewbox', 'style'], element?.attrs),
+          ...ObjectUtils.omit(['class', 'viewbox', 'style'], ObjectUtils.removeUndefined(element?.attrs)),
           className: element?.attrs?.class,
           viewBox: element?.attrs?.viewbox,
           ...componentProps,
@@ -135,7 +141,7 @@ export const ElementsPreview = ({appId, elements, selectedComponentId, selectedS
   return (
     <>
       <style>{css}</style>
-      {renderChildren([containerElement], selectedComponentId)}
+      <div id="__lennaPreview">{renderChildren([containerElement])}</div>
     </>
   )
 }
