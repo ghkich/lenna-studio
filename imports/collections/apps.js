@@ -9,7 +9,10 @@ export const AppSchema = new SimpleSchema({
     type: SimpleSchema.RegEx.Id,
     optional: true,
   },
-  themeId: SimpleSchema.RegEx.Id,
+  themeId: {
+    type: SimpleSchema.RegEx.Id,
+    optional: true,
+  },
   name: String,
   category: {
     type: String,

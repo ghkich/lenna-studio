@@ -16,7 +16,9 @@ WebApp.connectHandlers.use('/api/sendHtml', (req, res) => {
       let pageId = PagesCollection.findOne({appId, path: pathname})?._id
       if (!pageId) {
         const pathnameWithoutSlashes = pathname.replace(/\//g, '')
-        const pageName = pathnameWithoutSlashes[0].toUpperCase() + pathnameWithoutSlashes.slice(1)
+        const pageName = pathnameWithoutSlashes
+          ? pathnameWithoutSlashes[0]?.toUpperCase() + pathnameWithoutSlashes.slice(1)
+          : 'Home'
         pageId = PagesCollection.insert({appId, path: pathname, name: pageName})
       }
       const htmlNodes = parse(html)?.childNodes
