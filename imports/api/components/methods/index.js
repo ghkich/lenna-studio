@@ -64,4 +64,9 @@ Meteor.methods({
     )
     return ComponentsCollection.update(componentId, {$pull: {states: state}})
   },
+  ['components.remove'](componentId) {
+    ElementsCollection.remove({componentId})
+    SelectorsCollection.remove({componentId})
+    return ComponentsCollection.remove(componentId)
+  },
 })

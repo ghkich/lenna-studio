@@ -1,4 +1,5 @@
 import {PagesCollection} from '../../../collections/pages'
+import {ElementsCollection} from '../../../collections/elements'
 
 Meteor.methods({
   ['pages.create'](page) {
@@ -18,7 +19,8 @@ Meteor.methods({
     }
     return PagesCollection.update(_id, {$set: page})
   },
-  ['pages.remove'](_id) {
-    return PagesCollection.remove(_id)
+  ['pages.remove'](pageId) {
+    ElementsCollection.remove({pageId})
+    return PagesCollection.remove(pageId)
   },
 })

@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {SidebarLayout} from '../../components/layouts/SidebarLayout'
-import {useParams} from 'react-router-dom'
+import {useHistory, useParams} from 'react-router-dom'
 import {useTracker} from 'meteor/react-meteor-data'
 import {AppsCollection} from '../../../collections/apps'
 import {TextInput} from '../../components/basic/TextInput'
@@ -9,9 +9,11 @@ import {Button} from '../../components/basic/Button'
 import {Form} from '../../components/form/Form'
 import {useMethod} from '../../../infra/hooks/useMethod'
 import {ThemesCollection} from '../../../collections/themes'
+import {RoutePaths} from '../../app/routes'
 
 export const ViewApp = () => {
   const {appId} = useParams() || {}
+  const history = useHistory()
   const [themeId, setThemeId] = useState()
 
   const {app} = useTracker(() => {
@@ -39,6 +41,12 @@ export const ViewApp = () => {
 
   const updateApp = useMethod('apps.update')
 
+  const removeApp = useMethod('apps.remove', {
+    onSuccess: () => {
+      history.push(`${RoutePaths.APPS}`)
+    },
+  })
+
   const handleSubmit = ({name}) => {
     updateApp.call(appId, {name, themeId})
   }
@@ -64,6 +72,15 @@ export const ViewApp = () => {
           </Button>
         </div>
       </Form>
+      <div className="mt-1.5 flex">
+        <Button
+          type="button"
+          className="flex-1 hover:bg-gray-50 hover:text-red-500"
+          onClick={() => removeApp.call(app._id)}
+        >
+          Remove
+        </Button>
+      </div>
     </SidebarLayout>
   )
 }

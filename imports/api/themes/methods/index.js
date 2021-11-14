@@ -14,7 +14,7 @@ Meteor.methods({
     if (!theme?.name) return
     return ThemesCollection.update(_id, {$set: theme})
   },
-  ['themes.remove'](_id) {
-    return ThemesCollection.remove(_id)
+  ['themes.remove'](themeId) {
+    return ThemesCollection.remove(themeId)
   },
 })

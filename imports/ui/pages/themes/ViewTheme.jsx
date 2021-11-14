@@ -1,16 +1,18 @@
 import React from 'react'
 import {useTracker} from 'meteor/react-meteor-data'
 import {SidebarLayout} from '../../components/layouts/SidebarLayout'
-import {useParams} from 'react-router-dom'
+import {useHistory, useParams} from 'react-router-dom'
 import {PageHeader} from '../../components/PageHeader'
 import {TextInput} from '../../components/basic/TextInput'
 import {useMethod} from '../../../infra/hooks/useMethod'
 import {Form} from '../../components/form/Form'
 import {Button} from '../../components/basic/Button'
 import {ThemesCollection} from '../../../collections/themes'
+import {RoutePaths} from '../../app/routes'
 
 export const ViewTheme = () => {
-  const {themeId} = useParams() || {}
+  const {appId, themeId} = useParams() || {}
+  const history = useHistory()
 
   const {theme} = useTracker(() => {
     if (!themeId) return {}
@@ -27,13 +29,19 @@ export const ViewTheme = () => {
     onSuccess: () => {},
   })
 
+  const removeTheme = useMethod('themes.remove', {
+    onSuccess: () => {
+      history.push(`${RoutePaths.APPS}/${appId}${RoutePaths.THEMES}`)
+    },
+  })
+
   const onSubmit = ({name, colors}) => {
     updateTheme.call(theme?._id, {name, settings: {...theme.settings, colors}})
   }
 
   return (
     <SidebarLayout menuMinimized>
-      <PageHeader title={theme?.name} />
+      <PageHeader title={theme?.name} onDelete={() => removeTheme.call(theme?._id)} />
       {theme?.name && (
         <>
           <Form

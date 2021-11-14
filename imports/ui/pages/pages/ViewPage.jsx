@@ -4,7 +4,7 @@ import {ElementsCollection} from '../../../collections/elements'
 import {SidebarLayout} from '../../components/layouts/SidebarLayout'
 import {ElementsTree} from '../../containers/elements/ElementsTree'
 import {ElementsPreview} from '../../components/ElementsPreview'
-import {useParams} from 'react-router-dom'
+import {useHistory, useParams} from 'react-router-dom'
 import {PageHeader} from '../../components/PageHeader'
 import {PagesCollection} from '../../../collections/pages'
 import {TextInput} from '../../components/basic/TextInput'
@@ -19,9 +19,11 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faArrowRightArrowLeft} from '@fortawesome/pro-duotone-svg-icons'
 import {ElementsComparison} from '../../components/ElementsComparison'
 import {CUSTOM_ATTR_KEYS} from '../../../infra/constants/custom-attr-keys'
+import {RoutePaths} from '../../app/routes'
 
 export const ViewPage = () => {
   const {appId, pageId} = useParams() || {}
+  const history = useHistory()
   const [layoutComponentId, setLayoutComponentId] = useState()
   const [structureType, setStructureType] = useState()
 
@@ -98,6 +100,12 @@ export const ViewPage = () => {
     onSuccess: () => {},
   })
 
+  const removePage = useMethod('pages.remove', {
+    onSuccess: () => {
+      history.push(`${RoutePaths.APPS}/${appId}${RoutePaths.PAGES}`)
+    },
+  })
+
   const onSubmit = ({name, path}) => {
     savePage.call({...page, appId, name, path, layoutComponentId})
   }
@@ -112,7 +120,7 @@ export const ViewPage = () => {
         />
       }
     >
-      <PageHeader title={page?.name} />
+      <PageHeader title={page?.name} onDelete={() => removePage.call(page?._id)} />
       {page?.name && (
         <>
           <Form onSubmit={onSubmit} defaultValues={{name: page.name, path: page.path}}>

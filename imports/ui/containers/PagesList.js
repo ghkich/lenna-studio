@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import {useMethod} from '../../infra/hooks/useMethod'
 import {useTracker} from 'meteor/react-meteor-data'
 import {PagesCollection} from '../../collections/pages'
 import {RoutePaths} from '../app/routes'
@@ -19,12 +18,6 @@ export const PagesList = ({appId}) => {
       loading: !sub.ready(),
     }
   }, [appId, searchValue])
-
-  const removePage = useMethod('pages.remove')
-
-  const handleRemovePage = (pageId) => {
-    removePage.call(pageId)
-  }
 
   return (
     <>

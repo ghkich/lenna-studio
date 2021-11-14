@@ -9,12 +9,15 @@ import {SelectorsCollection} from '../../../collections/selectors'
 import {ManageStyles} from './components/ManageStyles'
 import {ManageStates} from './components/ManageStates'
 import {ClassesInput} from './components/ClassesInput'
-import {useParams} from 'react-router-dom'
+import {useHistory, useParams} from 'react-router-dom'
 import {PageHeader} from '../../components/PageHeader'
 import {CUSTOM_ATTR_KEYS} from '../../../infra/constants/custom-attr-keys'
+import {useMethod} from '../../../infra/hooks/useMethod'
+import {RoutePaths} from '../../app/routes'
 
 export const ViewComponent = () => {
   const {appId, componentId} = useParams() || {}
+  const history = useHistory()
   const [selectedState, setSelectedState] = useState()
   const [selectedStyle, setSelectedStyle] = useState()
   const [selectedSelectorValue, setSelectedSelectorValue] = useState()
@@ -35,7 +38,7 @@ export const ViewComponent = () => {
     const sub = Meteor.subscribe('elements.byComponentId', {componentId})
     const elements = ElementsCollection.find()
       .fetch()
-      .map((el) => (!el.parentId ? {...el, attrs: {...el.attrs, [CUSTOM_ATTR_KEYS.COMPONENT]: component.name}} : el))
+      .map((el) => (!el.parentId ? {...el, attrs: {...el.attrs, [CUSTOM_ATTR_KEYS.COMPONENT]: component?.name}} : el))
 
     return {
       elements,
@@ -61,6 +64,12 @@ export const ViewComponent = () => {
     setSelectedStyle(component?.styles?.[0])
   }, [component])
 
+  const removeComponent = useMethod('components.remove', {
+    onSuccess: () => {
+      history.push(`${RoutePaths.APPS}/${appId}${RoutePaths.COMPONENTS}`)
+    },
+  })
+
   return (
     <SidebarLayout
       menuMinimized
@@ -74,7 +83,7 @@ export const ViewComponent = () => {
         />
       }
     >
-      <PageHeader title={component?.name} />
+      <PageHeader title={component?.name} onDelete={() => removeComponent.call(component?._id)} />
       {component?._id && (
         <>
           <ElementsTree
@@ -96,20 +105,20 @@ export const ViewComponent = () => {
           />
           <ClassesInput
             appId={appId}
-            componentId={component._id}
+            componentId={component?._id}
             selectorId={selectedSelector?._id}
             selectorValue={selectedSelectorValue}
             classes={selectedSelector?.classes}
           />
           <ManageStyles
-            componentId={component._id}
+            componentId={component?._id}
             styles={component?.styles}
             selectedStyle={selectedStyle}
             onChangeStyle={(style) => setSelectedStyle(style)}
           />
           <ClassesInput
             appId={appId}
-            componentId={component._id}
+            componentId={component?._id}
             selectorId={selectedSelector?._id}
             selectorValue={selectedSelectorValue}
             classes={selectedSelector?.classesByStyles?.find(({style}) => style === selectedStyle)?.classes}
@@ -117,14 +126,14 @@ export const ViewComponent = () => {
             disabled={!component?.styles || component?.styles.length <= 0}
           />
           <ManageStates
-            componentId={component._id}
+            componentId={component?._id}
             states={component?.states}
             selectedState={selectedState}
             onChangeState={(state) => setSelectedState(state)}
           />
           <ClassesInput
             appId={appId}
-            componentId={component._id}
+            componentId={component?._id}
             selectorId={selectedSelector?._id}
             selectorValue={selectedSelectorValue}
             classes={selectedSelector?.classesByStates?.find(({state}) => state === selectedState)?.classes}
