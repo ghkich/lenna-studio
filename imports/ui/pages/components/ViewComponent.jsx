@@ -83,7 +83,7 @@ export const ViewComponent = () => {
         />
       }
     >
-      <PageHeader title={component?.name} onDelete={() => removeComponent.call(component?._id)} />
+      <PageHeader title={component?.name} onDelete={() => removeComponent.call(component?._id)} showCopyButton />
       {component?._id && (
         <>
           <ElementsTree

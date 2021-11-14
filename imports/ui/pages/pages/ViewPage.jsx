@@ -120,7 +120,7 @@ export const ViewPage = () => {
         />
       }
     >
-      <PageHeader title={page?.name} onDelete={() => removePage.call(page?._id)} />
+      <PageHeader title={page?.name} onDelete={() => removePage.call(page?._id)} showCopyButton />
       {page?.name && (
         <>
           <Form onSubmit={onSubmit} defaultValues={{name: page.name, path: page.path}}>
