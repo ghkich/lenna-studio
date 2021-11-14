@@ -13,7 +13,12 @@ WebApp.connectHandlers.use('/api/sendHtml', (req, res, next) => {
     'data',
     Meteor.bindEnvironment((data) => {
       const {pathname, html, appId} = JSON.parse(data)
-      const pageId = PagesCollection.findOne({appId, path: pathname})?._id
+      let pageId = PagesCollection.findOne({appId, path: pathname})?._id
+      if (!pageId) {
+        const pathnameWithoutSlashes = pathname.replace(/\//g, '')
+        const pageName = pathnameWithoutSlashes[0].toUpperCase() + pathnameWithoutSlashes.slice(1)
+        pageId = PagesCollection.insert({appId, path: pathname, name: pageName})
+      }
       const htmlNodes = parse(html)?.childNodes
       createElementsFor({
         appId,
