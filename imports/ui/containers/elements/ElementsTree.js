@@ -54,7 +54,7 @@ const checkIfComponentAcceptChildren = (component) => {
 }
 
 const checkIfElementAcceptChildren = (element) => {
-  return element.tagName && !VOID_ELEMENTS.includes(element.tagName)
+  return element.isChildrenContainer || (element.tagName && !VOID_ELEMENTS.includes(element.tagName))
 }
 
 const Element = ({
@@ -73,12 +73,17 @@ const Element = ({
   if (!element) return null
   const isSelected = selectedElement?._id === element._id
   const elementComponent = ComponentsCollection.findOne(element.component?._id)
-  const acceptChildren = elementComponent
-    ? checkIfComponentAcceptChildren(elementComponent)
-    : checkIfElementAcceptChildren(element)
+  const acceptChildren =
+    !element.isChildrenContainer && elementComponent
+      ? checkIfComponentAcceptChildren(elementComponent)
+      : checkIfElementAcceptChildren(element)
 
   return (
-    <div className={` ${isSelected ? 'bg-gray-100 border-0 hover:bg-gray-100' : 'bg-white'}`}>
+    <div
+      className={` ${isSelected ? 'bg-gray-100 border-0 hover:bg-gray-100' : 'bg-white'} ${
+        element.error ? 'bg-red-50 text-red-400' : ''
+      }`}
+    >
       <div
         className={`flex items-center gap-1 border-b cursor-pointer px-2 ${isSelected ? 'h-10' : 'h-6'}`}
         style={{paddingLeft: `${level * 10 || 3}px`}}
@@ -99,7 +104,7 @@ const Element = ({
             </button>
           )}
           {elementComponent?.name || element?.tagName || <span className="text-2xs">Text: "{element?.text}"</span>}
-          {targetPage && !element.parentId && <span className="text-2xs opacity-50"> {'{childrenContainer}'}</span>}
+          {element.isChildrenContainer && <span className="text-2xs opacity-50"> {'{childrenContainer}'}</span>}
         </div>
         {isSelected && (
           <>

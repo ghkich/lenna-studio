@@ -12,6 +12,17 @@ import {STRUCTURE_TYPES} from '../../infra/constants/structure-types'
 
 export const ElementsPreview = ({appId, elements, selectedComponentId, selectedStyle, selectedState}) => {
   const [css, setCss] = useState('')
+  const [previewReady, setPreviewReady] = useState(false)
+
+  useEffect(() => {
+    let renderDelay
+    if (css) {
+      renderDelay = setTimeout(() => setPreviewReady(true), 50)
+    }
+    return () => {
+      clearTimeout(renderDelay)
+    }
+  }, [css])
 
   const {allElements, theme, selectors} = useTracker(() => {
     if (!elements) return {}
@@ -36,11 +47,13 @@ export const ElementsPreview = ({appId, elements, selectedComponentId, selectedS
     Meteor.subscribe('elements.byComponentIds', componentIds)
     Meteor.subscribe('selectors.byComponentIds', componentIds)
     Meteor.subscribe('themes.byUserId')
-    const selectors = SelectorsCollection.find({componentId: {$in: componentIds}}).fetch()
+    let selectors = SelectorsCollection.find({componentId: {$in: componentIds}}).fetch()
+
     const app = AppsCollection.findOne(appId)
     const theme = ThemesCollection.findOne(app?.themeId)
 
     const allElements = []
+    const allElementComponentIds = componentIds
 
     let component
 
@@ -54,6 +67,9 @@ export const ElementsPreview = ({appId, elements, selectedComponentId, selectedS
         componentElements
           .filter((el) => el.parentId && el.parentId !== component?.childrenContainerElementId)
           .forEach((el) => {
+            if (el.component?._id) {
+              allElementComponentIds.push(el.component?._id)
+            }
             if (el.parentId === componentContainerElement?._id) {
               allElements.push({...el, parentId: element._id})
             } else {
@@ -65,6 +81,11 @@ export const ElementsPreview = ({appId, elements, selectedComponentId, selectedS
         allElements.push(element)
       }
     })
+
+    if (!selectedComponentId) {
+      Meteor.subscribe('selectors.byComponentIds', allElementComponentIds)
+      selectors = SelectorsCollection.find({componentId: {$in: allElementComponentIds}}).fetch()
+    }
 
     return {
       allElements,
@@ -121,7 +142,7 @@ export const ElementsPreview = ({appId, elements, selectedComponentId, selectedS
           element.component?.state || component?.states?.[0] || element.attrs?.[CUSTOM_ATTR_KEYS.STATE],
       }
       if (element?.text) {
-        return element?.text
+        return element?.text + '\n'
       }
       if (!tagName) return null
       const children = allElements?.filter((el) => el?.parentId === element._id)
@@ -141,7 +162,14 @@ export const ElementsPreview = ({appId, elements, selectedComponentId, selectedS
   return (
     <>
       <style>{css}</style>
-      <div id="__lennaPreview">{renderChildren([containerElement])}</div>
+      <div
+        id="__lennaPreview"
+        className={`${
+          previewReady ? 'opacity-1' : 'opacity-0'
+        } transition-opacity duration-250 flex items-center justify-center w-full h-screen`}
+      >
+        {renderChildren([containerElement])}
+      </div>
     </>
   )
 }

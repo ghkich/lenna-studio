@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {CUSTOM_ATTR_KEYS} from '../../infra/constants/custom-attr-keys'
 import {ElementsTree} from '../containers/elements/ElementsTree'
+import {ComponentsCollection} from '../../collections/components'
 
 export const ElementsComparison = ({actual, expected}) => {
   const [error, setError] = useState('')
@@ -16,19 +17,23 @@ export const ElementsComparison = ({actual, expected}) => {
           ...actual[i],
           error: true,
         }
-        if (!expectedEl?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT]) {
-          setError(`Missing children container`)
-          setActualString('No children container')
-          setExpectedString('To find a children container')
-          asserted.push(newElement)
-          return false
-        }
-        if (expectedEl?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT] !== actual[i]?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT]) {
-          setError(`Wrong component container`)
-          setActualString(actual[i]?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT])
-          setExpectedString(expectedEl?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT])
-          asserted.push(newElement)
-          return false
+        if (expectedEl?.component?._id) {
+          const component = ComponentsCollection.findOne(expectedEl?.component?._id)
+          if (component?.name !== actual[i]?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT]) {
+            setError(`Wrong component container`)
+            setActualString(actual[i]?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT])
+            setExpectedString(expectedEl?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT])
+            asserted.push(newElement)
+            return false
+          }
+        } else {
+          if (expectedEl?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT] !== actual[i]?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT]) {
+            setError(`Wrong component container`)
+            setActualString(actual[i]?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT])
+            setExpectedString(expectedEl?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT])
+            asserted.push(newElement)
+            return false
+          }
         }
         if (expectedEl?.tagName && expectedEl?.tagName !== actual[i]?.tagName) {
           setError(`Wrong tag`)
@@ -73,6 +78,17 @@ export const ElementsComparison = ({actual, expected}) => {
           <div>
             Expected: <b className="font-semibold">{expectedString}</b>
           </div>
+        </div>
+      )}
+      {(actual?.length === 0 || expected?.length === 0) && (
+        <div className="bg-gray-50 p-2 mt-2 border border-gray-300 text-center text-2xs">
+          <div>No elements to compare</div>
+        </div>
+      )}
+      {actual?.length > 0 && expected?.length > 0 && !error && (
+        <div className="bg-green-50 p-2 mt-2 border border-green-400 text-2xs">
+          <div className="pb-1 mb-1 border-b border-green-100 text-green-400 text-xs font-semibold">Success</div>
+          <div>All validations passed</div>
         </div>
       )}
     </div>
