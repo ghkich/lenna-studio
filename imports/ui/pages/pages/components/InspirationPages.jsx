@@ -5,7 +5,7 @@ import {Select} from '../../../components/basic/Select'
 import {PAGE_CATEGORIES} from '../../../../infra/constants/page-categories'
 import {PagesList} from '../../../components/PagesList'
 
-export const InspirationPages = () => {
+export const FromExistingPages = () => {
   const [selectedPageCategory, setSelectedPageCategory] = useState(PAGE_CATEGORIES.LANDING)
   const [selectedPageId, setSelectedPageId] = useState()
 
