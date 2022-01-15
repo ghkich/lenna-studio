@@ -14,9 +14,10 @@ Meteor.methods({
     }
     const appId = AppsCollection.insert({name, themeId, userId: this.userId})
     if (appId && checkedPageIds?.length > 0) {
+      const oldNewPageMap = {}
       checkedPageIds.forEach((pageId) => {
-        const {_id, ...page} = PagesCollection.findOne(pageId)
-        PagesCollection.insert({...page, appId})
+        const {_id: oldPageId, ...page} = PagesCollection.findOne(pageId)
+        oldNewPageMap[oldPageId] = PagesCollection.insert({...page, appId})
       })
       SelectorsCollection.find({appId: fromAppId})
         .fetch()
@@ -24,7 +25,12 @@ Meteor.methods({
           SelectorsCollection.insert({...selector, appId})
         })
       const oldNewElementMap = {}
-      ElementsCollection.find({appId: fromAppId})
+      ElementsCollection.find({appId: fromAppId, pageId: {$exists: false}})
+        .fetch()
+        .forEach(({_id: oldElementId, ...element}) => {
+          oldNewElementMap[oldElementId] = ElementsCollection.insert({...element, appId})
+        })
+      ElementsCollection.find({pageId: {$in: checkedPageIds}})
         .fetch()
         .forEach(({_id: oldElementId, ...element}) => {
           oldNewElementMap[oldElementId] = ElementsCollection.insert({...element, appId})
@@ -35,6 +41,19 @@ Meteor.methods({
         .forEach(({_id: oldComponentId, ...component}) => {
           oldNewComponentMap[oldComponentId] = ComponentsCollection.insert({...component, appId})
         })
+      // Remap pageIds
+      Object.entries(oldNewPageMap).forEach(([oldId, newId]) => {
+        ElementsCollection.update(
+          {appId, pageId: oldId},
+          {
+            $set: {
+              pageId: newId,
+            },
+          },
+          {multi: true},
+        )
+      })
+      // Remap componentIds
       Object.entries(oldNewComponentMap).forEach(([oldId, newId]) => {
         PagesCollection.update(
           {appId, layoutComponentId: oldId},
@@ -64,6 +83,7 @@ Meteor.methods({
           {multi: true},
         )
       })
+      // Remap elementIds
       Object.entries(oldNewElementMap).forEach(([oldId, newId]) => {
         ComponentsCollection.update(
           {appId, childrenContainerElementId: oldId},
