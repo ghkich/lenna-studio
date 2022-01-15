@@ -21,7 +21,7 @@ WebApp.connectHandlers.use('/api/sendHtml', (req, res) => {
           : 'Home'
         pageId = PagesCollection.insert({appId, path: pathname, name: pageName})
       }
-      const htmlNodes = parse(html)?.childNodes
+      const htmlNodes = parse(html?.trim())?.childNodes
       createElementsFor({
         appId,
         pageId,
