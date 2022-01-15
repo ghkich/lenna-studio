@@ -35,8 +35,8 @@ export const ViewTheme = () => {
     },
   })
 
-  const onSubmit = ({name, colors}) => {
-    updateTheme.call(theme?._id, {name, settings: {...theme.settings, colors}})
+  const onSubmit = ({name, colors, roundLevel}) => {
+    updateTheme.call(theme?._id, {name, settings: {...theme.settings, colors, roundLevel}})
   }
 
   return (
@@ -50,27 +50,35 @@ export const ViewTheme = () => {
               name: theme.name,
               'colors.primary': theme.settings?.colors?.primary,
               'colors.secondary': theme.settings?.colors?.secondary,
+              roundLevel: theme.settings?.roundLevel,
             }}
           >
             <TextInput name="name" placeholder="Name" />
-            <div className="flex gap-2 pb-2 mb-2 border-b">
+            <div className="flex items-center justify-between relative">
+              <label className="text-gray-500 pt-1 leading-none text-2xs uppercase">Color Primary</label>
+              <TextInput name="colors.primary" placeholder="Primary" className="text-gray-900" />
+              <div
+                className="w-5 h-5 absolute right-2 rounded"
+                style={{backgroundColor: theme.settings?.colors?.primary}}
+              />
+            </div>
+            <div className="flex items-center justify-between relative">
+              <label className="text-gray-500 pt-1 leading-none text-2xs uppercase">Color Secondary</label>
+              <TextInput name="colors.secondary" placeholder="Secondary" className="text-gray-900" />
+              <div
+                className="w-5 h-5 absolute right-2 rounded"
+                style={{backgroundColor: theme.settings?.colors?.secondary}}
+              />
+            </div>
+            <div className="flex items-center justify-between relative">
+              <label className="text-gray-500 pt-1 leading-none text-2xs uppercase">Round level</label>
+              <TextInput name="roundLevel" placeholder="Round level" className="text-gray-900" />
+            </div>
+            <div className="flex gap-2 pt-2 mt-0.5 border-t">
               <Button type="submit" className="flex-1">
                 Save
               </Button>
             </div>
-            <h2 className="text-gray-500 pt-1 leading-none text-2xs uppercase">Colors</h2>
-            <TextInput
-              name="colors.primary"
-              placeholder="Primary"
-              className="text-white"
-              style={{backgroundColor: theme.settings?.colors?.primary}}
-            />
-            <TextInput
-              name="colors.secondary"
-              placeholder="Secondary"
-              className="text-white"
-              style={{backgroundColor: theme.settings?.colors?.secondary}}
-            />
           </Form>
         </>
       )}
