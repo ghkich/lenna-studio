@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import {useTracker} from 'meteor/react-meteor-data'
-import {ElementsCollection} from '../../../collections/elements'
 import {SidebarLayout} from '../../components/layouts/SidebarLayout'
 import {ElementsTree} from '../../containers/elements/ElementsTree'
 import {ElementsPreview} from '../../components/ElementsPreview'
@@ -18,14 +17,14 @@ import {Button} from '../../components/basic/Button'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faArrowRightArrowLeft} from '@fortawesome/pro-duotone-svg-icons'
 import {ElementsComparison} from '../../components/ElementsComparison'
-import {CUSTOM_ATTR_KEYS} from '../../../infra/constants/custom-attr-keys'
 import {RoutePaths} from '../../app/routes'
+import {usePageLayoutElements} from '../../hooks/usePageLayoutElements'
 
 export const ViewPage = () => {
   const {appId, pageId} = useParams() || {}
   const history = useHistory()
   const [layoutComponentId, setLayoutComponentId] = useState()
-  const [structureType, setStructureType] = useState()
+  const [structureType, setStructureType] = useState(STRUCTURE_TYPES.EXPECTED)
 
   const {page} = useTracker(() => {
     if (!pageId) return {}
@@ -40,51 +39,14 @@ export const ViewPage = () => {
     }
   }, [pageId])
 
-  const {actualElements, previewElements, treeElements, layoutHasChildrenContainer} = useTracker(() => {
-    if (!pageId || !layoutComponentId) return {}
-    const subs = [
-      Meteor.subscribe('components.byId', {_id: layoutComponentId}),
-      Meteor.subscribe('elements.byComponentId', {componentId: layoutComponentId}),
-      Meteor.subscribe('elements.byPageId', {pageId}),
-    ]
-    const pageElements = ElementsCollection.find({pageId, 'structure.type': STRUCTURE_TYPES.EXPECTED}).fetch()
-    const layoutComponent = ComponentsCollection.findOne({_id: layoutComponentId})
-    const layoutElements = ElementsCollection.find({componentId: layoutComponentId}).fetch()
-    const actualElements = ElementsCollection.find({pageId, 'structure.type': STRUCTURE_TYPES.ACTUAL}).fetch()
+  const {actualElements, previewElements, treeElements, layoutHasChildrenContainer, loading} = usePageLayoutElements({
+    pageId,
+    layoutComponentId,
+  })
 
-    const layoutChildrenContainer = layoutElements.find((el) => el?._id === layoutComponent?.childrenContainerElementId)
-
-    let previewElements = layoutElements
-    let treeElements = layoutElements
-
-    if (layoutChildrenContainer) {
-      const mainLayoutContainerElement = layoutElements.find((el) => !el.parentId)
-      const pageElementsInLayoutContainer = pageElements.map((el) =>
-        !el.parentId ? {...el, parentId: layoutChildrenContainer._id} : el,
-      )
-      previewElements = [
-        ...layoutElements.filter((el) => el.parentId !== layoutChildrenContainer._id),
-        ...pageElementsInLayoutContainer,
-      ]
-      treeElements = [
-        {
-          ...layoutChildrenContainer,
-          component: mainLayoutContainerElement?.component,
-          parentId: undefined,
-          attrs: {[CUSTOM_ATTR_KEYS.COMPONENT]: layoutComponent?.name},
-        },
-        ...pageElementsInLayoutContainer,
-      ]
-    }
-
-    return {
-      actualElements,
-      previewElements,
-      treeElements,
-      layoutHasChildrenContainer: !!layoutChildrenContainer,
-      loading: subs.some((sub) => !sub?.ready()),
-    }
-  }, [pageId, layoutComponentId])
+  if (page && !loading) {
+    window.top.postMessage({message: 'pageAccess', pagePath: page.path, existingPage: actualElements?.length > 0}, '*')
+  }
 
   const {components} = useTracker(() => {
     const sub = Meteor.subscribe('components.byCategory', {appId, category: COMPONENT_CATEGORIES.LAYOUTS})
@@ -120,7 +82,12 @@ export const ViewPage = () => {
         />
       }
     >
-      <PageHeader title={page?.name} onDelete={() => removePage.call(page?._id)} showCopyButton />
+      <PageHeader
+        title={page?.name}
+        goBackTo={`${RoutePaths.APPS}/${appId}${RoutePaths.PAGES}`}
+        onDelete={() => removePage.call(page?._id)}
+        showCopyButton
+      />
       {page?.name && (
         <>
           <Form onSubmit={onSubmit} defaultValues={{name: page.name, path: page.path}}>
