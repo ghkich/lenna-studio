@@ -9,9 +9,12 @@ export const ComponentsList = ({appId}) => {
   const [searchValue, setSearchValue] = useState('')
   const {components} = useTracker(() => {
     const sub = Meteor.subscribe('components.byAppId', {appId})
-    const components = ComponentsCollection.find({
-      name: {$regex: searchValue, $options: 'i'},
-    }).fetch()
+    const components = ComponentsCollection.find(
+      {
+        name: {$regex: searchValue, $options: 'i'},
+      },
+      {sort: {createdAt: 1}},
+    ).fetch()
 
     return {
       components,

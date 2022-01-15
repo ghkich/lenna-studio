@@ -11,9 +11,12 @@ export const ThemesList = ({appId}) => {
   const {themes} = useTracker(() => {
     Meteor.subscribe('themes.byUserId')
     Meteor.subscribe('themes.global')
-    const themes = ThemesCollection.find({
-      name: {$regex: searchValue, $options: 'i'},
-    }).fetch()
+    const themes = ThemesCollection.find(
+      {
+        name: {$regex: searchValue, $options: 'i'},
+      },
+      {sort: {createdAt: 1}},
+    ).fetch()
 
     return {
       themes,

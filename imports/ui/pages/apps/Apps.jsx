@@ -11,9 +11,12 @@ export const Apps = () => {
 
   const {apps, loadingApps} = useTracker(() => {
     const sub = Meteor.subscribe('apps.byUserId')
-    const apps = AppsCollection.find({
-      name: {$regex: appSearchValue, $options: 'i'},
-    }).fetch()
+    const apps = AppsCollection.find(
+      {
+        name: {$regex: appSearchValue, $options: 'i'},
+      },
+      {sort: {createdAt: -1}},
+    ).fetch()
 
     return {
       apps,

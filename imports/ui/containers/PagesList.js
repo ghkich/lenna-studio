@@ -9,9 +9,12 @@ export const PagesList = ({appId}) => {
   const [searchValue, setSearchValue] = useState('')
   const {pages} = useTracker(() => {
     const sub = Meteor.subscribe('pages.byAppId', {appId})
-    const pages = PagesCollection.find({
-      name: {$regex: searchValue, $options: 'i'},
-    }).fetch()
+    const pages = PagesCollection.find(
+      {
+        name: {$regex: searchValue, $options: 'i'},
+      },
+      {sort: {createdAt: 1}},
+    ).fetch()
 
     return {
       pages,
