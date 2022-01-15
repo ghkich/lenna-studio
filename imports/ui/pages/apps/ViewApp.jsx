@@ -10,6 +10,8 @@ import {Form} from '../../components/form/Form'
 import {useMethod} from '../../../infra/hooks/useMethod'
 import {ThemesCollection} from '../../../collections/themes'
 import {RoutePaths} from '../../app/routes'
+import {faCopy} from '@fortawesome/pro-solid-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
 export const ViewApp = () => {
   const {appId} = useParams() || {}
@@ -55,6 +57,18 @@ export const ViewApp = () => {
 
   return (
     <SidebarLayout menuMinimized={false}>
+      <div className="flex gap-2 mb-2">
+        <TextInput value={`appId: ${appId}`} disabled className="flex-1" />
+        <Button
+          type="button"
+          className="px-3"
+          onClick={async () => {
+            await navigator.clipboard.writeText(appId)
+          }}
+        >
+          <FontAwesomeIcon icon={faCopy} className="text-xs" />
+        </Button>
+      </div>
       <Form onSubmit={handleSubmit} defaultValues={{name: app.name}}>
         <TextInput name="name" placeholder="Name" />
         <Select
