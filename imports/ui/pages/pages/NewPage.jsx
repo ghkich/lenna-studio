@@ -8,7 +8,6 @@ import {ToggleButtonGroup} from '../../components/basic/ToggleButtonGroup'
 import {useMethod} from '../../../infra/hooks/useMethod'
 import {useHistory, useParams} from 'react-router-dom'
 import {CREATION_OPTIONS, CREATION_TYPES} from '../../../infra/constants/creation-types'
-import {InspirationPages} from '../inspiration/components/InspirationPages'
 import {Select} from '../../components/basic/Select'
 import {useTracker} from 'meteor/react-meteor-data'
 import {COMPONENT_CATEGORIES} from '../../../infra/constants/component-categories'
@@ -77,11 +76,7 @@ export const NewPage = () => {
             />
           </>
         )}
-        {selectedCreationType === CREATION_TYPES.EXISTING && (
-          <div>
-            <InspirationPages />
-          </div>
-        )}
+        {selectedCreationType === CREATION_TYPES.EXISTING && <div>{/*<InspirationPages />*/}</div>}
         <div className="border-t opacity-50" />
         <Button type="submit" style="primary">
           Create
