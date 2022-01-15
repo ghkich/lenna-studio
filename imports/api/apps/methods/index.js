@@ -6,13 +6,74 @@ import {SelectorsCollection} from '../../../collections/selectors'
 import {PagesCollection} from '../../../collections/pages'
 
 Meteor.methods({
-  ['apps.create'](app) {
-    if (!app?.name) return
-    const existingAppName = AppsCollection.find({name: app.name}).fetch()
+  ['apps.create']({fromAppId, name, themeId, checkedPageIds}) {
+    if (!name) return
+    const existingAppName = AppsCollection.find({name}).fetch()
     if (existingAppName?.length > 0) {
       throw new Meteor.Error('app name already exists')
     }
-    return AppsCollection.insert({...app, userId: this.userId})
+    const appId = AppsCollection.insert({name, themeId, userId: this.userId})
+    if (appId && checkedPageIds?.length > 0) {
+      checkedPageIds.forEach((pageId) => {
+        const {_id, ...page} = PagesCollection.findOne(pageId)
+        PagesCollection.insert({...page, appId})
+      })
+      SelectorsCollection.find({appId: fromAppId})
+        .fetch()
+        .forEach(({_id, ...selector}) => {
+          SelectorsCollection.insert({...selector, appId})
+        })
+      const oldNewElementMap = {}
+      ElementsCollection.find({appId: fromAppId})
+        .fetch()
+        .forEach(({_id: oldElementId, ...element}) => {
+          oldNewElementMap[oldElementId] = ElementsCollection.insert({...element, appId})
+        })
+      const oldNewComponentMap = {}
+      ComponentsCollection.find({appId: fromAppId})
+        .fetch()
+        .forEach(({_id: oldComponentId, ...component}) => {
+          oldNewComponentMap[oldComponentId] = ComponentsCollection.insert({...component, appId})
+        })
+      Object.entries(oldNewComponentMap).forEach(([oldId, newId]) => {
+        PagesCollection.update(
+          {appId, layoutComponentId: oldId},
+          {
+            $set: {
+              layoutComponentId: newId,
+            },
+          },
+          {multi: true},
+        )
+        ElementsCollection.update(
+          {appId, componentId: oldId},
+          {
+            $set: {
+              componentId: newId,
+            },
+          },
+          {multi: true},
+        )
+        SelectorsCollection.update(
+          {appId, componentId: oldId},
+          {
+            $set: {
+              componentId: newId,
+            },
+          },
+          {multi: true},
+        )
+      })
+      Object.entries(oldNewElementMap).forEach(([oldId, newId]) => {
+        ComponentsCollection.update(
+          {appId, childrenContainerElementId: oldId},
+          {$set: {childrenContainerElementId: newId}},
+          {multi: true},
+        )
+        ElementsCollection.update({appId, parentId: oldId}, {$set: {parentId: newId}}, {multi: true})
+      })
+    }
+    return appId
   },
   ['apps.update'](_id, app) {
     if (!app?.name) return

@@ -5,7 +5,6 @@ import {RoutePaths} from '../../app/routes'
 import {Button} from '../../components/basic/Button'
 import {TextInput} from '../../components/basic/TextInput'
 import {ToggleButtonGroup} from '../../components/basic/ToggleButtonGroup'
-import {InspirationApps} from '../inspiration/components/InspirationApps'
 import {useMethod} from '../../../infra/hooks/useMethod'
 import {useHistory} from 'react-router-dom'
 import {CREATION_OPTIONS, CREATION_TYPES} from '../../../infra/constants/creation-types'
@@ -13,10 +12,16 @@ import {Form} from '../../components/form/Form'
 import {Select} from '../../components/basic/Select'
 import {useTracker} from 'meteor/react-meteor-data'
 import {ThemesCollection} from '../../../collections/themes'
+import {ElementsPreview} from '../../components/ElementsPreview'
+import {usePageLayoutElements} from '../../hooks/usePageLayoutElements'
+import {FromExistingApps} from './components/FromExistingApps'
 
 export const NewApp = () => {
-  const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.SCRATCH)
   const history = useHistory()
+  const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.SCRATCH)
+  const [selectedPage, setSelectedPage] = useState()
+  const [fromAppId, setFromAppId] = useState()
+  const [checkedPageIds, setCheckedPageIds] = useState([])
 
   const {themes} = useTracker(() => {
     Meteor.subscribe('themes.byUserId')
@@ -28,23 +33,25 @@ export const NewApp = () => {
     }
   }, [])
 
+  const {previewElements} = usePageLayoutElements({
+    pageId: selectedPage?._id,
+    layoutComponentId: selectedPage?.layoutComponentId,
+  })
+
   const createApp = useMethod('apps.create', {
     onSuccess: (appId) => {
       if (appId) {
-        if (selectedCreationType === CREATION_TYPES.SCRATCH) {
-          history.push(`${RoutePaths.APPS}/${appId}`)
-        } else {
-        }
+        history.push(`${RoutePaths.APPS}/${appId}`)
       }
     },
   })
 
   const handleSubmit = ({name, themeId}) => {
-    createApp.call({name, themeId})
+    createApp.call({fromAppId, name, themeId, checkedPageIds})
   }
 
   return (
-    <SidebarLayout menuMinimized>
+    <SidebarLayout menuMinimized contentComponent={<ElementsPreview appId={fromAppId} elements={previewElements} />}>
       <PageHeader title="New app" />
       <Form onSubmit={handleSubmit}>
         <TextInput name="name" placeholder="Name" />
@@ -62,7 +69,11 @@ export const NewApp = () => {
         />
         {selectedCreationType === CREATION_TYPES.EXISTING && (
           <div>
-            <InspirationApps />
+            <FromExistingApps
+              onAppSelect={(appId) => setFromAppId(appId)}
+              onPageClick={(page) => setSelectedPage(page)}
+              onPageCheck={(pageIds) => setCheckedPageIds(pageIds)}
+            />
           </div>
         )}
         <div className="border-t opacity-50" />

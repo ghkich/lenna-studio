@@ -1,14 +1,28 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useTracker} from 'meteor/react-meteor-data'
 import {PagesCollection} from '../../../../collections/pages'
 import {Select} from '../../../components/basic/Select'
 import {APP_CATEGORIES} from '../../../../infra/constants/app-categories'
 import {AppsCollection} from '../../../../collections/apps'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faEye} from '@fortawesome/pro-solid-svg-icons'
 
-export const InspirationApps = () => {
+export const FromExistingApps = ({onAppSelect, onPageClick, onPageCheck}) => {
   const [selectedAppCategory, setSelectedAppCategory] = useState('')
   const [selectedAppId, setSelectedAppId] = useState()
-  const [checkedPageIds, setCheckedPageIds] = useState({})
+  const [pagesCheckedState, setPagesCheckedState] = useState({})
+  const [selectedPage, setSelectedPage] = useState()
+
+  useEffect(() => {
+    onPageCheck(
+      Object.entries(pagesCheckedState)
+        .map(([pageId, isChecked]) => (isChecked ? pageId : undefined))
+        .filter(Boolean),
+    )
+    return () => {
+      onPageCheck([])
+    }
+  }, [pagesCheckedState])
 
   const {apps} = useTracker(() => {
     if (!selectedAppCategory) return {}
@@ -28,7 +42,8 @@ export const InspirationApps = () => {
     const sub = Meteor.subscribe('pages.byAppId', {appId: selectedAppId})
     const pages = PagesCollection.find({appId: selectedAppId}).fetch()
 
-    setCheckedPageIds({})
+    setPagesCheckedState({})
+    onAppSelect(selectedAppId)
 
     return {
       pages,
@@ -36,10 +51,15 @@ export const InspirationApps = () => {
     }
   }, [selectedAppId])
 
-  const handlePageCheck = (e) => {
+  const handleCheckPage = (e) => {
     const pageId = e.target.name
     const isChecked = e.target.checked
-    setCheckedPageIds((prev) => ({...prev, [pageId]: isChecked}))
+    setPagesCheckedState((prev) => ({...prev, [pageId]: isChecked}))
+  }
+
+  const handleSelectPage = (page) => {
+    setSelectedPage(page)
+    onPageClick(page)
   }
 
   return (
@@ -63,36 +83,32 @@ export const InspirationApps = () => {
               options={apps?.map(({_id, name}) => ({value: _id, label: name}))}
             />
           </div>
-
           {pages?.map((page) => (
-            <label
-              key={page._id}
-              className="flex items-center border mb-0.5 px-2 py-1.5 cursor-pointer hover:bg-gray-50"
-            >
-              <input
-                type="checkbox"
-                name={page._id}
-                checked={checkedPageIds[page._id] || false}
-                onChange={handlePageCheck}
-                className="mr-1"
-              />
-              <span> {page.name}</span>
-            </label>
+            <div className="relative" key={page._id}>
+              <label
+                className="flex items-center border mb-0.5 px-2 py-1.5 cursor-pointer hover:bg-gray-50"
+                onClick={() => handleSelectPage(page)}
+              >
+                <input
+                  type="checkbox"
+                  name={page._id}
+                  checked={pagesCheckedState[page._id] || false}
+                  onChange={handleCheckPage}
+                  className="mr-1"
+                />
+                <span>{page.name}</span>
+              </label>
+              <button
+                type="button"
+                onClick={() => handleSelectPage(page)}
+                className="py-1 px-3 text-xs text-gray-300 rounded absolute right-0 top-1"
+              >
+                <FontAwesomeIcon icon={faEye} className={selectedPage?._id === page?._id ? 'text-blue-500' : ''} />
+              </button>
+            </div>
           ))}
         </>
       )}
-      {/*{Object.values(checkedPageIds)?.some((isChecked) => isChecked) && (*/}
-      {/*  <>*/}
-      {/*    <div className="flex flex-col mt-2 gap-1 pt-2 border-t">*/}
-      {/*      <button type="button" className="p-2 flex-1 bg-gray-500 text-white hover:bg-gray-400">*/}
-      {/*        Copy to my app*/}
-      {/*      </button>*/}
-      {/*      <button type="button" className="p-2 flex-1 bg-gray-500 text-white hover:bg-gray-400">*/}
-      {/*        Create a new app*/}
-      {/*      </button>*/}
-      {/*    </div>*/}
-      {/*  </>*/}
-      {/*)}*/}
     </div>
   )
 }
