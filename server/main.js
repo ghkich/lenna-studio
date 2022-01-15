@@ -5,6 +5,7 @@ import {PageSchema, PagesCollection} from '../imports/collections/pages'
 import {ComponentSchema, ComponentsCollection} from '../imports/collections/components'
 import {SelectorSchema, SelectorsCollection} from '../imports/collections/selectors'
 import {ElementSchema, ElementsCollection} from '../imports/collections/elements'
+import {loadInitialData} from '../imports/infra/data/initial-data'
 
 // PUBLICATIONS
 import '../imports/api/apps/publications/by-user-id'
@@ -48,4 +49,6 @@ Meteor.startup(() => {
   ComponentsCollection.attachSchema(ComponentSchema)
   SelectorsCollection.attachSchema(SelectorSchema)
   ElementsCollection.attachSchema(ElementSchema)
+
+  loadInitialData()
 })

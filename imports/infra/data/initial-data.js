@@ -10,20 +10,22 @@ import {ThemesCollection} from '../../collections/themes'
 import {SelectorsCollection} from '../../collections/selectors'
 import {createElementsFor} from '../../api/elements/methods/create-elements-for'
 
-export const loadTestData = () => {
+export const loadInitialData = () => {
   if (ComponentsCollection.find().count()) return
+  let themeId
 
   const userId = Accounts.createUser({
     email: 'gh.kich@gmail.com',
     username: 'gustavo',
-    password: '123',
+    password: '123456',
   })
 
-  THEMES_SEED.forEach((theme) =>
-    ThemesCollection.insert({
-      userId,
-      ...theme,
-    }),
+  THEMES_SEED.forEach(
+    (theme) =>
+      (themeId = ThemesCollection.insert({
+        userId,
+        ...theme,
+      })),
   )
 
   const createOrUpdateSelectors = ({appId, componentId, selectors, style, state}) => {
@@ -91,7 +93,7 @@ export const loadTestData = () => {
 
   APPS_SEED.forEach((app) => {
     const appId = AppsCollection.insert({
-      ...(app.addForUser ? {userId} : {}),
+      ...(app.addForUser ? {userId, themeId} : {}),
       ...app,
     })
 

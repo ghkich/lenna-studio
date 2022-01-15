@@ -6,7 +6,7 @@ export const PAGES_SEED = [
     name: 'Home',
     path: '/welcome',
     category: PAGE_CATEGORIES.LANDING,
-    layout: 'SidebarLayout',
+    layout: 'BlankLayout',
     childNodes: [
       {
         tagName: 'button',
@@ -31,69 +31,60 @@ export const PAGES_SEED = [
     ],
   },
   {
-    name: 'Register',
-    path: '/register',
-    category: PAGE_CATEGORIES.REGISTER,
-    layout: 'SidebarLayout',
-    childNodes: [
-      {
-        tagName: 'form',
-        childNodes: [
-          {
-            tagName: 'input',
-            attrs: {
-              type: 'text',
-              placeholder: 'E-mail',
-            },
-          },
-          {
-            tagName: 'input',
-            attrs: {
-              type: 'password',
-              placeholder: 'Password',
-            },
-          },
-          {
-            tagName: 'input',
-            attrs: {
-              type: 'password',
-              placeholder: 'Confirm password',
-            },
-          },
-        ],
-      },
-      {
-        tagName: 'button',
-        attrs: {
-          [CUSTOM_ATTR_KEYS.COMPONENT]: 'LinkButton',
-          [CUSTOM_ATTR_KEYS.STYLE]: 'primary',
-        },
-        childNodes: [{text: 'Forgot password'}],
-      },
-    ],
-  },
-  {
     name: 'Login',
     path: '/login',
     category: PAGE_CATEGORIES.LOGIN,
-    layout: 'LoginLayout',
+    layout: 'BlankLayout',
+    childNodes: [
+      {
+        tagName: 'div',
+        attrs: {
+          [CUSTOM_ATTR_KEYS.COMPONENT]: 'LoginForm',
+        },
+      },
+    ],
   },
   {
     name: 'Dashboard',
     path: '/',
     category: PAGE_CATEGORIES.DASHBOARD,
-    layout: 'SidebarLayout',
-    childNodes: [{text: 'Welcome to dashboard :)'}],
-  },
-  {
-    name: 'Account',
-    path: '/account',
-    category: PAGE_CATEGORIES.PROFILE,
-    layout: 'SidebarLayout',
+    layout: 'AuthenticatedLayout',
     childNodes: [
       {
-        tagName: 'div',
-        childNodes: [{text: 'User profile'}],
+        tagName: 'header',
+        childNodes: [
+          {
+            tagName: 'div',
+            childNodes: [
+              {
+                tagName: 'h1',
+                childNodes: [{text: 'Dashboard'}],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Profile',
+    path: '/profile',
+    category: PAGE_CATEGORIES.PROFILE,
+    layout: 'AuthenticatedLayout',
+    childNodes: [
+      {
+        tagName: 'header',
+        childNodes: [
+          {
+            tagName: 'div',
+            childNodes: [
+              {
+                tagName: 'h1',
+                childNodes: [{text: 'Profile'}],
+              },
+            ],
+          },
+        ],
       },
     ],
   },
