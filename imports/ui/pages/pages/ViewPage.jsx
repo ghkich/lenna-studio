@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useTracker} from 'meteor/react-meteor-data'
 import {SidebarLayout} from '../../components/layouts/SidebarLayout'
 import {ElementsTree} from '../../containers/elements/ElementsTree'
@@ -45,8 +45,19 @@ export const ViewPage = () => {
   })
 
   if (page && !loading) {
-    window.top.postMessage({message: 'pageAccess', pagePath: page.path, existingPage: actualElements?.length > 0}, '*')
+    window.top.postMessage({message: 'pageAccess', pagePath: page.path}, '*')
   }
+
+  useEffect(() => {
+    if (structureType === STRUCTURE_TYPES.ACTUAL) {
+      window.top.postMessage({message: 'toggleView', value: 'sidebar'}, '*')
+    } else {
+      window.top.postMessage({message: 'toggleView', value: 'full'}, '*')
+    }
+    return () => {
+      window.top.postMessage({message: 'toggleView', value: 'sidebar'}, '*')
+    }
+  }, [structureType])
 
   const {components} = useTracker(() => {
     const sub = Meteor.subscribe('components.byCategory', {appId, category: COMPONENT_CATEGORIES.LAYOUTS})

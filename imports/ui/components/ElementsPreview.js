@@ -164,9 +164,9 @@ export const ElementsPreview = ({appId, elements, selectedComponentId, selectedS
       <style>{css}</style>
       <div
         id="__lennaPreview"
-        className={`${
-          previewReady ? 'opacity-1' : 'opacity-0'
-        } transition-opacity duration-250 flex items-center justify-center w-full h-screen`}
+        className={`${previewReady ? 'opacity-1' : 'opacity-0'} transition-opacity duration-250 ${
+          selectedComponentId ? 'flex items-center justify-center' : ''
+        } w-full h-screen`}
       >
         {renderChildren([containerElement])}
       </div>
