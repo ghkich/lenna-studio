@@ -40,9 +40,9 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
 
   return (
     <div data-ls="AuthenticatedLayout" className="flex">
-      <div className="content flex-1 hidden sm:block">{contentComponent}</div>
+      <div className="content flex-1 hidden sm:block bg-white">{contentComponent}</div>
       <div className="w-1.5 h-screen bg-gray-100 hover:bg-gray-200 border-l border-gray-200 hover:bg-opacity-75 cursor-pointer hidden sm:block" />
-      <div className="sidebar flex flex-col bg-white text-gray-500 text-xs w-full sm:w-80 h-screen border-l border-gray-200">
+      <div className="sidebar flex flex-col bg-white text-gray-500 text-xs w-full sm:w-80 max-w-xs h-screen sm:border-l border-gray-200">
         {user && (
           <>
             <div className="bg-white border-b h-7 px-1 flex justify-between items-center">
