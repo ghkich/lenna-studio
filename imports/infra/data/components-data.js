@@ -5,48 +5,6 @@ const stringToArray = (string) => string.split(' ')
 
 export const COMPONENTS_SEED = [
   {
-    name: 'Button',
-    category: COMPONENT_CATEGORIES.CONTROLS,
-    childNodes: [
-      {
-        tagName: 'button',
-        structure: {
-          isChildrenContainer: true,
-        },
-        attrs: {
-          type: 'button',
-        },
-        childNodes: [{text: 'Button label'}],
-      },
-    ],
-    selectors: [
-      {
-        value: '',
-        classes: stringToArray('py-2 px-4 rounded bg-gray text-white text-center'),
-      },
-    ],
-    styles: [
-      {
-        value: 'primary',
-        selectors: [
-          {
-            value: '',
-            classes: stringToArray('bg-primary'),
-          },
-        ],
-      },
-      {
-        value: 'secondary',
-        selectors: [
-          {
-            value: '',
-            classes: stringToArray('bg-secondary'),
-          },
-        ],
-      },
-    ],
-  },
-  {
     name: 'BlankLayout',
     category: COMPONENT_CATEGORIES.LAYOUTS,
     childNodes: [
@@ -246,6 +204,162 @@ export const COMPONENTS_SEED = [
       {
         value: '> main > header > div > h1',
         classes: stringToArray('text-3xl font-bold text-gray-900'),
+      },
+    ],
+  },
+  {
+    name: 'Button',
+    category: COMPONENT_CATEGORIES.CONTROLS,
+    childNodes: [
+      {
+        tagName: 'button',
+        structure: {
+          isChildrenContainer: true,
+        },
+        attrs: {
+          type: 'button',
+        },
+        childNodes: [{text: 'Button label'}],
+      },
+    ],
+    selectors: [
+      {
+        value: '',
+        classes: stringToArray('py-2 px-4 rounded bg-gray text-white text-center'),
+      },
+    ],
+    styles: [
+      {
+        value: 'primary',
+        selectors: [
+          {
+            value: '',
+            classes: stringToArray('bg-primary'),
+          },
+        ],
+      },
+      {
+        value: 'secondary',
+        selectors: [
+          {
+            value: '',
+            classes: stringToArray('bg-secondary'),
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'CallToAction',
+    category: COMPONENT_CATEGORIES.MISC,
+    childNodes: [
+      {
+        tagName: 'div',
+        childNodes: [
+          {
+            tagName: 'header',
+            childNodes: [],
+          },
+          {
+            tagName: 'div',
+            childNodes: [
+              {
+                tagName: 'h2',
+                childNodes: [
+                  {
+                    tagName: 'span',
+                    childNodes: [{text: 'Ready to dive in?'}],
+                  },
+                  {
+                    tagName: 'span',
+                    childNodes: [{text: 'Start your free trial today.'}],
+                  },
+                ],
+              },
+              {
+                tagName: 'div',
+                childNodes: [
+                  {
+                    tagName: 'div',
+                    childNodes: [
+                      {
+                        tagName: 'a',
+                        attrs: {
+                          href: '#',
+                        },
+                        childNodes: [{text: 'Get started'}],
+                      },
+                    ],
+                  },
+                  {
+                    tagName: 'div',
+                    childNodes: [
+                      {
+                        tagName: 'a',
+                        attrs: {
+                          href: '#',
+                        },
+                        childNodes: [{text: 'Learn more'}],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    selectors: [
+      {
+        value: '',
+        classes: stringToArray('w-full h-screen bg-gray-50'),
+      },
+      {
+        value: '> header',
+        classes: stringToArray('w-full h-5 bg-primary'),
+      },
+      {
+        value: '> div',
+        classes: stringToArray('mx-auto py-12 px-10 flex items-center justify-between'),
+      },
+      {
+        value: '> div > h2',
+        classes: stringToArray('text-3xl font-extrabold tracking-tight text-gray-900'),
+      },
+      {
+        value: '> div > h2 > span:first-child',
+        classes: stringToArray('block'),
+      },
+      {
+        value: '> div > h2 > span:last-child',
+        classes: stringToArray('block text-primary'),
+      },
+      {
+        value: '> div > div',
+        classes: stringToArray('mt-8 flex'),
+      },
+      {
+        value: '> div > div > div:first-child',
+        classes: stringToArray('inline-flex rounded-md shadow'),
+      },
+      {
+        value: '> div > div > div a',
+        classes: stringToArray(
+          'inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md',
+        ),
+      },
+      {
+        value: '> div > div > div:first-child a',
+        classes: stringToArray('text-white bg-primary'),
+      },
+      {
+        value: '> div > div > div:last-child',
+        classes: stringToArray('ml-3 inline-flex rounded-md shadow'),
+      },
+      {
+        value: '> div > div > div:last-child a',
+        classes: stringToArray('text-primary bg-white'),
       },
     ],
   },

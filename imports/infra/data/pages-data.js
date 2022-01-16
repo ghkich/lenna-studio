@@ -9,23 +9,9 @@ export const PAGES_SEED = [
     layout: 'BlankLayout',
     childNodes: [
       {
-        tagName: 'button',
-        attrs: {
-          [CUSTOM_ATTR_KEYS.COMPONENT]: 'Button',
-          [CUSTOM_ATTR_KEYS.STYLE]: 'primary',
-        },
-      },
-      {
         tagName: 'div',
         attrs: {
-          [CUSTOM_ATTR_KEYS.COMPONENT]: 'Button',
-          [CUSTOM_ATTR_KEYS.STYLE]: 'secondary',
-        },
-      },
-      {
-        tagName: 'div',
-        attrs: {
-          class: 'card',
+          [CUSTOM_ATTR_KEYS.COMPONENT]: 'CallToAction',
         },
       },
     ],
