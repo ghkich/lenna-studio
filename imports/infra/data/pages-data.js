@@ -4,14 +4,14 @@ import {PAGE_CATEGORIES} from '../constants/page-categories'
 export const PAGES_SEED = [
   {
     name: 'Home',
-    path: '/welcome',
+    path: '/',
     category: PAGE_CATEGORIES.LANDING,
     layout: 'BlankLayout',
     childNodes: [
       {
         tagName: 'div',
         attrs: {
-          [CUSTOM_ATTR_KEYS.COMPONENT]: 'CallToAction',
+          [CUSTOM_ATTR_KEYS.COMPONENT]: 'CallToActionA',
         },
       },
     ],
@@ -32,7 +32,7 @@ export const PAGES_SEED = [
   },
   {
     name: 'Dashboard',
-    path: '/',
+    path: '/dashboard',
     category: PAGE_CATEGORIES.DASHBOARD,
     layout: 'AuthenticatedLayout',
     childNodes: [

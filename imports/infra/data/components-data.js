@@ -250,7 +250,7 @@ export const COMPONENTS_SEED = [
     ],
   },
   {
-    name: 'CallToAction',
+    name: 'CallToActionA',
     category: COMPONENT_CATEGORIES.MISC,
     childNodes: [
       {
