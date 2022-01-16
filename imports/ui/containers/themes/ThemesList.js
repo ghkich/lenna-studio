@@ -21,7 +21,7 @@ export const ThemesList = ({appId}) => {
     return {
       themes,
     }
-  }, [])
+  }, [searchValue])
 
   return (
     <>
