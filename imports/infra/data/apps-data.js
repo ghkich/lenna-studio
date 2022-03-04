@@ -4,7 +4,7 @@ export const APPS_SEED = [
   {
     name: 'Sample app',
     category: APP_CATEGORIES.ADMIN,
-    addForUser: true,
+    addForUser: false,
   },
   {
     name: 'Admin sample app',
