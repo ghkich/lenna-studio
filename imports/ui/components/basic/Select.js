@@ -10,9 +10,9 @@ export const Select = ({name, label, defaultValue, value, onChange, className, o
       <select
         defaultValue={defaultValue}
         value={value}
-        onChange={onChange}
         className="px-1.5 py-2 font-semibold border border-gray-300 required:bg-gray-100 w-full"
         {...(register && name ? register(name) : {})}
+        onChange={onChange}
       >
         {options?.map((option) => (
           <option key={option.value} value={option.value}>
