@@ -16,7 +16,6 @@ export const ViewApp = () => {
   const {appId} = useParams() || {}
   const history = useHistory()
   const [themeId, setThemeId] = useState()
-  const [selectedFramework, setSelectedFramework] = useState('svelte')
 
   const {app} = useTracker(() => {
     if (!appId) return {}
@@ -55,37 +54,20 @@ export const ViewApp = () => {
 
   if (!app) return null
 
-  const FRAMEWORKS = [
-    {value: '', name: 'No framework'},
-    {value: 'react', name: 'React'},
-    {value: 'vue', name: 'Vue'},
-    {value: 'svelte', name: 'Svelte'},
-    {value: 'angular', name: 'Angular'},
-  ]
-
-  const scriptString = `\<script id="__lenna-script" data-app-id="${appId}" ${
-    selectedFramework ? `data-framework="${selectedFramework}"` : ''
-  } src="${window.location.origin}/lenna-script.js"\>\</script\>`
+  const scriptString = `\<script id="__lenna-script" data-app-id="${appId}" data-root-container-id="" src="${window.location.origin}/sync-script.js"\>\</script\>`
 
   return (
     <SidebarLayout
       contentComponent={
         <div className="flex flex-col p-4 h-screen w-full justify-center items-center">
           <div className="max-w-sm w-full text-xs">
-            <h2 className="font-bold text-md mb-1">Setup</h2>
+            <h2 className="font-bold text-md mb-1">Sync Script</h2>
             <p className="mb-3">
-              Copy and paste this script below into the &lt;head&gt; of your project and you will be able to use Lenna
-              Studio inside your app.
+              Copy and paste this script below into the &lt;head&gt; of your project to start syncing it with Lenna
+              Studio.
             </p>
             <Textarea value={scriptString} disabled className="w-full mb-2 p-2 border h-20" />
             <div className="flex gap-2">
-              <Select
-                value={selectedFramework}
-                options={[...FRAMEWORKS?.map((framework) => ({value: framework.value, label: framework.name}))]}
-                onChange={(e) => setSelectedFramework(e.target.value)}
-                className="flex-1"
-                disabled
-              />
               <Button
                 type="button"
                 style="primary"
