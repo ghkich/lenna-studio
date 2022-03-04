@@ -25,6 +25,8 @@ export const createElementsFor = ({appId, pageId, componentId, nodes, structureT
   const createChildrenElements = (childNodes, parentId) => {
     if (!childNodes || childNodes?.length === 0) return
     childNodes.forEach((node) => {
+      if (node.rawAttrs?.includes('aria-hidden="true"')) return
+      if (node._rawText?.trim() === '') return
       topDownIndex++
       let component
       const componentName = node.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT]
@@ -38,27 +40,6 @@ export const createElementsFor = ({appId, pageId, componentId, nodes, structureT
           }
         }
       }
-      // let attrs = node.attrs
-      // let styleProp = node.attrs?.[CUSTOM_ATTR_KEYS.STYLE]
-      // let stateProp = node.attrs?.[CUSTOM_ATTR_KEYS.STATE]
-      // if (!parentId && (!styleProp || !stateProp)) {
-      //   const component = ComponentsCollection.findOne(componentId)
-      //   if (component?.name) {
-      //     let nameProp = component?.name
-      //     if (component?.styles?.length > 0 && !styleProp) {
-      //       styleProp = component.styles?.[0]
-      //     }
-      //     if (component?.states?.length > 0 && !stateProp) {
-      //       stateProp = component.states?.[0]
-      //     }
-      //     attrs = {
-      //       ...attrs,
-      //       [CUSTOM_ATTR_KEYS.COMPONENT]: nameProp,
-      //       [CUSTOM_ATTR_KEYS.STYLE]: styleProp,
-      //       [CUSTOM_ATTR_KEYS.STATE]: stateProp,
-      //     }
-      //   }
-      // }
       const elementId = ElementsCollection.insert({
         appId,
         pageId,
