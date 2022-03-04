@@ -23,7 +23,6 @@ export const loadInitialData = () => {
   THEMES_SEED.forEach(
     (theme) =>
       (themeId = ThemesCollection.insert({
-        userId,
         ...theme,
       })),
   )
@@ -99,7 +98,7 @@ export const loadInitialData = () => {
 
     COMPONENTS_SEED.forEach((component) => {
       const componentId = ComponentsCollection.insert({
-        userId,
+        ...(app.addForUser ? {userId} : {}),
         appId,
         name: component.name,
         category: component.category,
@@ -141,7 +140,7 @@ export const loadInitialData = () => {
     PAGES_SEED.forEach((page) => {
       const layoutComponentId = ComponentsCollection.findOne({name: page.layout})?._id
       const pageId = PagesCollection.insert({
-        userId,
+        ...(app.addForUser ? {userId} : {}),
         appId,
         category: page.category,
         layoutComponentId,
