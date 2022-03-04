@@ -22,6 +22,7 @@ export const NewApp = () => {
   const [selectedPage, setSelectedPage] = useState()
   const [fromAppId, setFromAppId] = useState()
   const [checkedPageIds, setCheckedPageIds] = useState([])
+  const [selectedThemeId, setSelectedThemeId] = useState()
 
   const {themes} = useTracker(() => {
     Meteor.subscribe('themes.byUserId')
@@ -51,7 +52,12 @@ export const NewApp = () => {
   }
 
   return (
-    <SidebarLayout menuMinimized contentComponent={<ElementsPreview appId={fromAppId} elements={previewElements} />}>
+    <SidebarLayout
+      menuMinimized
+      contentComponent={
+        <ElementsPreview appId={fromAppId} elements={previewElements} selectedThemeId={selectedThemeId} />
+      }
+    >
       <PageHeader title="New app" />
       <Form onSubmit={handleSubmit}>
         <TextInput name="name" placeholder="Name" />
@@ -61,6 +67,9 @@ export const NewApp = () => {
             {value: '', label: 'Choose a theme...'},
             ...themes?.map((theme) => ({value: theme._id, label: theme.name})),
           ]}
+          onChange={(e) => {
+            setSelectedThemeId(e.target.value)
+          }}
         />
         <ToggleButtonGroup
           buttons={CREATION_OPTIONS}
