@@ -1,5 +1,7 @@
 ;(function () {
-  const appId = document.getElementById('__lenna-script').getAttribute('data-app-id')
+  const lennaScriptEl = document.getElementById('__lenna-script')
+  const appId = lennaScriptEl.getAttribute('data-app-id')
+  const framework = lennaScriptEl.getAttribute('data-framework')
   const styleEl = document.createElement('style')
   styleEl.innerHTML = `
         #__lenna .lenna-content {
@@ -30,7 +32,7 @@
           border-left: 1px solid rgb(228, 228, 231);
         }
 
-        #__lenna.full-view > iframe {
+        #__lenna.show-content > iframe {
           width: 100vw;
         }
 
@@ -47,20 +49,24 @@
           cursor: pointer;
           transition: right 0.15s linear;
         }
+        
+        #__lenna.show-content .lenna-sidebar-toggle {
+          display: none;
+        }
 
         #__lenna .lenna-sidebar-toggle:hover {
           background-color: rgb(235, 235, 236);
         }
 
-        body.sidebar-minimized #__lenna .lenna-content {
-          padding-right: 0;
+        #__lenna.sidebar-minimized .lenna-content {
+          right: 0;
         }
 
-        body.sidebar-minimized #__lenna > iframe {
+        #__lenna.sidebar-minimized > iframe {
           transform: translateX(320px);
         }
 
-        body.sidebar-minimized #__lenna .lenna-sidebar-toggle {
+        #__lenna.sidebar-minimized .lenna-sidebar-toggle {
           right: 0;
         }
       `
@@ -68,13 +74,13 @@
 
   const handlePostMessage = (e) => {
     const lennaElement = document.getElementById('__lenna')
-    if (e.data.message === 'toggleView') {
-      if (e.data.value === 'full') {
-        lennaElement.classList.add('full-view')
-      } else {
-        sendHtmlAndLoadCss()
-        lennaElement.classList.remove('full-view')
-      }
+    if (e.data.message === 'showLennaContent') {
+      lennaElement.classList.add('show-content')
+    }
+
+    if (e.data.message === 'hideLennaContent') {
+      sendHtmlAndLoadCss()
+      lennaElement.classList.remove('show-content')
     }
 
     if (e.data.message === 'forceNavigation') {
@@ -82,14 +88,16 @@
       window.location.href = e.data.pagePath
     }
   }
+
   window.addEventListener('message', handlePostMessage)
 
   const lennaApiCommunication = () => {
+    const PAGE_HTML_STORAGE_KEY = `${appId}-${window.location.pathname}`
     const contentElement = document.querySelector('#__lenna .lenna-content')
     const pageHTML = contentElement?.innerHTML
     const stringifiedPageHTML = JSON.stringify(pageHTML)
-    if (window.pageHtml !== stringifiedPageHTML) {
-      window.pageHtml = stringifiedPageHTML
+    if (localStorage.getItem(PAGE_HTML_STORAGE_KEY) !== stringifiedPageHTML) {
+      localStorage.setItem(PAGE_HTML_STORAGE_KEY, stringifiedPageHTML)
       const xhr = new XMLHttpRequest()
       xhr.open('POST', 'http://localhost:3050/api/sendHtml', true)
       xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
@@ -104,32 +112,32 @@
         // done
         console.log('data-sent')
       }
-      const xhr2 = new XMLHttpRequest()
-      xhr2.open('POST', 'http://localhost:3050/api/getCss', true)
-      xhr2.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
-      xhr2.send(
-        JSON.stringify({
-          appId,
-        }),
-      )
-      xhr2.onreadystatechange = function () {
-        if (xhr2.readyState === XMLHttpRequest.DONE) {
-          var jsonResponse = JSON.parse(xhr2.responseText)
-          var css = jsonResponse.css,
-            head = document.head || document.getElementsByTagName('head')[0],
-            style = document.createElement('style')
+    }
+    const xhr2 = new XMLHttpRequest()
+    xhr2.open('POST', 'http://localhost:3050/api/getCss', true)
+    xhr2.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+    xhr2.send(
+      JSON.stringify({
+        appId,
+      }),
+    )
+    xhr2.onreadystatechange = function () {
+      if (xhr2.readyState === XMLHttpRequest.DONE) {
+        const jsonResponse = JSON.parse(xhr2.responseText)
+        const css = jsonResponse.css,
+          head = document.head || document.getElementsByTagName('head')[0],
+          style = document.createElement('style')
 
-          head.appendChild(style)
+        head.appendChild(style)
 
-          style.type = 'text/css'
-          if (style.styleSheet) {
-            style.styleSheet.cssText = css
-          } else {
-            style.appendChild(document.createTextNode(css))
-          }
-          contentElement.style.opacity = '1'
-          contentElement.style.pointerEvents = 'auto'
+        style.type = 'text/css'
+        if (style.styleSheet) {
+          style.styleSheet.cssText = css
+        } else {
+          style.appendChild(document.createTextNode(css))
         }
+        contentElement.style.opacity = '1'
+        contentElement.style.pointerEvents = 'auto'
       }
     }
   }
@@ -139,7 +147,7 @@
   }
 
   const toggleSidebar = () => {
-    document.body.classList.toggle('sidebar-minimized')
+    document.getElementById('__lenna').classList.toggle('sidebar-minimized')
   }
 
   document.onreadystatechange = function () {
@@ -161,9 +169,20 @@
         lennaWrap.appendChild(iframe)
         lennaWrap.appendChild(lennaToggleBar)
         lennaWrap.appendChild(lennaContent)
-        document.querySelectorAll('body *').forEach((node) => {
-          lennaContent.append(node)
-        })
+        let pageContentQuery = 'body > *:not([aria-hidden="true"])'
+        if (framework === 'svelte') {
+          pageContentQuery = 'body > main > *:not([aria-hidden="true"])'
+        }
+        const pageElements = document.querySelectorAll(pageContentQuery)
+        if (pageElements.length === 1) {
+          lennaContent.append(pageElements[0])
+        } else {
+          const wrap = document.createElement('div')
+          lennaContent.append(wrap)
+          pageElements.forEach((node) => {
+            wrap.append(node)
+          })
+        }
         document.body.appendChild(lennaWrap)
         document.body.style.opacity = '1'
         sendHtmlAndLoadCss()
