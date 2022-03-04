@@ -54,12 +54,12 @@ export const ViewPage = () => {
 
   useEffect(() => {
     if (structureType === STRUCTURE_TYPES.ACTUAL) {
-      window.top.postMessage({message: 'toggleView', value: 'sidebar'}, '*')
+      window.top.postMessage({message: 'hideLennaContent'}, '*')
     } else {
-      window.top.postMessage({message: 'toggleView', value: 'full'}, '*')
+      window.top.postMessage({message: 'showLennaContent'}, '*')
     }
     return () => {
-      window.top.postMessage({message: 'toggleView', value: 'sidebar'}, '*')
+      window.top.postMessage({message: 'showLennaContent'}, '*')
     }
   }, [structureType])
 
