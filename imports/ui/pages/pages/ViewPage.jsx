@@ -26,6 +26,14 @@ export const ViewPage = () => {
   const [layoutComponentId, setLayoutComponentId] = useState()
   const [structureType, setStructureType] = useState(STRUCTURE_TYPES.EXPECTED)
 
+  useEffect(() => {
+    let params = new URL(document.location).searchParams
+    let structureTypeParam = params.get('structureType')
+    if (structureTypeParam) {
+      setStructureType(structureTypeParam)
+    }
+  }, [])
+
   const {page} = useTracker(() => {
     if (!pageId) return {}
     const sub = Meteor.subscribe('pages.byId', {pageId})
@@ -39,14 +47,10 @@ export const ViewPage = () => {
     }
   }, [pageId])
 
-  const {actualElements, previewElements, treeElements, layoutHasChildrenContainer, loading} = usePageLayoutElements({
+  const {actualElements, previewElements, treeElements, layoutHasChildrenContainer} = usePageLayoutElements({
     pageId,
     layoutComponentId,
   })
-
-  if (page && !loading) {
-    window.top.postMessage({message: 'pageAccess', pagePath: page.path}, '*')
-  }
 
   useEffect(() => {
     if (structureType === STRUCTURE_TYPES.ACTUAL) {
@@ -125,7 +129,10 @@ export const ViewPage = () => {
                   className={`p-2 flex-1 bg-gray-100 border text-center cursor-pointer ${
                     structureType === STRUCTURE_TYPES.ACTUAL ? 'text-blue-500 bg-blue-50' : ''
                   }`}
-                  onClick={() => setStructureType(STRUCTURE_TYPES.ACTUAL)}
+                  onClick={() => {
+                    setStructureType(STRUCTURE_TYPES.ACTUAL)
+                    window.top.postMessage({message: 'forceNavigation', pagePath: page?.path}, '*')
+                  }}
                 >
                   Actual
                 </div>
@@ -133,7 +140,9 @@ export const ViewPage = () => {
                   className={`px-4 flex items-center border mx-1.5 bg-gray-100 cursor-pointer text-md ${
                     structureType === undefined ? 'text-white bg-blue-500 border-blue-600' : ''
                   }`}
-                  onClick={() => setStructureType(undefined)}
+                  onClick={() => {
+                    setStructureType(undefined)
+                  }}
                 >
                   <FontAwesomeIcon icon={faArrowRightArrowLeft} />
                 </div>
