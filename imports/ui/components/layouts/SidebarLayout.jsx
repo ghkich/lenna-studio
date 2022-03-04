@@ -1,16 +1,34 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faBrowsers, faCube, faBarsProgress, faSwatchbook, faLoader, faArrowLeft} from '@fortawesome/pro-solid-svg-icons'
-import {useLocation, NavLink, useParams} from 'react-router-dom'
+import {useLocation, NavLink, useParams, useHistory} from 'react-router-dom'
 import {useTracker} from 'meteor/react-meteor-data'
 import {RoutePaths} from '../../app/routes'
 import {faSidebarFlip, faCircleUser} from '@fortawesome/pro-light-svg-icons'
 import {AppsCollection} from '../../../collections/apps'
+import {useMethod} from '../../../infra/hooks/useMethod'
 
 export const SidebarLayout = ({children, contentComponent, loading, menuMinimized}) => {
   const {appId} = useParams() || {}
   const location = useLocation()
+  const history = useHistory()
   const user = useTracker(() => Meteor.user())
+
+  const findPage = useMethod('pages.findByPath', {
+    onSuccess: (page) => {
+      if (page) {
+        history.push(`${RoutePaths.APPS}/${appId}${RoutePaths.PAGES}/${page._id}?structureType=actual`)
+      }
+    },
+  })
+
+  useEffect(() => {
+    let params = new URL(document.location).searchParams
+    let pagePathParam = params.get('pagePath')
+    if (pagePathParam) {
+      findPage.call({appId, path: pagePathParam})
+    }
+  }, [])
 
   const {app} = useTracker(() => {
     if (!appId) return {}

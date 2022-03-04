@@ -23,4 +23,7 @@ Meteor.methods({
     ElementsCollection.remove({pageId})
     return PagesCollection.remove(pageId)
   },
+  ['pages.findByPath']({appId, path}) {
+    return PagesCollection.findOne({appId, path})
+  },
 })
