@@ -24,6 +24,10 @@ export const FromExistingApps = ({onAppSelect, onPageClick, onPageCheck}) => {
     }
   }, [pagesCheckedState])
 
+  useEffect(() => {
+    onAppSelect(selectedAppId)
+  }, [selectedAppId])
+
   const {apps} = useTracker(() => {
     if (!selectedAppCategory) return {}
     const sub = Meteor.subscribe('apps.byCategory', {category: selectedAppCategory})
@@ -43,7 +47,6 @@ export const FromExistingApps = ({onAppSelect, onPageClick, onPageCheck}) => {
     const pages = PagesCollection.find({appId: selectedAppId}).fetch()
 
     setPagesCheckedState({})
-    onAppSelect(selectedAppId)
 
     return {
       pages,
