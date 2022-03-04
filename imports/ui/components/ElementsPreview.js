@@ -10,7 +10,14 @@ import {ThemesCollection} from '../../collections/themes'
 import {AppsCollection} from '../../collections/apps'
 import {STRUCTURE_TYPES} from '../../infra/constants/structure-types'
 
-export const ElementsPreview = ({appId, elements, selectedComponentId, selectedStyle, selectedState}) => {
+export const ElementsPreview = ({
+  appId,
+  elements,
+  selectedThemeId,
+  selectedComponentId,
+  selectedStyle,
+  selectedState,
+}) => {
   const [css, setCss] = useState('')
   const [previewReady, setPreviewReady] = useState(false)
 
@@ -46,11 +53,12 @@ export const ElementsPreview = ({appId, elements, selectedComponentId, selectedS
     Meteor.subscribe('components.byIds', componentIds)
     Meteor.subscribe('elements.byComponentIds', componentIds)
     Meteor.subscribe('selectors.byComponentIds', componentIds)
+    Meteor.subscribe('themes.global')
     Meteor.subscribe('themes.byUserId')
     let selectors = SelectorsCollection.find({componentId: {$in: componentIds}}).fetch()
 
     const app = AppsCollection.findOne(appId)
-    const theme = ThemesCollection.findOne(app?.themeId)
+    const theme = ThemesCollection.findOne(selectedThemeId || app?.themeId)
 
     const allElements = []
     const allElementComponentIds = componentIds
