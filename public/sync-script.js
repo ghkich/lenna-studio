@@ -1,9 +1,124 @@
 ;(function () {
   const lennaScriptEl = document.getElementById('__lenna-script')
   const appId = lennaScriptEl.getAttribute('data-app-id')
-  const framework = lennaScriptEl.getAttribute('data-framework')
-  const styleEl = document.createElement('style')
-  styleEl.innerHTML = `
+  const rootContainerId = lennaScriptEl.getAttribute('data-root-container-id')
+
+  const handlePostMessage = (e) => {
+    const lennaElement = document.getElementById('__lenna')
+    if (e.data.message === 'showLennaContent') {
+      lennaElement.classList.add('show-content')
+    }
+
+    if (e.data.message === 'hideLennaContent') {
+      sendHtmlAndLoadCss()
+      lennaElement.classList.remove('show-content')
+    }
+
+    if (e.data.message === 'forceNavigation') {
+      sendHtmlAndLoadCss()
+      window.location.href = e.data.pagePath
+    }
+  }
+
+  window.addEventListener('message', handlePostMessage)
+
+  const lennaApiCommunication = () => {
+    const PAGE_HTML_STORAGE_KEY = `${appId}-${window.location.pathname}`
+    const defaultLennaContent = document.querySelector('#__lenna .lenna-content')
+    let contentElement = defaultLennaContent
+    if (document.querySelector('#__next')) {
+      contentElement = document.querySelector('#__next')
+    }
+    if (rootContainerId) {
+      contentElement = document.querySelector(`#${rootContainerId}`)
+    }
+    const pageHTML = contentElement?.innerHTML
+    const stringifiedPageHTML = JSON.stringify(pageHTML)
+    if (localStorage.getItem(PAGE_HTML_STORAGE_KEY) !== stringifiedPageHTML) {
+      localStorage.setItem(PAGE_HTML_STORAGE_KEY, stringifiedPageHTML)
+      const xhr = new XMLHttpRequest()
+      xhr.open('POST', 'http://localhost:3050/api/sendHtml', true)
+      xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+      xhr.send(
+        JSON.stringify({
+          appId,
+          pathname: window.location.pathname,
+          html: pageHTML,
+        }),
+      )
+      xhr.onloadend = function () {
+        console.log('data-sent')
+      }
+    }
+    const xhr2 = new XMLHttpRequest()
+    xhr2.open('POST', 'http://localhost:3050/api/getCss', true)
+    xhr2.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+    xhr2.send(
+      JSON.stringify({
+        appId,
+      }),
+    )
+    xhr2.onreadystatechange = function () {
+      if (xhr2.readyState === XMLHttpRequest.DONE) {
+        const jsonResponse = JSON.parse(xhr2.responseText)
+        const css = jsonResponse.css,
+          head = document.head || document.getElementsByTagName('head')[0],
+          style = document.createElement('style')
+
+        head.appendChild(style)
+
+        style.type = 'text/css'
+        if (style.styleSheet) {
+          style.styleSheet.cssText = css
+        } else {
+          style.appendChild(document.createTextNode(css))
+        }
+        defaultLennaContent.style.opacity = '1'
+        defaultLennaContent.style.pointerEvents = 'auto'
+      }
+    }
+  }
+
+  const sendHtmlAndLoadCss = () => {
+    lennaApiCommunication()
+  }
+
+  const toggleSidebar = () => {
+    document.getElementById('__lenna').classList.toggle('sidebar-minimized')
+  }
+
+  document.onreadystatechange = function () {
+    if (document.readyState === 'complete') {
+      document.body.style.opacity = '0'
+      window.setTimeout(() => {
+        const lennaWrap = document.createElement('div')
+        lennaWrap.id = '__lenna'
+        const lennaToggleBar = document.createElement('div')
+        lennaToggleBar.addEventListener('click', toggleSidebar)
+        lennaToggleBar.classList.add('lenna-sidebar-toggle')
+        const lennaContent = document.createElement('div')
+        lennaContent.classList.add('lenna-content')
+        lennaContent.style.opacity = '0'
+        const iframe = document.createElement('iframe')
+        iframe.setAttribute('allow', 'clipboard-write')
+        const pagePath = window.location.pathname
+        iframe.src = `http://localhost:3050/apps/${appId}?pagePath=${pagePath}`
+        lennaWrap.appendChild(lennaContent)
+        lennaWrap.appendChild(iframe)
+        lennaWrap.appendChild(lennaToggleBar)
+        lennaWrap.appendChild(lennaContent)
+        const pageElements = document.querySelectorAll('body > *')
+        pageElements.forEach((node) => {
+          lennaContent.append(node)
+        })
+        document.body.appendChild(lennaWrap)
+        document.body.style.opacity = '1'
+        sendHtmlAndLoadCss()
+      }, 100)
+
+      // CSS
+      const styleEl = document.createElement('style')
+      styleEl.innerHTML = `
         #__lenna .lenna-content {
           transition: opacity 0.2s linear;
           position: fixed;
@@ -70,123 +185,7 @@
           right: 0;
         }
       `
-  document.head.appendChild(styleEl)
-
-  const handlePostMessage = (e) => {
-    const lennaElement = document.getElementById('__lenna')
-    if (e.data.message === 'showLennaContent') {
-      lennaElement.classList.add('show-content')
-    }
-
-    if (e.data.message === 'hideLennaContent') {
-      sendHtmlAndLoadCss()
-      lennaElement.classList.remove('show-content')
-    }
-
-    if (e.data.message === 'forceNavigation') {
-      sendHtmlAndLoadCss()
-      window.location.href = e.data.pagePath
-    }
-  }
-
-  window.addEventListener('message', handlePostMessage)
-
-  const lennaApiCommunication = () => {
-    const PAGE_HTML_STORAGE_KEY = `${appId}-${window.location.pathname}`
-    const contentElement = document.querySelector('#__lenna .lenna-content')
-    const pageHTML = contentElement?.innerHTML
-    const stringifiedPageHTML = JSON.stringify(pageHTML)
-    if (localStorage.getItem(PAGE_HTML_STORAGE_KEY) !== stringifiedPageHTML) {
-      localStorage.setItem(PAGE_HTML_STORAGE_KEY, stringifiedPageHTML)
-      const xhr = new XMLHttpRequest()
-      xhr.open('POST', 'http://localhost:3050/api/sendHtml', true)
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
-      xhr.send(
-        JSON.stringify({
-          appId,
-          pathname: window.location.pathname,
-          html: pageHTML,
-        }),
-      )
-      xhr.onloadend = function () {
-        // done
-        console.log('data-sent')
-      }
-    }
-    const xhr2 = new XMLHttpRequest()
-    xhr2.open('POST', 'http://localhost:3050/api/getCss', true)
-    xhr2.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
-    xhr2.send(
-      JSON.stringify({
-        appId,
-      }),
-    )
-    xhr2.onreadystatechange = function () {
-      if (xhr2.readyState === XMLHttpRequest.DONE) {
-        const jsonResponse = JSON.parse(xhr2.responseText)
-        const css = jsonResponse.css,
-          head = document.head || document.getElementsByTagName('head')[0],
-          style = document.createElement('style')
-
-        head.appendChild(style)
-
-        style.type = 'text/css'
-        if (style.styleSheet) {
-          style.styleSheet.cssText = css
-        } else {
-          style.appendChild(document.createTextNode(css))
-        }
-        contentElement.style.opacity = '1'
-        contentElement.style.pointerEvents = 'auto'
-      }
-    }
-  }
-
-  const sendHtmlAndLoadCss = () => {
-    lennaApiCommunication()
-  }
-
-  const toggleSidebar = () => {
-    document.getElementById('__lenna').classList.toggle('sidebar-minimized')
-  }
-
-  document.onreadystatechange = function () {
-    if (document.readyState === 'complete') {
-      document.body.style.opacity = '0'
-      window.setTimeout(() => {
-        const lennaWrap = document.createElement('div')
-        lennaWrap.id = '__lenna'
-        const lennaToggleBar = document.createElement('div')
-        lennaToggleBar.addEventListener('click', toggleSidebar)
-        lennaToggleBar.classList.add('lenna-sidebar-toggle')
-        const lennaContent = document.createElement('div')
-        lennaContent.classList.add('lenna-content')
-        lennaContent.style.opacity = '0'
-        const iframe = document.createElement('iframe')
-        const pagePath = window.location.pathname
-        iframe.src = `http://localhost:3050/apps/${appId}?pagePath=${pagePath}`
-        lennaWrap.appendChild(lennaContent)
-        lennaWrap.appendChild(iframe)
-        lennaWrap.appendChild(lennaToggleBar)
-        lennaWrap.appendChild(lennaContent)
-        let pageContentQuery = 'body > *:not([aria-hidden="true"])'
-        if (framework === 'svelte') {
-          pageContentQuery = 'body > main > *:not([aria-hidden="true"])'
-        }
-        const pageElements = document.querySelectorAll(pageContentQuery)
-        if (pageElements.length === 1) {
-          lennaContent.append(pageElements[0])
-        } else {
-          const wrap = document.createElement('div')
-          lennaContent.append(wrap)
-          pageElements.forEach((node) => {
-            wrap.append(node)
-          })
-        }
-        document.body.appendChild(lennaWrap)
-        document.body.style.opacity = '1'
-        sendHtmlAndLoadCss()
-      }, 100)
+      document.head.appendChild(styleEl)
     }
   }
 })()
