@@ -12,12 +12,13 @@ Meteor.methods({
     if (existingAppName?.length > 0) {
       throw new Meteor.Error('app name already exists')
     }
-    const appId = AppsCollection.insert({name, themeId, userId: this.userId})
+    const userId = this.userId
+    const appId = AppsCollection.insert({name, themeId, userId})
     if (appId && checkedPageIds?.length > 0) {
       const oldNewPageMap = {}
       checkedPageIds.forEach((pageId) => {
         const {_id: oldPageId, ...page} = PagesCollection.findOne(pageId)
-        oldNewPageMap[oldPageId] = PagesCollection.insert({...page, appId})
+        oldNewPageMap[oldPageId] = PagesCollection.insert({...page, userId, appId})
       })
       SelectorsCollection.find({appId: fromAppId})
         .fetch()
@@ -39,7 +40,7 @@ Meteor.methods({
       ComponentsCollection.find({appId: fromAppId})
         .fetch()
         .forEach(({_id: oldComponentId, ...component}) => {
-          oldNewComponentMap[oldComponentId] = ComponentsCollection.insert({...component, appId})
+          oldNewComponentMap[oldComponentId] = ComponentsCollection.insert({...component, userId, appId})
         })
       // Remap pageIds
       Object.entries(oldNewPageMap).forEach(([oldId, newId]) => {
