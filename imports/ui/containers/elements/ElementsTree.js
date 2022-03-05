@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {faCaretRight, faCaretDown} from '@fortawesome/pro-solid-svg-icons'
+import {faCaretRight, faCaretDown, faCheck, faTimes} from '@fortawesome/pro-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {VOID_ELEMENTS} from '../../../infra/constants/void-elements'
 import {AddElement} from './AddElement'
@@ -13,12 +13,14 @@ export const ElementsTree = ({appId, targetComponent, targetPage, elements, addE
   const containerElement = elements?.find((el) => !el?.parentId)
   if (!containerElement) return null
   let level = 0
+  let childrenCount = 0
   const renderChildren = (children, level) => {
     if (!children || children.length === 0) return null
     level++
     return (
       <>
         {children?.map((element) => {
+          childrenCount++
           return (
             <Element
               key={element?._id}
@@ -36,6 +38,7 @@ export const ElementsTree = ({appId, targetComponent, targetPage, elements, addE
               }}
               level={level}
               renderChildren={renderChildren}
+              isLastElement={elements?.length === childrenCount}
             />
           )
         })}
@@ -43,7 +46,7 @@ export const ElementsTree = ({appId, targetComponent, targetPage, elements, addE
     )
   }
   return (
-    <div className="max-h-96 overflow-y-auto border">
+    <div className="max-h-100 overflow-y-auto border">
       <div>{renderChildren([containerElement], level)}</div>
     </div>
   )
@@ -67,6 +70,7 @@ const Element = ({
   renderChildren,
   onClick,
   selectedElement,
+  isLastElement,
 }) => {
   const [open, setOpen] = useState(true)
 
@@ -79,13 +83,11 @@ const Element = ({
       : checkIfElementAcceptChildren(element)
 
   return (
-    <div
-      className={` ${isSelected ? 'bg-gray-100 border-0 hover:bg-gray-100' : 'bg-white'} ${
-        element.error ? 'bg-red-50 text-red-700' : ''
-      } ${element.success ? 'bg-green-50 text-green-700' : ''}`}
-    >
+    <div className={` ${isSelected ? 'bg-gray-100 border-0 hover:bg-gray-100' : 'bg-white'}`}>
       <div
-        className={`flex items-center gap-1 border-b cursor-pointer px-2 ${isSelected ? 'h-10' : 'h-6'}`}
+        className={`relative flex items-center gap-1 ${!isLastElement ? 'border-b' : ''} cursor-pointer px-2 ${
+          isSelected ? 'h-10' : 'h-6'
+        } ${element.success ? 'bg-green-50 bg-opacity-50' : ''} ${element.error ? 'bg-red-50 bg-opacity-50' : ''}`}
         style={{paddingLeft: `${level * 10 || 3}px`}}
         onClick={() => {
           onClick(element)
@@ -105,6 +107,18 @@ const Element = ({
           )}
           {elementComponent?.name || element?.tagName || <span className="text-2xs">Text: "{element?.text}"</span>}
           {element.isChildrenContainer && <span className="text-2xs opacity-50"> {'{childrenContainer}'}</span>}
+          {element.success && (
+            <FontAwesomeIcon
+              icon={faCheck}
+              className="absolute right-2 top-1.5 text-green-600 text-opacity-50 text-2xs"
+            />
+          )}
+          {element.error && (
+            <FontAwesomeIcon
+              icon={faTimes}
+              className="absolute right-2 top-1.5 text-red-600 text-opacity-50 text-2xs"
+            />
+          )}
         </div>
         {isSelected && (
           <>
