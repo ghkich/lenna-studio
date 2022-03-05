@@ -19,7 +19,6 @@ export const Register = () => {
   })
 
   const onSubmit = ({username, email, password, confirmPassword}) => {
-    console.log({username, email, password, confirmPassword})
     if (password === confirmPassword) {
       createUser.call({username, email, password})
     }
