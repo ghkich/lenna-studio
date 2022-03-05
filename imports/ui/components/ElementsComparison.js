@@ -97,7 +97,7 @@ export const ElementsComparison = ({actual: actualUn, expected: expectedUn}) => 
         <>
           {error && (
             <div className="bg-red-50 p-2 mt-2 border border-red-400 text-2xs">
-              <div className="pb-1 mb-1 border-b border-red-100 text-red-400 text-xs font-semibold">{error}</div>
+              <div className="pb-1 mb-1 border-b border-red-100 text-red-600 text-xs font-semibold">{error}</div>
               <div className="pb-1">
                 <span>Actual: </span>
                 <b className="font-semibold">{actualString}</b>
@@ -114,7 +114,7 @@ export const ElementsComparison = ({actual: actualUn, expected: expectedUn}) => 
           )}
           {actualUn?.length > 0 && expectedUn?.length > 0 && !error && (
             <div className="bg-green-50 p-2 mt-2 border border-green-400 text-2xs">
-              <div className="pb-1 mb-1 border-b border-green-100 text-green-400 text-xs font-semibold">Success</div>
+              <div className="pb-1 mb-1 border-b border-green-100 text-green-600 text-xs font-semibold">Success</div>
               <div>All validations passed</div>
             </div>
           )}
