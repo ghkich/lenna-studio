@@ -8,7 +8,6 @@ import {ComponentsCollection} from '../../collections/components'
 import {ElementsCollection} from '../../collections/elements'
 import {ThemesCollection} from '../../collections/themes'
 import {AppsCollection} from '../../collections/apps'
-import {STRUCTURE_TYPES} from '../../infra/constants/structure-types'
 
 export const ElementsPreview = ({
   appId,
@@ -31,7 +30,7 @@ export const ElementsPreview = ({
     }
   }, [css])
 
-  const {allElements, theme, selectors} = useTracker(() => {
+  const {theme, selectors} = useTracker(() => {
     if (!elements) return {}
     const componentIds = elements
       ?.map((element) => {
@@ -60,43 +59,7 @@ export const ElementsPreview = ({
     const app = AppsCollection.findOne(appId)
     const theme = ThemesCollection.findOne(selectedThemeId || app?.themeId)
 
-    const allElements = []
-    const allElementComponentIds = componentIds
-
-    let component
-
-    elements.forEach((element) => {
-      const componentId = element?.component?._id
-      if (componentId) {
-        component = ComponentsCollection.findOne({_id: componentId})
-        const componentElements =
-          element?.structure.type === STRUCTURE_TYPES.ACTUAL ? [] : ElementsCollection.find({componentId}).fetch()
-        const componentContainerElement = componentElements.find((el) => !el.parentId)
-        componentElements
-          .filter((el) => el.parentId && el.parentId !== component?.childrenContainerElementId)
-          .forEach((el) => {
-            if (el.component?._id) {
-              allElementComponentIds.push(el.component?._id)
-            }
-            if (el.parentId === componentContainerElement?._id) {
-              allElements.push({...el, parentId: element._id})
-            } else {
-              allElements.push(el)
-            }
-          })
-      }
-      if (element.parentId !== component?.childrenContainerElementId) {
-        allElements.push(element)
-      }
-    })
-
-    if (!selectedComponentId) {
-      Meteor.subscribe('selectors.byComponentIds', allElementComponentIds)
-      selectors = SelectorsCollection.find({componentId: {$in: allElementComponentIds}}).fetch()
-    }
-
     return {
-      allElements,
       theme,
       selectors,
     }
@@ -153,7 +116,7 @@ export const ElementsPreview = ({
         return element?.text + '\n'
       }
       if (!tagName) return null
-      const children = allElements?.filter((el) => el?.parentId === element._id)
+      const children = elements?.filter((el) => el?.parentId === element._id)
       return React.createElement(
         tagName,
         {

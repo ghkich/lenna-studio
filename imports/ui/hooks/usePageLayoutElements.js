@@ -5,7 +5,7 @@ import {ComponentsCollection} from '../../collections/components'
 import {CUSTOM_ATTR_KEYS} from '../../infra/constants/custom-attr-keys'
 
 export const usePageLayoutElements = ({pageId, layoutComponentId}) => {
-  const {actualElements, previewElements, treeElements, layoutHasChildrenContainer, loading} = useTracker(() => {
+  const {actualElements, previewElements, treeElements, layoutHasChildrenContainer} = useTracker(() => {
     if (!pageId || !layoutComponentId) return {}
     Meteor.subscribe('components.byId', {_id: layoutComponentId})
     Meteor.subscribe('elements.byComponentId', {componentId: layoutComponentId})
@@ -45,35 +45,36 @@ export const usePageLayoutElements = ({pageId, layoutComponentId}) => {
       ]
     }
 
-    let allTreeElements = []
+    const getAllElements = (elements) => {
+      let allElements = []
+      let component
 
-    let component
+      elements.forEach((element) => {
+        const componentId = element?.component?._id
+        if (componentId) {
+          component = ComponentsCollection.findOne({_id: componentId})
+          const componentElements = ElementsCollection.find({componentId}).fetch()
+          const componentContainerElement = componentElements.find((el) => !el.parentId)
+          componentElements
+            .filter((el) => el.parentId && el.parentId !== component?.childrenContainerElementId)
+            .forEach((el) => {
+              if (el.parentId === componentContainerElement?._id) {
+                allElements.push({...el, parentId: element._id})
+              } else {
+                allElements.push(el)
+              }
+            })
+        }
+        allElements.push(element)
+      })
 
-    treeElements.forEach((element) => {
-      const componentId = element?.component?._id
-      if (componentId) {
-        component = ComponentsCollection.findOne({_id: componentId})
-        const componentElements = ElementsCollection.find({componentId}).fetch()
-        const componentContainerElement = componentElements.find((el) => !el.parentId)
-        componentElements
-          .filter((el) => el.parentId && el.parentId !== component?.childrenContainerElementId)
-          .forEach((el) => {
-            if (el.parentId === componentContainerElement?._id) {
-              allTreeElements.push({...el, parentId: element._id})
-            } else {
-              allTreeElements.push(el)
-            }
-          })
-      }
-      if (element.parentId !== component?.childrenContainerElementId) {
-        allTreeElements.push(element)
-      }
-    })
+      return allElements
+    }
 
     return {
       actualElements,
-      previewElements,
-      treeElements: allTreeElements,
+      previewElements: getAllElements(previewElements),
+      treeElements: getAllElements(treeElements),
       layoutHasChildrenContainer: !!layoutChildrenContainer,
     }
   }, [pageId, layoutComponentId])
@@ -83,6 +84,5 @@ export const usePageLayoutElements = ({pageId, layoutComponentId}) => {
     previewElements,
     treeElements,
     layoutHasChildrenContainer,
-    loading,
   }
 }
