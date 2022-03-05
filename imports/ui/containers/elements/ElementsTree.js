@@ -81,8 +81,8 @@ const Element = ({
   return (
     <div
       className={` ${isSelected ? 'bg-gray-100 border-0 hover:bg-gray-100' : 'bg-white'} ${
-        element.error ? 'bg-red-50 text-red-400' : ''
-      }`}
+        element.error ? 'bg-red-50 text-red-700' : ''
+      } ${element.success ? 'bg-green-50 text-green-700' : ''}`}
     >
       <div
         className={`flex items-center gap-1 border-b cursor-pointer px-2 ${isSelected ? 'h-10' : 'h-6'}`}
