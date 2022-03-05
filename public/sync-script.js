@@ -88,8 +88,8 @@
   }
 
   document.onreadystatechange = function () {
+    document.body.style.opacity = '0'
     if (document.readyState === 'complete') {
-      document.body.style.opacity = '0'
       window.setTimeout(() => {
         const lennaWrap = document.createElement('div')
         lennaWrap.id = '__lenna'
