@@ -26,6 +26,7 @@ export const createElementsFor = ({appId, pageId, componentId, nodes, structureT
     if (!childNodes || childNodes?.length === 0) return
     childNodes.forEach((node) => {
       if (node.rawAttrs?.includes('aria-hidden="true"')) return
+      if (node.rawAttrs?.includes('clip: rect(0px, 0px, 0px, 0px);')) return
       if (node._rawText?.trim() === '') return
       topDownIndex++
       let component
