@@ -2,6 +2,8 @@
   const lennaScriptEl = document.getElementById('__lenna-script')
   const appId = lennaScriptEl.getAttribute('data-app-id')
   const rootContainerId = lennaScriptEl.getAttribute('data-root-container-id')
+  const devDomain = lennaScriptEl.getAttribute('data-dev-domain')
+  const domainPath = devDomain ? devDomain : 'https://lenna.studio'
 
   const handlePostMessage = (e) => {
     const lennaElement = document.getElementById('__lenna')
@@ -16,7 +18,7 @@
 
     if (e.data.message === 'forceNavigation') {
       sendHtmlAndLoadCss()
-      window.location.href = e.data.pagePath
+      window.location.href = e.data.pagePath || window.location.pathname
     }
   }
 
@@ -37,7 +39,7 @@
     if (localStorage.getItem(PAGE_HTML_STORAGE_KEY) !== stringifiedPageHTML) {
       localStorage.setItem(PAGE_HTML_STORAGE_KEY, stringifiedPageHTML)
       const xhr = new XMLHttpRequest()
-      xhr.open('POST', 'http://localhost:3050/api/sendHtml', true)
+      xhr.open('POST', `${domainPath}/api/sendHtml`, true)
       xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
       xhr.send(
         JSON.stringify({
@@ -51,7 +53,7 @@
       }
     }
     const xhr2 = new XMLHttpRequest()
-    xhr2.open('POST', 'http://localhost:3050/api/getCss', true)
+    xhr2.open('POST', `${domainPath}/api/getCss`, true)
     xhr2.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
     xhr2.send(
       JSON.stringify({
@@ -102,7 +104,7 @@
         const iframe = document.createElement('iframe')
         iframe.setAttribute('allow', 'clipboard-write')
         const pagePath = window.location.pathname
-        iframe.src = `http://localhost:3050/apps/${appId}?pagePath=${pagePath}`
+        iframe.src = `${domainPath}/apps/${appId}?pagePath=${pagePath}`
         lennaWrap.appendChild(lennaContent)
         lennaWrap.appendChild(iframe)
         lennaWrap.appendChild(lennaToggleBar)
