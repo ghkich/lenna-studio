@@ -11,6 +11,8 @@ import {useMethod} from '../../../infra/hooks/useMethod'
 import {ThemesCollection} from '../../../collections/themes'
 import {RoutePaths} from '../../app/routes'
 import {Textarea} from '../../components/basic/Textarea'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faArrowsRotate} from '@fortawesome/pro-solid-svg-icons'
 
 export const ViewApp = () => {
   const {appId} = useParams() || {}
@@ -54,23 +56,27 @@ export const ViewApp = () => {
 
   if (!app) return null
 
-  const scriptString = `\<script id="__lenna-script" data-app-id="${appId}" data-root-container-id="" src="${window.location.origin}/sync-script.js"\>\</script\>`
+  const devDomainAttr = process.env.NODE_ENV ? `data-dev-domain="${window.location.origin}"` : ''
+  const scriptString = `\<script id="__lenna-script" data-app-id="${appId}" data-root-container-id="" ${devDomainAttr} src="${window.location.origin}/sync-script.js"\>\</script\>`
 
   return (
     <SidebarLayout
       contentComponent={
         <div className="flex flex-col p-4 h-screen w-full justify-center items-center">
-          <div className="max-w-sm w-full text-xs">
-            <h2 className="font-bold text-md mb-1">Sync Script</h2>
-            <p className="mb-3">
-              Copy and paste this script below into the &lt;head&gt; of your project to start syncing it with Lenna
-              Studio.
+          <div className="w-80 text-xs text-center text-white">
+            <FontAwesomeIcon icon={faArrowsRotate} className="text-7xl" />
+            <h1 className="font-light text-3xl my-5">Sync script</h1>
+            <p className="font-thin text-lg mb-3">
+              Copy and paste the script below into the &lt;head&gt; of your project to start syncing
             </p>
-            <Textarea value={scriptString} disabled className="w-full mb-2 p-2 border h-20" />
+            <Textarea
+              value={scriptString}
+              disabled
+              className="w-full mb-3 p-2 border border-white border-opacity-25 h-20 leading-tight bg-black bg-opacity-25 rounded opacity-75"
+            />
             <div className="flex gap-2">
               <Button
                 type="button"
-                style="primary"
                 className="flex-1"
                 onClick={async () => {
                   await navigator.clipboard.writeText(scriptString)
@@ -79,6 +85,9 @@ export const ViewApp = () => {
                 Copy script
               </Button>
             </div>
+            <p className="mt-3 font-thin w-64 mx-auto">
+              Every page with the script will load and show the Lenna Studio sidebar into it.
+            </p>
           </div>
         </div>
       }
