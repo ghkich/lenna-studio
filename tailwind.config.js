@@ -1,4 +1,3 @@
-const colors = require('tailwindcss/colors')
 const plugin = require('tailwindcss/plugin')
 
 module.exports = {
@@ -9,9 +8,6 @@ module.exports = {
       maxHeight: {
         100: '25rem',
         108: '26rem',
-      },
-      colors: {
-        gray: colors.gray,
       },
       fontSize: {
         '2xs': '0.65rem',
