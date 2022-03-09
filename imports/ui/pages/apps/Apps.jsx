@@ -6,10 +6,14 @@ import {AppsCollection} from '../../../collections/apps'
 import {RoutePaths} from '../../app/routes'
 import {ListControls} from '../../components/ListControls'
 import {faArrowTurnUp} from '@fortawesome/pro-regular-svg-icons'
+import {faFaceLaughWink} from '@fortawesome/pro-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faArrowRight} from '@fortawesome/pro-light-svg-icons'
+import {Meteor} from 'meteor/meteor'
 
 export const Apps = () => {
   const [appSearchValue, setAppSearchValue] = useState('')
+  const user = useTracker(() => Meteor.user())
 
   const {apps, loadingApps} = useTracker(() => {
     const sub = Meteor.subscribe('apps.byUserId')
@@ -27,7 +31,20 @@ export const Apps = () => {
   }, [appSearchValue])
 
   return (
-    <SidebarLayout loading={loadingApps}>
+    <SidebarLayout
+      loading={loadingApps}
+      contentComponent={
+        <div className="flex flex-col p-4 h-screen w-full justify-center items-center">
+          <div className="w-full text-xs text-center text-white">
+            <FontAwesomeIcon icon={faFaceLaughWink} className="text-7xl" />
+            <h1 className="font-light text-3xl my-5">Hello {user.username}!</h1>
+            <p className="font-thin text-lg">
+              Use the <strong className="font-light">sidebar</strong> <FontAwesomeIcon icon={faArrowRight} />
+            </p>
+          </div>
+        </div>
+      }
+    >
       <ListControls
         searchValue={appSearchValue}
         onSearch={(value) => setAppSearchValue(value)}
