@@ -22,13 +22,11 @@ export const ElementsPreview = ({
 
   useEffect(() => {
     let renderDelay
-    if (css) {
-      renderDelay = setTimeout(() => setPreviewReady(true), 50)
-    }
+    renderDelay = setTimeout(() => setPreviewReady(true), 75)
     return () => {
       clearTimeout(renderDelay)
     }
-  }, [css])
+  }, [css, elements])
 
   const {theme, selectors} = useTracker(() => {
     if (!elements) return {}
@@ -68,6 +66,7 @@ export const ElementsPreview = ({
   useEffect(() => {
     if (!theme || !selectors) return null
     const css = generateCss({theme, selectors})
+    setPreviewReady(false)
     setCss(css)
   }, [theme, selectors])
 
@@ -135,9 +134,9 @@ export const ElementsPreview = ({
       <style>{css}</style>
       <div
         id="__lennaPreview"
-        className={`${previewReady ? 'opacity-1' : 'opacity-0'} transition-opacity duration-250 ${
+        className={`${previewReady ? 'opacity-1 transition-opacity duration-250' : 'opacity-0'}  ${
           selectedComponentId ? 'flex items-center justify-center' : ''
-        } w-full h-screen`}
+        } w-full h-screen bg-gradient-to-bl from-white to-gray-100`}
       >
         {renderChildren([containerElement])}
       </div>
