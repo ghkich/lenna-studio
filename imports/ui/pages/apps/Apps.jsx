@@ -37,7 +37,7 @@ export const Apps = () => {
         <div className="flex flex-col p-4 h-screen w-full justify-center items-center">
           <div className="w-full text-xs text-center text-white">
             <FontAwesomeIcon icon={faFaceLaughWink} className="text-7xl" />
-            <h1 className="font-light text-3xl my-5">Hello {user.username}!</h1>
+            <h1 className="font-light text-3xl my-5">Hello {user?.username}!</h1>
             <p className="font-thin text-lg">
               Use the <strong className="font-light">sidebar</strong> <FontAwesomeIcon icon={faArrowRight} />
             </p>
