@@ -1,6 +1,6 @@
 import React from 'react'
 import {Meteor} from 'meteor/meteor'
-import {useHistory, NavLink} from 'react-router-dom'
+import {useHistory, NavLink, Redirect} from 'react-router-dom'
 import {RoutePaths} from '../../app/routes'
 import {SidebarLayout} from '../../components/layouts/SidebarLayout'
 import {faSidebarFlip} from '@fortawesome/pro-light-svg-icons'
@@ -8,20 +8,27 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {Button} from '../../components/basic/Button'
 import {Form} from '../../components/form/Form'
 import {TextInput} from '../../components/basic/TextInput'
+import {useTracker} from 'meteor/react-meteor-data'
 
 export const Login = () => {
   const history = useHistory()
+  const user = useTracker(() => Meteor.user())
+
+  if (user) {
+    return <Redirect to={RoutePaths.APPS} />
+  }
 
   const onSubmit = ({email, password}) => {
     Meteor.loginWithPassword({email}, password, () => {
       if (Meteor.user()) {
+        window.top.postMessage({message: 'forceNavigation'}, '*')
         history.push(RoutePaths.APPS)
       }
     })
   }
 
   return (
-    <SidebarLayout>
+    <SidebarLayout animateSidebar>
       <div className="flex flex-col items-center justify-center p-2 gap-5 w-full h-screen">
         <div className="text-center">
           <FontAwesomeIcon icon={faSidebarFlip} className="text-5xl" />
