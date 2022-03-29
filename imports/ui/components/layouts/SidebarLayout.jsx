@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faBrowsers, faCube, faBarsProgress, faSwatchbook, faLoader, faArrowLeft} from '@fortawesome/pro-solid-svg-icons'
 import {useLocation, NavLink, useParams, useHistory} from 'react-router-dom'
@@ -8,11 +8,12 @@ import {faSidebarFlip, faCircleUser} from '@fortawesome/pro-light-svg-icons'
 import {AppsCollection} from '../../../collections/apps'
 import {useMethod} from '../../../infra/hooks/useMethod'
 
-export const SidebarLayout = ({children, contentComponent, loading, menuMinimized}) => {
+export const SidebarLayout = ({children, contentComponent, loading, menuMinimized, animateSidebar}) => {
   const {appId} = useParams() || {}
   const location = useLocation()
   const history = useHistory()
   const user = useTracker(() => Meteor.user())
+  const [animateSidebarClasses, setAnimatedSidebarClasses] = useState('translate-x-80 sm:w-0')
 
   const findPage = useMethod('pages.findByPath', {
     onSuccess: (page) => {
@@ -28,6 +29,7 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
     if (pagePathParam) {
       findPage.call({appId, path: pagePathParam})
     }
+    setAnimatedSidebarClasses('translate-x-0 sm:w-80')
   }, [])
 
   const {app} = useTracker(() => {
@@ -57,12 +59,16 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
   }
 
   return (
-    <div data-ls="AuthenticatedLayout" className="flex">
+    <div data-ls="AuthenticatedLayout" className="flex overflow-hidden">
       <div className="content flex-1 hidden sm:block bg-gradient-to-bl from-blue-500 to-purple-500">
         {contentComponent}
       </div>
       <div className="w-1.5 h-screen bg-gray-100 hover:bg-gray-200 border-l border-gray-200 hover:bg-opacity-75 cursor-pointer hidden sm:block" />
-      <div className="sidebar flex flex-col bg-white text-gray-500 text-xs w-full sm:w-80 h-screen sm:border-l border-gray-200">
+      <div
+        className={`sidebar flex flex-col bg-white text-gray-500 text-xs w-full  h-screen sm:border-l border-gray-200 transition-all duration-300 ${
+          animateSidebar ? `transform overflow-hidden ${animateSidebarClasses}` : 'sm:w-80'
+        }`}
+      >
         {user && (
           <>
             <div className="bg-white border-b h-7 px-1 flex justify-between items-center">
