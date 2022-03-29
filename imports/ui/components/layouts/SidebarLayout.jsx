@@ -13,7 +13,7 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
   const location = useLocation()
   const history = useHistory()
   const user = useTracker(() => Meteor.user())
-  const [animateSidebarClasses, setAnimatedSidebarClasses] = useState('translate-x-80 sm:w-0')
+  const [animatedSidebarClasses, setAnimatedSidebarClasses] = useState('translate-x-80 sm:w-0')
 
   const findPage = useMethod('pages.findByPath', {
     onSuccess: (page) => {
@@ -66,7 +66,7 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
       <div className="w-1.5 h-screen bg-gray-100 hover:bg-gray-200 border-l border-gray-200 hover:bg-opacity-75 cursor-pointer hidden sm:block" />
       <div
         className={`sidebar flex flex-col bg-white text-gray-500 text-xs w-full  h-screen sm:border-l border-gray-200 transition-all duration-300 ${
-          animateSidebar ? `transform overflow-hidden ${animateSidebarClasses}` : 'sm:w-80'
+          animateSidebar ? `transform overflow-hidden ${animatedSidebarClasses}` : 'sm:w-80'
         }`}
       >
         {user && (
