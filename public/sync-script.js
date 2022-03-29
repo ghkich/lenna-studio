@@ -5,6 +5,8 @@
   const devDomain = lennaScriptEl.getAttribute('data-dev-domain')
   const domainPath = devDomain ? devDomain : 'https://lenna.studio'
 
+  // Communication between Lenna Studio iframe
+  // and the project where it was embedded
   const handlePostMessage = (e) => {
     const lennaElement = document.getElementById('__lenna')
     if (e.data.message === 'showLennaContent') {
@@ -12,19 +14,19 @@
     }
 
     if (e.data.message === 'hideLennaContent') {
-      sendHtmlAndLoadCss()
+      sendHtmlAndGetCss()
       lennaElement.classList.remove('show-content')
     }
 
     if (e.data.message === 'forceNavigation') {
-      sendHtmlAndLoadCss()
+      sendHtmlAndGetCss()
       window.location.href = e.data.pagePath || window.location.pathname
     }
   }
 
   window.addEventListener('message', handlePostMessage)
 
-  const lennaApiCommunication = () => {
+  const sendHtmlAndGetCss = () => {
     const PAGE_HTML_STORAGE_KEY = `${appId}-${window.location.pathname}`
     const defaultLennaContent = document.querySelector('#__lenna .lenna-content')
     let contentElement = defaultLennaContent
@@ -36,33 +38,36 @@
     }
     const pageHTML = contentElement?.innerHTML
     const stringifiedPageHTML = JSON.stringify(pageHTML)
+
+    // Only send html if the page content has changed
     if (localStorage.getItem(PAGE_HTML_STORAGE_KEY) !== stringifiedPageHTML) {
       localStorage.setItem(PAGE_HTML_STORAGE_KEY, stringifiedPageHTML)
-      const xhr = new XMLHttpRequest()
-      xhr.open('POST', `${domainPath}/api/sendHtml`, true)
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
-      xhr.send(
+      const sendHtml = new XMLHttpRequest()
+      sendHtml.open('POST', `${domainPath}/api/sendHtml`, true)
+      sendHtml.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+      sendHtml.send(
         JSON.stringify({
           appId,
           pathname: window.location.pathname,
           html: pageHTML,
         }),
       )
-      xhr.onloadend = function () {
-        console.log('data-sent')
+      sendHtml.onloadend = function () {
+        console.log('html-sent')
       }
     }
-    const xhr2 = new XMLHttpRequest()
-    xhr2.open('POST', `${domainPath}/api/getCss`, true)
-    xhr2.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
-    xhr2.send(
+    const getCss = new XMLHttpRequest()
+    getCss.open('POST', `${domainPath}/api/getCss`, true)
+    getCss.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+    getCss.send(
       JSON.stringify({
         appId,
       }),
     )
-    xhr2.onreadystatechange = function () {
-      if (xhr2.readyState === XMLHttpRequest.DONE) {
-        const jsonResponse = JSON.parse(xhr2.responseText)
+    getCss.onreadystatechange = function () {
+      if (getCss.readyState === XMLHttpRequest.DONE) {
+        console.log('css-received')
+        const jsonResponse = JSON.parse(getCss.responseText)
         const css = jsonResponse.css,
           head = document.head || document.getElementsByTagName('head')[0],
           style = document.createElement('style')
@@ -81,22 +86,20 @@
     }
   }
 
-  const sendHtmlAndLoadCss = () => {
-    lennaApiCommunication()
-  }
-
-  const toggleSidebar = () => {
+  const toggleLennaSidebar = () => {
     document.getElementById('__lenna').classList.toggle('sidebar-minimized')
   }
 
+  // Add Lenna Studio iframe to the project
   document.onreadystatechange = function () {
+    // hide document.body while loading Lenna Studio
     document.body.style.opacity = '0'
     if (document.readyState === 'complete') {
       window.setTimeout(() => {
         const lennaWrap = document.createElement('div')
         lennaWrap.id = '__lenna'
         const lennaToggleBar = document.createElement('div')
-        lennaToggleBar.addEventListener('click', toggleSidebar)
+        lennaToggleBar.addEventListener('click', toggleLennaSidebar)
         lennaToggleBar.classList.add('lenna-sidebar-toggle')
         const lennaContent = document.createElement('div')
         lennaContent.classList.add('lenna-content')
@@ -115,10 +118,10 @@
         })
         document.body.appendChild(lennaWrap)
         document.body.style.opacity = '1'
-        sendHtmlAndLoadCss()
+        sendHtmlAndGetCss()
       }, 100)
 
-      // CSS
+      // Lenna Studio embedded content CSS
       const styleEl = document.createElement('style')
       styleEl.innerHTML = `
         #__lenna .lenna-content {
