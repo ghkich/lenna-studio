@@ -1,9 +1,9 @@
 export const CREATION_TYPES = {
-  SCRATCH: 'scratch',
-  EXISTING: 'existing',
+  BLANK: 'blank',
+  COPY: 'copy',
 }
 
 export const CREATION_OPTIONS = [
-  {value: CREATION_TYPES.SCRATCH, label: 'From scratch'},
-  {value: CREATION_TYPES.EXISTING, label: 'From existing'},
+  {value: CREATION_TYPES.BLANK, label: 'Blank'},
+  {value: CREATION_TYPES.COPY, label: 'Copy'},
 ]

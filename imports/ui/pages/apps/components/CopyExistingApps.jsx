@@ -7,7 +7,7 @@ import {AppsCollection} from '../../../../collections/apps'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faEye} from '@fortawesome/pro-solid-svg-icons'
 
-export const FromExistingApps = ({onAppSelect, onPageClick, onPageCheck}) => {
+export const CopyExistingApps = ({onAppSelect, onPageClick, onPageCheck}) => {
   const [selectedAppCategory, setSelectedAppCategory] = useState('')
   const [selectedAppId, setSelectedAppId] = useState()
   const [pagesCheckedState, setPagesCheckedState] = useState({})
@@ -97,7 +97,7 @@ export const FromExistingApps = ({onAppSelect, onPageClick, onPageCheck}) => {
                   name={page._id}
                   checked={pagesCheckedState[page._id] || false}
                   onChange={handleCheckPage}
-                  className="mr-1"
+                  className="mr-1.5"
                 />
                 <span>{page.name}</span>
               </label>

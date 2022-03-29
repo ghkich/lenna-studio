@@ -1,20 +1,6 @@
 export const THEMES_SEED = [
   {
-    name: 'TW Square Orange',
-    globalClasses: {
-      body: '',
-    },
-    settings: {
-      fontFamily: {},
-      colors: {
-        primary: '#f97316',
-        secondary: '#6366f1',
-      },
-      roundLevel: 0,
-    },
-  },
-  {
-    name: 'TW Indigo',
+    name: 'Rounded/Indigo Theme',
     globalClasses: {
       body: '',
     },
@@ -25,6 +11,20 @@ export const THEMES_SEED = [
         secondary: '#f97316',
       },
       roundLevel: 1,
+    },
+  },
+  {
+    name: 'Square/Orange Theme',
+    globalClasses: {
+      body: '',
+    },
+    settings: {
+      fontFamily: {},
+      colors: {
+        primary: '#f97316',
+        secondary: '#6366f1',
+      },
+      roundLevel: 0,
     },
   },
 ]

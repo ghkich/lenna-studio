@@ -14,11 +14,11 @@ import {useTracker} from 'meteor/react-meteor-data'
 import {ThemesCollection} from '../../../collections/themes'
 import {ElementsPreview} from '../../components/ElementsPreview'
 import {usePageLayoutElements} from '../../hooks/usePageLayoutElements'
-import {FromExistingApps} from './components/FromExistingApps'
+import {CopyExistingApps} from './components/CopyExistingApps'
 
 export const NewApp = () => {
   const history = useHistory()
-  const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.SCRATCH)
+  const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.COPY)
   const [selectedPage, setSelectedPage] = useState()
   const [fromAppId, setFromAppId] = useState()
   const [checkedPageIds, setCheckedPageIds] = useState([])
@@ -67,6 +67,7 @@ export const NewApp = () => {
             {value: '', label: 'Choose a theme...'},
             ...themes?.map((theme) => ({value: theme._id, label: theme.name})),
           ]}
+          value={selectedThemeId}
           onChange={(e) => {
             setSelectedThemeId(e.target.value)
           }}
@@ -74,12 +75,19 @@ export const NewApp = () => {
         <ToggleButtonGroup
           buttons={CREATION_OPTIONS}
           activeButton={selectedCreationType}
-          onToggle={(value) => setSelectedCreationType(value)}
+          onToggle={(value) => {
+            setSelectedCreationType(value)
+          }}
         />
-        {selectedCreationType === CREATION_TYPES.EXISTING && (
+        {selectedCreationType === CREATION_TYPES.COPY && (
           <div>
-            <FromExistingApps
-              onAppSelect={(appId) => setFromAppId(appId)}
+            <CopyExistingApps
+              onAppSelect={(appId) => {
+                setFromAppId(appId)
+                if (!selectedThemeId) {
+                  setSelectedThemeId(themes?.[0]?._id)
+                }
+              }}
               onPageClick={(page) => setSelectedPage(page)}
               onPageCheck={(pageIds) => setCheckedPageIds(pageIds)}
             />
