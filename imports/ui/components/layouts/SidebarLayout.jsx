@@ -13,7 +13,8 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
   const location = useLocation()
   const history = useHistory()
   const user = useTracker(() => Meteor.user())
-  const [sidebarClasses, setAnimatedSidebarClasses] = useState(
+  const [contentClasses, setContentClasses] = useState('opacity-0')
+  const [sidebarClasses, setSidebarClasses] = useState(
     animateSidebar ? 'translate-x-80 sm:w-0' : 'translate-x-0 sm:w-80',
   )
   const [sidebarMinimized, setSidebarMinimized] = useState(false)
@@ -32,14 +33,15 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
     if (pagePathParam) {
       findPage.call({appId, path: pagePathParam})
     }
-    setAnimatedSidebarClasses('translate-x-0 sm:w-80')
+    setContentClasses('opacity-100')
+    setSidebarClasses('translate-x-0 sm:w-80')
   }, [])
 
   useEffect(() => {
     if (sidebarMinimized) {
-      setAnimatedSidebarClasses('translate-x-80 sm:w-0')
+      setSidebarClasses('translate-x-80 sm:w-0')
     } else {
-      setAnimatedSidebarClasses('translate-x-0 sm:w-80')
+      setSidebarClasses('translate-x-0 sm:w-80')
     }
   }, [sidebarMinimized])
 
@@ -72,7 +74,7 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
   return (
     <div data-ls="AuthenticatedLayout" className="flex overflow-hidden">
       <div className="content flex-1 hidden sm:block bg-gradient-to-bl from-blue-500 to-purple-500">
-        {contentComponent}
+        <div className={`transition-opacity ${contentClasses}`}>{contentComponent}</div>
       </div>
       <div
         className="w-1.5 h-screen bg-gray-100 hover:bg-gray-200 border-l border-gray-200 hover:bg-opacity-75 cursor-pointer hidden sm:block"
@@ -80,7 +82,7 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
       />
       <div
         className={`sidebar flex flex-col bg-white text-gray-500 text-xs w-full h-screen sm:border-l border-gray-200 
-                    transition-all duration-300 transform overflow-hidden ${sidebarClasses}`}
+                    transition-all transform overflow-hidden ${sidebarClasses}`}
       >
         {user && (
           <>
