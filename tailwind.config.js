@@ -5,6 +5,12 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      spacing: {
+        68: '17rem',
+        70: '17.5rem',
+        84: '21rem',
+        92: '23rem',
+      },
       maxHeight: {
         100: '25rem',
         108: '26rem',
