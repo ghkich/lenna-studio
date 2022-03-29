@@ -33,6 +33,11 @@ export const RoutePaths = {
 
 export const publicRoutes = [
   {
+    exact: true,
+    path: RoutePaths.HOME,
+    component: Home,
+  },
+  {
     path: RoutePaths.LOGIN,
     component: Login,
   },
@@ -43,11 +48,6 @@ export const publicRoutes = [
 ]
 
 export const authenticatedRoutes = [
-  {
-    exact: true,
-    path: RoutePaths.HOME,
-    component: Home,
-  },
   {
     exact: true,
     path: RoutePaths.APPS,
