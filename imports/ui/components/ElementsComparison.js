@@ -27,7 +27,7 @@ const useSortedActualExpected = ({actualUn, expectedUn}) => {
   return {actual: getAndSortChildren(actualUn), expected: getAndSortChildren(expectedUn)}
 }
 
-export const ElementsComparison = ({actual: actualUn, expected: expectedUn}) => {
+export const ElementsComparison = ({actual: actualUn, expected: expectedUn, maxHeight}) => {
   const [error, setError] = useState('')
   const [assertedElements, setAssertedElements] = useState([])
   const [expectedString, setExpectedString] = useState('')
@@ -50,7 +50,7 @@ export const ElementsComparison = ({actual: actualUn, expected: expectedUn}) => 
           error: true,
         }
         if (expectedEl?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT] !== actual[i]?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT]) {
-          setError(`Wrong component container`)
+          setError(`Wrong component`)
           setActualString(actual[i]?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT] || actual[i]?.tagName)
           setExpectedString(expectedEl?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT] || expectedEl[i]?.tagName)
           asserted.push(newElement)
@@ -88,7 +88,7 @@ export const ElementsComparison = ({actual: actualUn, expected: expectedUn}) => 
 
   return (
     <div>
-      <ElementsTree elements={assertedElements} addElementDisabled />
+      <ElementsTree elements={assertedElements} addElementDisabled maxHeight={maxHeight} />
       {!analyzeTimeEnd ? (
         <div className="text-center p-4">
           <FontAwesomeIcon icon={faLoader} className="text-xl" spin />
@@ -114,8 +114,10 @@ export const ElementsComparison = ({actual: actualUn, expected: expectedUn}) => 
           )}
           {actualUn?.length > 0 && expectedUn?.length > 0 && !error && (
             <div className="bg-green-50 p-2 mt-2 border border-green-400 text-2xs">
-              <div className="pb-1 mb-1 border-b border-green-100 text-green-600 text-xs font-semibold">Success</div>
-              <div>All validations passed</div>
+              <div className="pb-1 mb-1 border-b border-green-100 text-green-600 text-xs font-semibold">
+                Structure validated!
+              </div>
+              <div>All the elements are matching</div>
             </div>
           )}
         </>
