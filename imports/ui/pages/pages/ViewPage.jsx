@@ -14,11 +14,10 @@ import {ComponentsCollection} from '../../../collections/components'
 import {Form} from '../../components/form/Form'
 import {STRUCTURE_TYPES} from '../../../infra/constants/structure-types'
 import {Button} from '../../components/basic/Button'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faArrowRightArrowLeft} from '@fortawesome/pro-duotone-svg-icons'
 import {ElementsComparison} from '../../components/ElementsComparison'
 import {RoutePaths} from '../../app/routes'
 import {usePageLayoutElements} from '../../hooks/usePageLayoutElements'
+import {ComparisonButtonGroup} from './components/ComparisonButtonGroup'
 
 export const ViewPage = () => {
   const {appId, pageId} = useParams() || {}
@@ -124,37 +123,17 @@ export const ViewPage = () => {
           </Form>
           {page?._id && treeElements?.length > 0 && (
             <>
-              <div className="flex mb-2">
-                <div
-                  className={`p-2 flex-1 bg-gray-100 border text-center cursor-pointer ${
-                    structureType === STRUCTURE_TYPES.ACTUAL ? 'text-blue-500 bg-blue-50' : ''
-                  }`}
-                  onClick={() => {
-                    setStructureType(STRUCTURE_TYPES.ACTUAL)
-                    window.top.postMessage({message: 'forceNavigation', pagePath: page?.path}, '*')
-                  }}
-                >
-                  Actual
-                </div>
-                <div
-                  className={`px-4 flex items-center border mx-1.5 bg-gray-100 cursor-pointer text-md ${
-                    structureType === undefined ? 'text-white bg-blue-500 border-blue-600' : ''
-                  }`}
-                  onClick={() => {
-                    setStructureType(undefined)
-                  }}
-                >
-                  <FontAwesomeIcon icon={faArrowRightArrowLeft} />
-                </div>
-                <div
-                  className={`p-2 flex-1 bg-gray-100 border text-center cursor-pointer ${
-                    structureType === STRUCTURE_TYPES.EXPECTED ? 'text-blue-500 bg-blue-50' : ''
-                  }`}
-                  onClick={() => setStructureType(STRUCTURE_TYPES.EXPECTED)}
-                >
-                  Expected
-                </div>
-              </div>
+              <ComparisonButtonGroup
+                structureType={structureType}
+                onActualClick={() => {
+                  setStructureType(STRUCTURE_TYPES.ACTUAL)
+                  window.top.postMessage({message: 'forceNavigation', pagePath: page?.path}, '*')
+                }}
+                onComparisonClick={() => {
+                  setStructureType(undefined)
+                }}
+                onExpectedClick={() => setStructureType(STRUCTURE_TYPES.EXPECTED)}
+              />
               {!structureType && <ElementsComparison actual={actualElements} expected={treeElements} />}
               {structureType === STRUCTURE_TYPES.EXPECTED && (
                 <ElementsTree
