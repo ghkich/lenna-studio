@@ -2,7 +2,7 @@ import React from 'react'
 import {useHistory, NavLink} from 'react-router-dom'
 import {RoutePaths} from '../../app/routes'
 import {SidebarLayout} from '../../components/layouts/SidebarLayout'
-import {faSidebarFlip} from '@fortawesome/pro-light-svg-icons'
+import {faSidebarFlip} from '@fortawesome/pro-thin-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {Button} from '../../components/basic/Button'
 import {Form} from '../../components/form/Form'
@@ -28,8 +28,8 @@ export const Register = () => {
     <SidebarLayout>
       <div className="flex flex-col items-center justify-center p-2 gap-5 w-full h-screen">
         <div className="text-center">
-          <FontAwesomeIcon icon={faSidebarFlip} className="text-5xl" />
-          <h1 className="text-base font-extralight m-0 mt-1">Lenna Studio</h1>
+          <FontAwesomeIcon icon={faSidebarFlip} className="text-5xl text-gray-400" />
+          <h1 className="text-base font-thin m-0 mt-1">Lenna Studio</h1>
         </div>
         <Form onSubmit={onSubmit} className="w-8/12">
           <TextInput name="username" placeholder="Username" />
