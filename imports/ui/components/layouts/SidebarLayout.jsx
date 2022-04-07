@@ -7,6 +7,7 @@ import {RoutePaths} from '../../app/routes'
 import {faSidebarFlip, faCircleUser} from '@fortawesome/pro-light-svg-icons'
 import {AppsCollection} from '../../../collections/apps'
 import {useMethod} from '../../../infra/hooks/useMethod'
+import {BackgroundContainer} from '../basic/BackgroundContainer'
 
 export const SidebarLayout = ({children, contentComponent, loading, menuMinimized, animateSidebar}) => {
   const {appId} = useParams() || {}
@@ -73,8 +74,13 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
 
   return (
     <div data-ls="AuthenticatedLayout" className="flex overflow-hidden">
-      <div className="content flex-1 hidden sm:block bg-gradient-to-bl from-blue-500 to-purple-500">
-        <div className={`transition-opacity ${contentClasses}`}>{contentComponent}</div>
+      <div className="content flex-1 hidden sm:block">
+        <BackgroundContainer
+          imageUrl="/tareq-ajalyakin-VAGak8u8eiI-unsplash.jpg"
+          className="from-pink-700 to-purple-900"
+        >
+          <div className={`transition-opacity ${contentClasses}`}>{contentComponent}</div>
+        </BackgroundContainer>
       </div>
       <div
         className="w-1.5 h-screen bg-gray-100 hover:bg-gray-200 border-l border-gray-200 hover:bg-opacity-75 cursor-pointer hidden sm:block"
@@ -114,7 +120,7 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
                     <NavLink
                       key={idx}
                       className={`flex-1 flex flex-col gap-1 justify-center items-center border-r border-gray-200 cursor-pointer ${
-                        isTabActive(tab.path) ? 'bg-gray-100  text-blue-500' : ''
+                        isTabActive(tab.path) ? 'bg-gray-100  text-purple-500' : ''
                       }`}
                       to={`${RoutePaths.APPS}/${appId}${tab.path ? tab.path : ''}`}
                     >
