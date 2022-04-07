@@ -75,7 +75,7 @@ export const ElementsPreview = ({
       const selectedComponent = ComponentsCollection.findOne(selectedComponentId)
       const updateComponentElementCustomData = () => {
         setTimeout(() => {
-          const domComponents = document.querySelectorAll(`[data-component=${selectedComponent.name}]`)
+          const domComponents = document.querySelectorAll(`[${CUSTOM_ATTR_KEYS.COMPONENT}=${selectedComponent.name}]`)
           if (domComponents?.length > 0) {
             domComponents.forEach((domComp) => {
               if (selectedStyle) {
