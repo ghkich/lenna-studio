@@ -6,8 +6,17 @@ import {AddElement} from './AddElement'
 import {RemoveElement} from './RemoveElement'
 import {ComponentsCollection} from '../../../collections/components'
 import {TurnElementIntoChildrenContainer} from './TurnElementIntoChildrenContainer'
+import {CUSTOM_ATTR_KEYS} from '../../../infra/constants/custom-attr-keys'
 
-export const ElementsTree = ({appId, targetComponent, targetPage, elements, addElementDisabled, onElementClick}) => {
+export const ElementsTree = ({
+  appId,
+  targetComponent,
+  targetPage,
+  elements,
+  addElementDisabled,
+  onElementClick,
+  maxHeight,
+}) => {
   const [selectedElement, setSelectedElement] = useState({})
 
   const containerElement = elements?.find((el) => !el?.parentId)
@@ -46,7 +55,7 @@ export const ElementsTree = ({appId, targetComponent, targetPage, elements, addE
     )
   }
   return (
-    <div className="max-h-100 overflow-y-auto border">
+    <div className={`max-h-${maxHeight ? maxHeight : '100'} overflow-y-auto border`}>
       <div>{renderChildren([containerElement], level)}</div>
     </div>
   )
@@ -93,7 +102,7 @@ const Element = ({
           onClick(element)
         }}
       >
-        <div className="flex-1">
+        <div className="flex-1 flex items-center w-full">
           {elementChildren?.length > 0 && (
             <button
               type="button"
@@ -105,7 +114,9 @@ const Element = ({
               <FontAwesomeIcon icon={open ? faCaretRight : faCaretDown} className="text-2xs" />
             </button>
           )}
-          {elementComponent?.name || element?.tagName || <span className="text-2xs">Text: "{element?.text}"</span>}
+          {elementComponent?.name || element?.attrs?.[CUSTOM_ATTR_KEYS.COMPONENT] || element?.tagName || (
+            <span className="text-2xs truncate overflow-hidden inline-block w-full pr-4">Text: "{element?.text}"</span>
+          )}
           {element.isChildrenContainer && <span className="text-2xs opacity-50"> {'{childrenContainer}'}</span>}
           {element.success && (
             <FontAwesomeIcon
