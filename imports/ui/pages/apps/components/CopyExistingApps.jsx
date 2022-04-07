@@ -106,7 +106,7 @@ export const CopyExistingApps = ({onAppSelect, onPageClick, onPageCheck}) => {
                 onClick={() => handleSelectPage(page)}
                 className="py-1 px-3 text-xs text-gray-300 rounded absolute right-0 top-1"
               >
-                <FontAwesomeIcon icon={faEye} className={selectedPage?._id === page?._id ? 'text-blue-500' : ''} />
+                <FontAwesomeIcon icon={faEye} className={selectedPage?._id === page?._id ? 'text-purple-500' : ''} />
               </button>
             </div>
           ))}

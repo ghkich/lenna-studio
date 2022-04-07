@@ -17,7 +17,7 @@ export const PagesList = ({pages, selectedPageId, onSelectPage, showRemove}) => 
           key={page._id}
           type="button"
           className={`flex border border-b-0 px-2 py-1 w-full text-left ${
-            page._id === selectedPageId ? 'bg-blue-50 text-blue-500' : ''
+            page._id === selectedPageId ? 'bg-purple-50 text-purple-500' : ''
           }`}
           onClick={() => onSelectPage(page._id)}
         >

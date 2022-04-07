@@ -8,7 +8,7 @@ export const ToggleButtonGroup = ({buttons, activeButton, onToggle}) => {
           key={button.value}
           type="button"
           className={`flex-1 p-1.5 border font-bold ${
-            activeButton === button.value ? 'bg-blue-50 text-blue-500' : ''
+            activeButton === button.value ? 'bg-purple-50 text-purple-500' : ''
           } ${index + 1 < buttons.length ? 'border-r-0 rounded-l-sm' : 'rounded-r-sm'}`}
           onClick={() => onToggle(button.value)}
         >
