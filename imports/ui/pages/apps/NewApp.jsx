@@ -5,7 +5,7 @@ import {RoutePaths} from '../../app/routes'
 import {Button} from '../../components/basic/Button'
 import {TextInput} from '../../components/basic/TextInput'
 import {ToggleButtonGroup} from '../../components/basic/ToggleButtonGroup'
-import {useMethod} from '../../../infra/hooks/useMethod'
+import {METHOD_STATUSES, useMethod} from '../../../infra/hooks/useMethod'
 import {useHistory} from 'react-router-dom'
 import {CREATION_OPTIONS, CREATION_TYPES} from '../../../infra/constants/creation-types'
 import {Form} from '../../components/form/Form'
@@ -53,6 +53,7 @@ export const NewApp = () => {
 
   return (
     <SidebarLayout
+      loading={createApp.status === METHOD_STATUSES.LOADING}
       menuMinimized
       contentComponent={
         <ElementsPreview appId={fromAppId} elements={previewElements} selectedThemeId={selectedThemeId} />
@@ -60,7 +61,7 @@ export const NewApp = () => {
     >
       <PageHeader title="New app" />
       <Form onSubmit={handleSubmit} className="mt-1">
-        <TextInput name="name" placeholder="Name" />
+        <TextInput name="name" placeholder="Name" required />
         <Select
           name="themeId"
           options={[

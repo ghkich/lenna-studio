@@ -32,10 +32,10 @@ export const Register = () => {
           <h1 className="text-base font-thin m-0 mt-1">Lenna Studio</h1>
         </div>
         <Form onSubmit={onSubmit} className="w-8/12">
-          <TextInput name="username" placeholder="Username" />
-          <TextInput name="email" placeholder="E-mail" />
-          <TextInput type="password" name="password" placeholder="Password" />
-          <TextInput type="password" name="confirmPassword" placeholder="Confirm Password" />
+          <TextInput name="username" placeholder="Username" required />
+          <TextInput name="email" placeholder="E-mail" required />
+          <TextInput type="password" name="password" placeholder="Password" required />
+          <TextInput type="password" name="confirmPassword" placeholder="Confirm Password" required />
           <Button type="submit" style="primary">
             Create
           </Button>

@@ -5,7 +5,7 @@ import {RoutePaths} from '../../app/routes'
 import {Button} from '../../components/basic/Button'
 import {TextInput} from '../../components/basic/TextInput'
 import {ToggleButtonGroup} from '../../components/basic/ToggleButtonGroup'
-import {useMethod} from '../../../infra/hooks/useMethod'
+import {METHOD_STATUSES, useMethod} from '../../../infra/hooks/useMethod'
 import {useHistory, useParams} from 'react-router-dom'
 import {CREATION_OPTIONS, CREATION_TYPES} from '../../../infra/constants/creation-types'
 import {Form} from '../../components/form/Form'
@@ -16,7 +16,7 @@ export const NewComponent = () => {
   const {appId} = useParams() || {}
   const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.BLANK)
   const history = useHistory()
-
+  3
   const createComponent = useMethod('components.create', {
     onSuccess: (componentId) => {
       if (componentId) {
@@ -34,10 +34,10 @@ export const NewComponent = () => {
   }
 
   return (
-    <SidebarLayout menuMinimized>
+    <SidebarLayout menuMinimized loading={createComponent.status === METHOD_STATUSES.LOADING}>
       <PageHeader title="New component" />
       <Form onSubmit={handleSubmit} className="mt-1">
-        <TextInput name="name" placeholder="Name" />
+        <TextInput name="name" placeholder="Name" required />
         <ToggleButtonGroup
           buttons={CREATION_OPTIONS}
           activeButton={selectedCreationType}

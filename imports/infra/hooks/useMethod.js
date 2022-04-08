@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import {Meteor} from 'meteor/meteor'
 
-const METHOD_STATUSES = {
+export const METHOD_STATUSES = {
   IDLE: 'idle',
   LOADING: 'loading',
   SUCCESS: 'success',
@@ -34,6 +34,7 @@ export const useMethod = (methodName, opt) => {
       .catch((error) => {
         console.log(error)
         setStatus(METHOD_STATUSES.ERROR)
+        alert(error?.message)
       })
   }
 

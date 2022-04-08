@@ -74,7 +74,17 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
 
   return (
     <div data-ls="AuthenticatedLayout" className="flex overflow-hidden">
-      <div className="content flex-1 hidden sm:block">
+      <div className="content flex-1 hidden sm:block relative">
+        {loading && (
+          <div className="absolute top-0 right-0 bottom-0 left-0 bg-white z-50 ">
+            <BackgroundContainer
+              imageUrl="/tareq-ajalyakin-VAGak8u8eiI-unsplash.jpg"
+              className="from-pink-700 to-purple-900 flex justify-center items-center"
+            >
+              <FontAwesomeIcon icon={faLoader} className="text-3xl my-10 text-white" spin />
+            </BackgroundContainer>
+          </div>
+        )}
         <BackgroundContainer
           imageUrl="/tareq-ajalyakin-VAGak8u8eiI-unsplash.jpg"
           className="from-pink-700 to-purple-900"
@@ -133,7 +143,7 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
         )}
         <div className={`flex-1 h-screen ${user ? 'p-4' : 'px-4'} overflow-auto relative`}>
           {loading && (
-            <div className="absolute top-0 right-0 bottom-0 left-0 bg-white flex justify-center">
+            <div className="absolute top-0 right-0 bottom-0 left-0 bg-white bg-opacity-50 z-50 flex justify-center items-center">
               <FontAwesomeIcon icon={faLoader} className="text-xl my-10" spin />
             </div>
           )}
