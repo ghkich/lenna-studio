@@ -67,7 +67,7 @@ export const CopyExistingApps = ({onAppSelect, onPageClick, onPageCheck}) => {
 
   return (
     <div>
-      <div className="mb-2">
+      <div className="">
         <Select
           value={selectedAppCategory}
           onChange={(e) => setSelectedAppCategory(e.target.value)}
@@ -79,37 +79,44 @@ export const CopyExistingApps = ({onAppSelect, onPageClick, onPageCheck}) => {
       </div>
       {selectedAppCategory && (
         <>
-          <div className="mb-2">
+          <div className="mt-2">
             <Select
               value={selectedAppId}
               onChange={(e) => setSelectedAppId(e.target.value)}
               options={apps?.map(({_id, name}) => ({value: _id, label: name}))}
             />
           </div>
-          {pages?.map((page) => (
-            <div className="relative" key={page._id}>
-              <label
-                className="flex items-center border mb-0.5 px-2 py-1.5 cursor-pointer hover:bg-gray-50"
-                onClick={() => handleSelectPage(page)}
-              >
-                <input
-                  type="checkbox"
-                  name={page._id}
-                  checked={pagesCheckedState[page._id] || false}
-                  onChange={handleCheckPage}
-                  className="mr-1.5"
-                />
-                <span>{page.name}</span>
-              </label>
-              <button
-                type="button"
-                onClick={() => handleSelectPage(page)}
-                className="py-1 px-3 text-xs text-gray-300 rounded absolute right-0 top-1"
-              >
-                <FontAwesomeIcon icon={faEye} className={selectedPage?._id === page?._id ? 'text-purple-500' : ''} />
-              </button>
+          {pages?.length > 0 && (
+            <div className="mt-2">
+              {pages?.map((page) => (
+                <div className="relative" key={page._id}>
+                  <label
+                    className="flex items-center border mb-0.5 px-2 py-1.5 cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => handleSelectPage(page)}
+                  >
+                    <input
+                      type="checkbox"
+                      name={page._id}
+                      checked={pagesCheckedState[page._id] || false}
+                      onChange={handleCheckPage}
+                      className="mr-1.5"
+                    />
+                    <span>{page.name}</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => handleSelectPage(page)}
+                    className="py-1 px-3 text-xs text-gray-300 rounded absolute right-0 top-1"
+                  >
+                    <FontAwesomeIcon
+                      icon={faEye}
+                      className={selectedPage?._id === page?._id ? 'text-purple-500' : ''}
+                    />
+                  </button>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </>
       )}
     </div>

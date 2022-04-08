@@ -17,7 +17,7 @@ import {PAGE_CATEGORIES} from '../../../infra/constants/page-categories'
 
 export const NewPage = () => {
   const {appId} = useParams() || {}
-  const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.SCRATCH)
+  const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.BLANK)
   const history = useHistory()
 
   const {components} = useTracker(() => {
@@ -35,7 +35,7 @@ export const NewPage = () => {
   const createPage = useMethod('pages.create', {
     onSuccess: (pageId) => {
       if (pageId) {
-        if (selectedCreationType === CREATION_TYPES.SCRATCH) {
+        if (selectedCreationType === CREATION_TYPES.BLANK) {
           history.push(`${RoutePaths.APPS}/${appId}${RoutePaths.PAGES}/${pageId}`)
         } else {
         }
@@ -50,7 +50,7 @@ export const NewPage = () => {
   return (
     <SidebarLayout menuMinimized>
       <PageHeader title="New page" />
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="mt-1">
         <TextInput name="name" placeholder="Name" />
         <TextInput name="path" placeholder="Route path" />
         <ToggleButtonGroup
@@ -58,7 +58,7 @@ export const NewPage = () => {
           activeButton={selectedCreationType}
           onToggle={(value) => setSelectedCreationType(value)}
         />
-        {selectedCreationType === CREATION_TYPES.SCRATCH && (
+        {selectedCreationType === CREATION_TYPES.BLANK && (
           <>
             <Select
               name="category"
@@ -76,7 +76,7 @@ export const NewPage = () => {
             />
           </>
         )}
-        {selectedCreationType === CREATION_TYPES.EXISTING && <div>{/*<InspirationPages />*/}</div>}
+        {selectedCreationType === CREATION_TYPES.COPY && <div>{/*<InspirationPages />*/}</div>}
         <div className="border-t opacity-50" />
         <Button type="submit" style="primary">
           Create

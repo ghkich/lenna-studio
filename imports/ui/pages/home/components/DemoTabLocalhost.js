@@ -126,16 +126,18 @@ export const DemoTabLocalhost = () => {
                   <>
                     <ElementsTree elements={state.expectedElements} maxHeight={32} />
                     <hr className="my-3" />
-                    <DemoButton
-                      style="primary"
-                      onClick={async () => {
-                        await navigator.clipboard.writeText(DEMO_ELEMENTS.EXPECTED_HTML)
-                        actions.setActiveTabId('project')
-                        actions.setFileSelected('home')
-                      }}
-                    >
-                      Copy expected HTML
-                    </DemoButton>
+                    {state.fileSelected === 'index' && (
+                      <DemoButton
+                        style="primary"
+                        onClick={async () => {
+                          await navigator.clipboard.writeText(DEMO_ELEMENTS.EXPECTED_HTML)
+                          actions.setActiveTabId('project')
+                          actions.setFileSelected('home')
+                        }}
+                      >
+                        Copy expected HTML
+                      </DemoButton>
+                    )}
                   </>
                 )}
               </div>

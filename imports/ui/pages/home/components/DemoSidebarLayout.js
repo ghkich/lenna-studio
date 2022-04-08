@@ -60,7 +60,7 @@ export const DemoSidebarLayout = ({height, content, sidebarContent, startWithSid
           }`}
         >
           <div className="bg-white border-b h-7 px-1 flex justify-between items-center">
-            <NavLink to={RoutePaths.APPS} className="flex gap-1 items-center p-2">
+            <NavLink to={RoutePaths.APPS} className="flex flex-1 gap-1 items-center px-2 pt-0.5">
               <FontAwesomeIcon icon={faSidebarFlip} className="text-2xs" />
               <h1 className="text-2xs font-extralight">Lenna Studio</h1>
             </NavLink>

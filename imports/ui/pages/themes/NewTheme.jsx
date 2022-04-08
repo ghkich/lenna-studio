@@ -12,13 +12,13 @@ import {Form} from '../../components/form/Form'
 
 export const NewTheme = () => {
   const {appId} = useParams() || {}
-  const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.SCRATCH)
+  const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.BLANK)
   const history = useHistory()
 
   const createTheme = useMethod('themes.create', {
     onSuccess: (themeId) => {
       if (themeId) {
-        if (selectedCreationType === CREATION_TYPES.SCRATCH) {
+        if (selectedCreationType === CREATION_TYPES.BLANK) {
           history.push(`${RoutePaths.APPS}/${appId}${RoutePaths.THEMES}/${themeId}`)
         } else {
         }
@@ -33,15 +33,15 @@ export const NewTheme = () => {
   return (
     <SidebarLayout menuMinimized>
       <PageHeader title="New theme" />
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="mt-1">
         <TextInput name="name" placeholder="Name" />
         <ToggleButtonGroup
           buttons={CREATION_OPTIONS}
           activeButton={selectedCreationType}
           onToggle={(value) => setSelectedCreationType(value)}
         />
-        {selectedCreationType === CREATION_TYPES.SCRATCH && <></>}
-        {selectedCreationType === CREATION_TYPES.EXISTING && <></>}
+        {selectedCreationType === CREATION_TYPES.BLANK && <></>}
+        {selectedCreationType === CREATION_TYPES.COPY && <></>}
         <div className="border-t opacity-50" />
         <Button type="submit" style="primary">
           Create

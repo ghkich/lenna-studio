@@ -38,11 +38,11 @@ export const ThemesList = ({appId}) => {
 
 const ThemesListComponent = ({themes, appId}) => {
   return (
-    <div className="flex flex-col gap-0.5 mt-1">
+    <div className="flex flex-col gap-1.5 sm:gap-0.5">
       {themes?.map((comp) => (
         <NavLink
           key={comp._id}
-          className={`border rounded-sm px-2 py-1 hover:bg-gray-50 cursor-pointer`}
+          className={`border px-2 py-2 sm:py-1 hover:bg-gray-50 cursor-pointer transition-colors`}
           to={`${RoutePaths.APPS}/${appId}${RoutePaths.THEMES}/${comp._id}`}
         >
           {comp.name}

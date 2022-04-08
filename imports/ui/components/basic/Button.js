@@ -14,9 +14,7 @@ export const Button = ({style, className, children, ...props}) => {
   return (
     <button
       type="button"
-      className={`${getStyleClasses(
-        style,
-      )} p-2 rounded-sm  transition-colors duration-200 uppercase tracking-wider ${className}`}
+      className={`${getStyleClasses(style)} p-2 transition-all duration-200 uppercase tracking-wider ${className}`}
       {...props}
     >
       {children}

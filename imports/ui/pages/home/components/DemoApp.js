@@ -11,7 +11,7 @@ const App = () => {
       <div className="flex items-center justify-center">
         <div className="flex relative">
           <div
-            className="h-16 w-24 bg-white rounded-t absolute transition-transform bg-opacity-10"
+            className="h-16 w-24 rounded-t absolute transition-transform bg-gradient-to-t from-white to-transparent opacity-10"
             style={{transform: `translateX(${DEMO_TABS.findIndex((tab) => tab.id === state.activeTabId) * 96}px)`}}
           />
           {DEMO_TABS.map((tab) => (
@@ -38,7 +38,7 @@ const App = () => {
             key={id}
             className={`${
               state.activeTabId === id ? 'opacity-1' : 'opacity-0 pointer-events-none'
-            } absolute right-0 bottom-0 top-0 left-0 pt-2 p-2 bg-white shadow-lg bg-opacity-20 rounded-lg`}
+            } absolute right-0 bottom-0 top-0 left-0 pt-2 p-2 bg-white shadow-lg bg-opacity-25 rounded-lg`}
           >
             <TabContent idx={id} />
           </div>

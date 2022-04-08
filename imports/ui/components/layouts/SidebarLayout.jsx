@@ -92,21 +92,19 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
       >
         {user && (
           <>
-            <div className="bg-white border-b h-7 px-1 flex justify-between items-center">
-              <NavLink to={RoutePaths.APPS} className="flex gap-1 items-center p-2">
-                <FontAwesomeIcon icon={faSidebarFlip} className="text-2xs" />
-                <h1 className="text-2xs font-extralight">Lenna Studio</h1>
+            <div className="bg-white border-b h-10 sm:h-7 px-1 flex justify-between items-center">
+              <NavLink to={RoutePaths.APPS} className="flex gap-1 items-center p-2 flex-1">
+                <FontAwesomeIcon icon={faSidebarFlip} className="text-xs sm:text-2xs" />
+                <h1 className="text-xs sm:text-2xs font-extralight">Lenna Studio</h1>
               </NavLink>
               <NavLink to={RoutePaths.PROFILE} className="flex-none flex gap-1 items-center p-2 cursor-pointer">
-                <span className="text-2xs font-light">{user?.username}</span>
-                <FontAwesomeIcon icon={faCircleUser} className="text-2xs" />
+                <span className="text-xs sm:text-2xs font-light">{user?.username}</span>
+                <FontAwesomeIcon icon={faCircleUser} className="text-xs sm:text-2xs" />
               </NavLink>
             </div>
             {app && (
               <NavLink
-                className={`${
-                  menuMinimized ? 'py-2' : 'py-3'
-                } px-3 flex justify-start items-center gap-2 border-b bg-gray-50 uppercase text-2xs`}
+                className={`py-4 sm:py-3 px-3 flex justify-start items-center gap-2 border-b bg-gray-50 uppercase text-xs sm:text-2xs`}
                 to={RoutePaths.APPS}
               >
                 <FontAwesomeIcon icon={faArrowLeft} className="" />
@@ -125,7 +123,7 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
                       to={`${RoutePaths.APPS}/${appId}${tab.path ? tab.path : ''}`}
                     >
                       <FontAwesomeIcon icon={tab.icon} className={`text-lg`} />
-                      {!menuMinimized && <h2 className={`text-2xs`}>{tab.label}</h2>}
+                      {!menuMinimized && <h2 className={`text-xs sm:text-2xs leading-none mt-0.5`}>{tab.label}</h2>}
                     </NavLink>
                   ))}
                 </div>

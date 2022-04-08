@@ -8,7 +8,7 @@ export const TextInput = ({name, className, ...props} = {className: ''}) => {
     <input
       {...(register ? register(name) : {})}
       type="text"
-      className={`p-2 rounded-sm border ${className}`}
+      className={`p-2 border focus:outline-none focus:ring ring-purple-200 focus:border-purple-300 ${className}`}
       {...props}
     />
   )

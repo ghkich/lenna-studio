@@ -60,12 +60,12 @@ export const Apps = () => {
           <FontAwesomeIcon icon={faArrowTurnUp} className="text-3xl" />
         </div>
       )}
-      <div className="flex flex-col gap-1 mt-1">
+      <div className="flex flex-col gap-1.5 sm:gap-1">
         {apps.map((app) => (
           <NavLink
             key={app._id}
             to={`${RoutePaths.APPS}/${app._id}`}
-            className="border rounded-sm p-2 hover:bg-gray-50"
+            className="border p-2 hover:bg-gray-50 transition-colors"
           >
             {app.name}
           </NavLink>

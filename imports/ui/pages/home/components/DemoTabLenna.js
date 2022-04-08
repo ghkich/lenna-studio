@@ -53,7 +53,6 @@ export const DemoTabLenna = () => {
               </p>
               <Textarea
                 value={`\<script id="__lenna-script" data-app-id="${DEMO_APP_ID}" src="${window.location.origin}/sync-script.js"\>\</script\>`}
-                disabled
                 className="w-full mb-3 p-2 border h-16 text-gray-400 leading-tight bg-white bg-opacity-75 border border-white rounded"
               />
               <div className="flex gap-2">
@@ -76,7 +75,8 @@ export const DemoTabLenna = () => {
       sidebarContent={
         appCreated ? (
           <>
-            <TextInput defaultValue="My new app" disabled />
+            <TextInput defaultValue="My new app" />
+            <hr className="my-0.5 opacity-75" />
             <div className="flex flex-col gap-1">
               {DEMO_PAGES.map((page) => (
                 <div key={page._id} className="px-2 py-1 border cursor-pointer">

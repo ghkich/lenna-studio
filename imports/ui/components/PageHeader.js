@@ -24,19 +24,19 @@ export const PageHeader = ({title, goBackTo, showCopyButton, onDelete}) => {
       {showCopyButton && (
         <button
           type="button"
-          className={`flex h-6 w-6 justify-center items-center rounded-sm bg-white border hover:bg-gray-50`}
+          className={`flex h-8 w-8 sm:h-6 sm:w-6 justify-center items-center bg-white border hover:bg-gray-50`}
           onClick={() => copyHtml()}
         >
-          <FontAwesomeIcon icon={faCopy} className="text-2xs" />
+          <FontAwesomeIcon icon={faCopy} className="text-xs sm:text-2xs" />
         </button>
       )}
       {onDelete && (
         <button
           type="button"
-          className={`flex h-6 w-6 justify-center items-center rounded-sm bg-white border hover:bg-gray-50 hover:text-red-500`}
+          className={`flex h-8 w-8 sm:h-6 sm:w-6 justify-center items-center bg-white border hover:bg-gray-50 hover:text-red-500`}
           onClick={onDelete}
         >
-          <FontAwesomeIcon icon={faTrashCan} className="text-2xs" />
+          <FontAwesomeIcon icon={faTrashCan} className="text-xs sm:text-2xs" />
         </button>
       )}
     </div>

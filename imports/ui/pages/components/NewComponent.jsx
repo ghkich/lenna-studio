@@ -14,13 +14,13 @@ import {Select} from '../../components/basic/Select'
 
 export const NewComponent = () => {
   const {appId} = useParams() || {}
-  const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.SCRATCH)
+  const [selectedCreationType, setSelectedCreationType] = useState(CREATION_TYPES.BLANK)
   const history = useHistory()
 
   const createComponent = useMethod('components.create', {
     onSuccess: (componentId) => {
       if (componentId) {
-        if (selectedCreationType === CREATION_TYPES.SCRATCH) {
+        if (selectedCreationType === CREATION_TYPES.BLANK) {
           history.push(`${RoutePaths.APPS}/${appId}${RoutePaths.COMPONENTS}/${componentId}`)
         } else {
         }
@@ -36,14 +36,14 @@ export const NewComponent = () => {
   return (
     <SidebarLayout menuMinimized>
       <PageHeader title="New component" />
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="mt-1">
         <TextInput name="name" placeholder="Name" />
         <ToggleButtonGroup
           buttons={CREATION_OPTIONS}
           activeButton={selectedCreationType}
           onToggle={(value) => setSelectedCreationType(value)}
         />
-        {selectedCreationType === CREATION_TYPES.SCRATCH && (
+        {selectedCreationType === CREATION_TYPES.BLANK && (
           <>
             <Select
               name="category"
@@ -55,7 +55,7 @@ export const NewComponent = () => {
             <TextInput name="structure" placeholder="Structure (div > div + div)" />
           </>
         )}
-        {selectedCreationType === CREATION_TYPES.EXISTING && <div></div>}
+        {selectedCreationType === CREATION_TYPES.COPY && <div></div>}
         <div className="border-t opacity-50" />
         <Button type="submit" style="primary">
           Create

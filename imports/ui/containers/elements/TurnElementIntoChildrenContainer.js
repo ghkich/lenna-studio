@@ -9,7 +9,7 @@ export const TurnElementIntoChildrenContainer = ({element, active}) => {
   return (
     <button
       type="button"
-      className={`flex h-6 w-6 justify-center items-center rounded-sm bg-white border ${
+      className={`flex h-6 w-6 justify-center items-center bg-white border ${
         active ? 'bg-purple-50 text-purple-500' : 'hover:bg-gray-50'
       }`}
       onClick={() => {

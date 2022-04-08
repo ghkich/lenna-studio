@@ -51,7 +51,7 @@ export const Tags = ({tags, selectedTag, onChangeTag, onAddTag, onRemoveTag, add
             handleAddTag()
           }}
           placeholder={addTagPlaceholder}
-          className="px-1 py-0.5 border rounded-sm w-20"
+          className="px-1 py-0.5 border w-20"
         />
       </div>
     </div>

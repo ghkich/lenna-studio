@@ -59,7 +59,7 @@ export const NewApp = () => {
       }
     >
       <PageHeader title="New app" />
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className="mt-1">
         <TextInput name="name" placeholder="Name" />
         <Select
           name="themeId"

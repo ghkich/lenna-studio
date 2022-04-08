@@ -5,7 +5,7 @@ import {faPlus} from '@fortawesome/pro-solid-svg-icons'
 
 export const ListControls = ({searchValue, onSearch, placeholder, onAddClickGoTo}) => {
   return (
-    <div className="flex">
+    <div className="flex items-center pb-2">
       <div className="flex-1">
         <div className="">
           <input
@@ -20,7 +20,7 @@ export const ListControls = ({searchValue, onSearch, placeholder, onAddClickGoTo
       <div className="">
         <NavLink
           to={onAddClickGoTo}
-          className="w-10 h-6 flex items-center justify-center border rounded-sm bg-gray-50 hover:bg-gray-100"
+          className="w-12 h-8 sm:w-10 sm:h-7 flex items-center justify-center border bg-gray-50 hover:bg-gray-100 transition-colors"
         >
           <FontAwesomeIcon icon={faPlus} className="" />
         </NavLink>
