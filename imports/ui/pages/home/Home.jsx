@@ -53,10 +53,12 @@ export const Home = () => {
                 <span>Welcome to</span>
                 <strong className="block mt-1 mb-2 text-6xl font-thin">Lenna Studio</strong>
               </h1>
-              <h2 className="font-thin text-base mb-1 max-w-md mx-auto">Your project's UI and CSS in the cloud</h2>
+              <h2 className="font-thin text-base mb-1 max-w-md mx-auto">
+                Your project's <b className="font-light">UI</b> and <b className="font-light">CSS</b> in the cloud
+              </h2>
             </div>
-            <Button style="transparent" onClick={() => setShowInteractiveDemo(true)} className={`mt-4`}>
-              See interactive demo
+            <Button style="transparent" onClick={() => {}} className={`mt-2 flex-1`}>
+              Watch demonstration
             </Button>
             <HomeFooter />
           </div>
