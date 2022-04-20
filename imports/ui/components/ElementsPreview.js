@@ -22,6 +22,7 @@ export const ElementsPreview = ({
 
   useEffect(() => {
     let renderDelay
+    setPreviewReady(false)
     renderDelay = setTimeout(() => setPreviewReady(true), 75)
     return () => {
       clearTimeout(renderDelay)
@@ -66,7 +67,6 @@ export const ElementsPreview = ({
   useEffect(() => {
     if (!theme || !selectors) return null
     const css = generateCss({theme, selectors})
-    setPreviewReady(false)
     setCss(css)
   }, [theme, selectors])
 
