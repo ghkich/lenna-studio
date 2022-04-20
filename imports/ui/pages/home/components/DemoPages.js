@@ -23,8 +23,8 @@ export const DEMO_PAGES = [
             How it works
           </h2>
           <DemoTextBubble>
-            <b className="text-pink-600">1.</b> After you have created your account and logged in, you will be able to
-            create an app.
+            <b className="text-pink-600">1.</b> After creating an account and login in, you will be able to create an
+            app.
           </DemoTextBubble>
           <DemoTextBubble>
             <b className="text-pink-600">2.</b> An app can be created <b className="text-pink-600">blank</b> (without
