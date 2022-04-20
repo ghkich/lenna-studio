@@ -6,7 +6,7 @@
   const domainPath = devDomain ? devDomain : 'https://lenna.studio'
 
   // Communication between Lenna Studio iframe
-  // and the project where it was embedded
+  // and the project where it was embedded3
   const handlePostMessage = (e) => {
     const lennaElement = document.getElementById('__lenna')
     if (e.data.message === 'showLennaContent') {
@@ -125,25 +125,23 @@
       const styleEl = document.createElement('style')
       styleEl.innerHTML = `
         #__lenna .lenna-content {
-          transition: opacity 0.2s linear;
+          transition: all 0.15s linear;
           position: fixed;
           top: 0;
-          right: 327px;
+          right: 326px;
           left: 0;
           height: 100vh;
           background-color: #FFF;
+          z-index: 20;
+          opacity: 0;
         }
         
-        body {
-            padding-right: 327px;
-        }
-
         #__lenna > iframe {
           position: fixed;
           top: 0;
           right: 0;
           bottom: 0;
-          width: 320px;
+          width: 100vw;
           height: 100vh;
           border: none;
           z-index: 10;
@@ -152,8 +150,9 @@
           border-left: 1px solid rgb(228, 228, 231);
         }
 
-        #__lenna.show-content > iframe {
-          width: 100vw;
+        #__lenna.show-content .lenna-content {
+          opacity: 100;
+          z-index: 5;
         }
 
         #__lenna .lenna-sidebar-toggle {
@@ -179,7 +178,7 @@
         }
 
         #__lenna.sidebar-minimized .lenna-content {
-          right: 0;
+          right: 6px;
         }
 
         #__lenna.sidebar-minimized > iframe {
