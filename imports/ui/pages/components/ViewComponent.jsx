@@ -72,6 +72,7 @@ export const ViewComponent = () => {
 
   return (
     <SidebarLayout
+      backgroundClassNames="bg-white"
       menuMinimized
       contentComponent={
         <ElementsPreview

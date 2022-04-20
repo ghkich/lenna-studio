@@ -54,6 +54,7 @@ export const NewApp = () => {
   return (
     <SidebarLayout
       loading={createApp.status === METHOD_STATUSES.LOADING}
+      backgroundClassNames={selectedPage ? 'bg-white' : ''}
       menuMinimized
       contentComponent={
         <ElementsPreview appId={fromAppId} elements={previewElements} selectedThemeId={selectedThemeId} />
