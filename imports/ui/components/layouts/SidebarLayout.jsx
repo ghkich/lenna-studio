@@ -9,7 +9,14 @@ import {AppsCollection} from '../../../collections/apps'
 import {useMethod} from '../../../infra/hooks/useMethod'
 import {BackgroundContainer} from '../basic/BackgroundContainer'
 
-export const SidebarLayout = ({children, contentComponent, loading, menuMinimized, animateSidebar}) => {
+export const SidebarLayout = ({
+  children,
+  contentComponent,
+  loading,
+  backgroundClassNames,
+  menuMinimized,
+  animateSidebar,
+}) => {
   const {appId} = useParams() || {}
   const location = useLocation()
   const history = useHistory()
@@ -87,7 +94,7 @@ export const SidebarLayout = ({children, contentComponent, loading, menuMinimize
         )}
         <BackgroundContainer
           imageUrl="/tareq-ajalyakin-VAGak8u8eiI-unsplash.jpg"
-          className="from-pink-700 to-purple-900"
+          className={backgroundClassNames ? backgroundClassNames : 'from-pink-700 to-purple-900'}
         >
           <div className={`transition-opacity ${contentClasses}`}>{contentComponent}</div>
         </BackgroundContainer>
