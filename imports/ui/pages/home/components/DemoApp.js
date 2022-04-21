@@ -30,7 +30,7 @@ const App = () => {
       <div className="relative w-full h-96">
         {state.loading && (
           <div className="absolute right-2 bottom-2 top-2 left-2 z-30 bg-white bg-opacity-90 rounded-md flex justify-center items-center">
-            <FontAwesomeIcon icon={faLoader} className="text-purple-500 text-2xl animate-spin" />
+            <FontAwesomeIcon icon={faLoader} className="text-gray-700 text-2xl animate-spin" />
           </div>
         )}
         {DEMO_TABS.map(({id, component: TabContent}) => (

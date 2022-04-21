@@ -17,9 +17,9 @@ export const DEMO_PAGES = [
     _id: 'home',
     name: 'Home',
     content: (
-      <div className="h-full flex flex-col justify-center items-center bg-gradient-to-br from-purple-100 to-pink-100 text-gray-500">
+      <div className="h-full flex flex-col justify-center items-center bg-gradient-to-br from-gray-100 to-gray-100 text-gray-500">
         <div className="p-6">
-          <h2 className="font-bold text-lg text-center pb-2 uppercase text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">
+          <h2 className="font-bold text-lg text-center pb-2 uppercase text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-gray-700">
             How it works
           </h2>
           <DemoTextBubble>
@@ -48,7 +48,7 @@ export const DEMO_PAGES = [
     _id: 'login',
     name: 'Login',
     content: (
-      <div className="bg-gradient-to-br from-purple-100 to-pink-100 p-6 h-full flex flex-col justify-center">
+      <div className="bg-gradient-to-br from-gray-100 to-gray-100 p-6 h-full flex flex-col justify-center">
         <div className="flex flex-col gap-2 bg-white bg-opacity-50 border border-white border-opacity-100 p-4 rounded w-48 mx-auto">
           <TextInput
             placeholder="username"
@@ -70,9 +70,9 @@ export const DEMO_PAGES = [
     _id: 'dashboard',
     name: 'Dashboard',
     content: (
-      <div className="bg-gradient-to-br from-purple-100 to-pink-100 h-full">
+      <div className="bg-gradient-to-br from-gray-100 to-gray-100 h-full">
         <div className="px-6 pt-6 flex items-center justify-between">
-          <h2 className="font-bold uppercase text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500 flex-1">
+          <h2 className="font-bold uppercase text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-gray-700 flex-1">
             Dashboard
           </h2>
           <span className="text-2xs opacity-50">

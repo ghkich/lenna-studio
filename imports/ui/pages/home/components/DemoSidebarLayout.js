@@ -34,7 +34,7 @@ export const DemoSidebarLayout = ({height, content, sidebarContent, startWithSid
           height ? height : '92'
         } flex rounded-md text-gray-600 text-left overflow-hidden`}
       >
-        <div className={`flex-1 ${height ? height : '92'} bg-gradient-to-br from-purple-50 to-purple-100 relative`}>
+        <div className={`flex-1 ${height ? height : '92'} bg-gradient-to-br from-gray-50 to-gray-100 relative`}>
           {content}
         </div>
         <div
@@ -45,7 +45,7 @@ export const DemoSidebarLayout = ({height, content, sidebarContent, startWithSid
             setShowFloatingSidebar(true)
           }}
         >
-          <FontAwesomeIcon icon={faCaretLeft} className="text-purple-500" />
+          <FontAwesomeIcon icon={faCaretLeft} className="text-gray-700" />
         </div>
         <div
           ref={sidebar}

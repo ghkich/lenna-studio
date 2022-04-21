@@ -45,10 +45,10 @@ export const DemoTabLenna = () => {
         appCreated ? (
           <div className="flex flex-col h-full w-full justify-center items-center">
             <div className="w-full max-w-sm p-6 text-xs font-light text-center">
-              <FontAwesomeIcon icon={faCheckCircle} className="text-3xl mb-1 text-purple-400" />
-              <h1 className="text-xl mb-3 text-purple-500 font-normal">App created</h1>
+              <FontAwesomeIcon icon={faCheckCircle} className="text-3xl mb-1 text-gray-400" />
+              <h1 className="text-xl mb-3 text-gray-700 font-normal">App created</h1>
               <p className="text-md mb-3">
-                Now, copy and paste the script below into the <b className="text-purple-500">&lt;head&gt;</b> of your
+                Now, copy and paste the script below into the <b className="text-gray-700">&lt;head&gt;</b> of your
                 project to start syncing it with Lenna Studio
               </p>
               <Textarea
@@ -61,7 +61,7 @@ export const DemoTabLenna = () => {
                 </DemoButton>
               </div>
               <p className="mt-3 mx-auto">
-                You are free to use it with <b className="text-purple-500">any framework</b>, as long as the generated
+                You are free to use it with <b className="text-gray-700">any framework</b>, as long as the generated
                 code is HTML.
               </p>
               <hr className="my-3 mx-auto" />
@@ -118,7 +118,7 @@ export const DemoTabLenna = () => {
                     >
                       <FontAwesomeIcon
                         icon={faEye}
-                        className={selectedPage?._id === page?._id ? 'text-purple-500' : ''}
+                        className={selectedPage?._id === page?._id ? 'text-gray-700' : ''}
                       />
                     </button>
                   </div>

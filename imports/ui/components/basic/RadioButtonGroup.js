@@ -13,7 +13,7 @@ export const RadioButton = ({value, children, className, ...props}) => {
     <label className="flex-1">
       <input {...props} type="radio" value={value} className="hidden" />
       <div
-        className={`w-full p-1.5 border label-checked:bg-purple-50 label-checked:text-purple-500 text-center cursor-pointer ${className}`}
+        className={`w-full p-1.5 border label-checked:bg-gray-50 label-checked:text-gray-700 text-center cursor-pointer ${className}`}
       >
         {children}
       </div>

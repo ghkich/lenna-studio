@@ -24,7 +24,7 @@ export const Tags = ({tags, selectedTag, onChangeTag, onAddTag, onRemoveTag, add
               onChangeTag(tag)
             }}
             className={`${
-              selected === tag ? 'bg-purple-500' : 'bg-gray-400'
+              selected === tag ? 'bg-gray-700' : 'bg-gray-400'
             } text-white rounded-full px-2 py-0.5 text-xs cursor-pointer`}
           >
             {tag}

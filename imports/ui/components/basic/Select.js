@@ -13,7 +13,7 @@ export const Select = ({name, label, defaultValue, value, onChange, className, o
       <select
         defaultValue={defaultValue}
         value={value}
-        className="px-2 py-2 font-semibold bg-white border border-gray-200 required:bg-gray-100 w-full appearance-none focus:outline-none focus:ring ring-purple-200 focus:border-purple-300"
+        className="px-2 py-2 font-semibold bg-white border border-gray-200 required:bg-gray-100 w-full appearance-none focus:outline-none focus:ring ring-gray-200 focus:border-gray-300"
         {...(register && name ? register(name) : {})}
         onChange={onChange}
         {...props}

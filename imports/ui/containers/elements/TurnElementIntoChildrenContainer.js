@@ -10,7 +10,7 @@ export const TurnElementIntoChildrenContainer = ({element, active}) => {
     <button
       type="button"
       className={`flex h-6 w-6 justify-center items-center bg-white border ${
-        active ? 'bg-purple-50 text-purple-500' : 'hover:bg-gray-50'
+        active ? 'bg-gray-50 text-gray-700' : 'hover:bg-gray-50 text-gray-400'
       }`}
       onClick={() => {
         updateComponent.call({componentId: element.componentId, childrenContainerElementId: element._id})

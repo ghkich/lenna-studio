@@ -2,7 +2,7 @@ import React from 'react'
 
 const getStyleClasses = (style) => {
   if (style === 'primary') {
-    return `bg-purple-500 hover:bg-opacity-90 text-white font-semibold`
+    return `bg-gray-700 hover:bg-opacity-90 text-white font-semibold`
   }
   if (style === 'transparent') {
     return `border border-white hover:bg-white hover:bg-opacity-10 px-6`

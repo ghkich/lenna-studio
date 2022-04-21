@@ -13,7 +13,7 @@ import {useDemoContext} from './DemoContext'
 
 export const ExpectedPage = ({hideCopyMessage}) => (
   <div className="p-6">
-    <h1 className="font-bold text-lg text-center pb-2 uppercase text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">
+    <h1 className="font-bold text-lg text-center pb-2 uppercase text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-gray-700">
       Home
     </h1>
     <DemoTextBubble>

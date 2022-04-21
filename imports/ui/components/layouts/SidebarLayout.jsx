@@ -86,7 +86,7 @@ export const SidebarLayout = ({
           <div className="absolute top-0 right-0 bottom-0 left-0 bg-white z-50 ">
             <BackgroundContainer
               imageUrl="/tareq-ajalyakin-VAGak8u8eiI-unsplash.jpg"
-              className="from-pink-700 to-purple-900 flex justify-center items-center"
+              className="from-gray-900 to-gray-800 flex justify-center items-center"
             >
               <FontAwesomeIcon icon={faLoader} className="text-3xl my-10 text-white" spin />
             </BackgroundContainer>
@@ -94,7 +94,7 @@ export const SidebarLayout = ({
         )}
         <BackgroundContainer
           imageUrl="/tareq-ajalyakin-VAGak8u8eiI-unsplash.jpg"
-          className={backgroundClassNames ? backgroundClassNames : 'from-pink-700 to-purple-900'}
+          className={backgroundClassNames ? backgroundClassNames : 'from-gray-900 to-gray-800'}
         >
           <div className={`transition-opacity ${contentClasses}`}>{contentComponent}</div>
         </BackgroundContainer>
@@ -135,7 +135,7 @@ export const SidebarLayout = ({
                     <NavLink
                       key={idx}
                       className={`flex-1 flex flex-col gap-1 justify-center items-center border-r border-gray-200 cursor-pointer ${
-                        isTabActive(tab.path) ? 'bg-gray-100  text-purple-500' : ''
+                        isTabActive(tab.path) ? 'bg-gray-100  text-gray-700' : 'text-gray-400'
                       }`}
                       to={`${RoutePaths.APPS}/${appId}${tab.path ? tab.path : ''}`}
                     >

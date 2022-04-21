@@ -44,7 +44,7 @@ export const Home = () => {
   }, [showInteractiveDemo])
 
   return (
-    <BackgroundContainer imageUrl="/tareq-ajalyakin-VAGak8u8eiI-unsplash.jpg" className="from-pink-700 to-purple-900">
+    <BackgroundContainer imageUrl="/tareq-ajalyakin-VAGak8u8eiI-unsplash.jpg" className="from-gray-900 to-gray-800">
       <div className={`flex flex-col h-screen w-full justify-center items-center overflow-auto`}>
         <div className={`absolute ${afterTransitionDelay ? 'opacity-0 pointer-events-none' : ''}`}>
           <div className="p-4 w-full max-w-2xl text-xs text-center text-white">
