@@ -39,7 +39,7 @@ export const Login = () => {
           <FontAwesomeIcon icon={faSidebarFlip} className="text-5xl text-gray-400" />
           <h1 className="text-base font-thin m-0 mt-1">Lenna Studio</h1>
         </div>
-        <Form onSubmit={onSubmit} className="w-8/12">
+        <Form onSubmit={onSubmit} defaultValues={{email: 'demo@lenna.studio', password: '123456'}} className="w-8/12">
           <TextInput name="email" placeholder="E-mail" required />
           <TextInput type="password" name="password" placeholder="Password" required />
           <Button type="submit" style="primary">

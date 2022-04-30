@@ -15,8 +15,8 @@ export const loadInitialData = () => {
   let themeId
 
   const userId = Accounts.createUser({
-    email: 'gh.kich@gmail.com',
-    username: 'gustavo',
+    email: 'demo@lenna.studio',
+    username: 'demo.lenna',
     password: '123456',
   })
 
