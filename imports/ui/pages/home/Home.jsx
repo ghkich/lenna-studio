@@ -46,8 +46,8 @@ export const Home = () => {
   return (
     <BackgroundContainer imageUrl="/tareq-ajalyakin-VAGak8u8eiI-unsplash.jpg" className="from-gray-900 to-gray-800">
       <div className={`flex flex-col h-screen w-full justify-center items-center overflow-auto`}>
-        <div className={`absolute ${afterTransitionDelay ? 'opacity-0 pointer-events-none' : ''}`}>
-          <div className="p-4 w-full max-w-2xl text-xs text-center text-white">
+        <div className={`w-full max-w-2xl absolute ${afterTransitionDelay ? 'opacity-0 pointer-events-none' : ''}`}>
+          <div className="p-4 w-full text-xs text-center text-white">
             <div className="mb-8">
               <h1 className="font-thin text-base mt-8">
                 <span>Welcome to</span>
@@ -55,6 +55,7 @@ export const Home = () => {
               </h1>
               <h2 className="font-thin text-base mb-1 max-w-md mx-auto">A work-in-progress conceptual tool</h2>
             </div>
+            <DemoApp />
             <Button
               style="transparent"
               onClick={() => {
